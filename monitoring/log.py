@@ -23,5 +23,4 @@
 import logging as log
 
 # Setup basic logging
-log.basicConfig(format='%(asctime)s [%(levelname)s] %(name)s: %(message)s', level=log.INFO)
-mainlog = log.getLogger('main')
+log.basicConfig(format='%(asctime)s - %(name)-20s - [%(levelname)s] %(message)s', level=log.INFO)

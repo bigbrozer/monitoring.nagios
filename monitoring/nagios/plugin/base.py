@@ -22,7 +22,9 @@
 import argparse
 import logging as log
 
-from monitoring.nagios.plugin.exceptions import NagiosUnknown
+from monitoring.nagios.plugin.exceptions import NagiosUnknown, NagiosCritical, NagiosWarning, NagiosOk
+
+logger = log.getLogger('nagios.plugin.base')
 
 #-------------------------------------------------------------------------------
 # Class that define the default Nagios plugin structure
@@ -31,8 +33,6 @@ from monitoring.nagios.plugin.exceptions import NagiosUnknown
 class NagiosPlugin(object):
     def __init__(self, name, version, description):
         """Initialize a new Nagios Plugin"""
-        self.log = log.getLogger('nagios.plugin.base')
-
         self.pluginname = name
         self.pluginversion = version
         self.plugindesc = description
@@ -41,18 +41,21 @@ class NagiosPlugin(object):
         self._init_plugin_arguments()
         self.define_plugin_arguments()
         self._parse_plugin_arguments()
-        self.verify_plugin_arguments()
-        
+
         # Check if debug mode is active
         if self.options.debug:
-            self.log.setLevel(log.DEBUG)
-        
-        # Debug
-        self.log.debug('Debug mode is ON.')
-        self.log.debug('Plugin class: %s.' % self.__class__.__name__)
-        self.log.debug('\tName: %s, v%s' % (self.pluginname, self.pluginversion))
-        self.log.debug('\tDesc: %s' % self.plugindesc)
-        self.log.debug('Arguments passed on command line %s.' % vars(self.options))
+            # Set root logger option
+            log.getLogger('').setLevel(log.DEBUG)
+
+        # Debug init
+        logger.debug('Debug mode is ON.')
+        logger.debug('Plugin class: %s.' % self.__class__.__name__)
+        logger.debug('\tName: %s, v%s' % (self.pluginname, self.pluginversion))
+        logger.debug('\tDesc: %s' % self.plugindesc)
+        logger.debug('Arguments passed on command line %s.' % vars(self.options))
+
+        # Sanity checks for plugin arguments
+        self.verify_plugin_arguments()
 
     # Arguments processing
     def _init_plugin_arguments(self):
@@ -84,8 +87,15 @@ class NagiosPlugin(object):
         """
         self.options = self.parser.parse_args()
 
-if __name__ == '__main__':
-    from monitoring.log import mainlog
-    mainlog.info('Creating instance of the plugin.')
-    plugin = NagiosPlugin("hello", "1.0", "Just a test")
-    mainlog.info('Done.')
+    # Nagios status methods
+    def ok(self, msg):
+        raise NagiosOk(msg)
+
+    def warning(self, msg):
+        raise NagiosWarning(msg)
+
+    def critical(self, msg):
+        raise NagiosCritical(msg)
+
+    def unknown(self, msg):
+        raise NagiosUnknown(msg)

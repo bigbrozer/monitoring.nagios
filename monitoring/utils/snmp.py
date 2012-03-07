@@ -18,8 +18,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #===============================================================================
 
+import logging as log
+
 from pysnmp.entity.rfc3413.oneliner import cmdgen
 from monitoring.nagios.plugin.exceptions import NagiosUnknown
+
+logger = log.getLogger('nagios.utils.snmp')
 
 def snmp_next(host, community, oid_param, port=161, snmpv2=True):
     """
@@ -27,7 +31,8 @@ def snmp_next(host, community, oid_param, port=161, snmpv2=True):
 
             Return a list:
                 [[(OID), Value]...]
-            """
+    """
+    logger.debug('Query SNMP Next on host %s for OID %s.' % (host, oid_param))
 
     values = []
     oid = None
@@ -51,6 +56,8 @@ def snmp_next(host, community, oid_param, port=161, snmpv2=True):
     for varBind in varBinds:
         values.append(varBind[0])
 
+    logger.debug('\tVarbinds: %s' % values)
+
     return values
 
 def snmp_get(host, community, oid_param, port=161, snmpv2=True):
@@ -59,7 +66,9 @@ def snmp_get(host, community, oid_param, port=161, snmpv2=True):
 
             Return a single element list:
                 [(OID), Value]
-            """
+    """
+    logger.debug('Query SNMP Get on host %s for OID %s.' % (host, oid_param))
+
     oid = None
 
     # Convert dotted OID notation to a tuple if it is a dotted notation string
@@ -77,6 +86,8 @@ def snmp_get(host, community, oid_param, port=161, snmpv2=True):
             host, community, oid_param, e))
 
     if errorIndication is not None: raise NagiosUnknown('SNMP query error: %s' % errorIndication)
+
+    logger.debug('\tVarbinds: %s' % varBinds)
 
     return varBinds[0]
 

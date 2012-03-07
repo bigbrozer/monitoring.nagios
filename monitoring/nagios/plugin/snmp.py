@@ -19,8 +19,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #===============================================================================
 
+import logging as log
 from monitoring.nagios.plugin.base import NagiosPlugin
 from monitoring.utils.snmp import snmp_get, snmp_next
+
+logger = log.getLogger('nagios.plugin.snmp')
 
 class NagiosPluginSNMP(NagiosPlugin):
     """Base for a standard SNMP Nagios plugin"""
@@ -35,7 +38,7 @@ class NagiosPluginSNMP(NagiosPlugin):
         super(NagiosPluginSNMP, self).define_plugin_arguments()
         
         # Add extra arguments
-        self.parser.add_argument('-C', dest='snmpcommunity', help='SNMP Community to use', required=True)
+        self.required_args.add_argument('-C', dest='snmpcommunity', help='SNMP Community to use', required=True)
         self.parser.add_argument('-2', action='store_true', dest='snmpv2', default=False, help='Use SNMP v2c (default use version 1)')
 
     def verify_plugin_arguments(self):
@@ -44,25 +47,17 @@ class NagiosPluginSNMP(NagiosPlugin):
         super(NagiosPluginSNMP, self).verify_plugin_arguments()
         
         if self.options.snmpv2:
+            logger.debug('Using SNMP v2.')
             self.usesnmpv2 = 1
 
     def snmpget(self, oid_param):
         """
         Query a SNMP OID using Get method.
         """
-        self.log.debug('SNMP Get on host %s for OID %s.' % (self.options.hostname, oid_param))
-        return snmp_get(self.options.hostname, self.options.snmpcommunity, oid_param, snmpv2=self.options.snmpv2)
+        return snmp_get(self.options.hostname, self.options.snmpcommunity, oid_param, snmpv2=self.usesnmpv2)
 
     def snmpnext(self, oid_param):
         """
         Query a SNMP OID using Next (walk) method.
         """
-        self.log.debug('SNMP Next on host %s for OID %s.' % (self.options.hostname, oid_param))
-        return snmp_next(self.options.hostname, self.options.snmpcommunity, oid_param, snmpv2=self.options.snmpv2)
-
-if __name__ == '__main__':
-    from monitoring.log import mainlog
-
-    mainlog.info('Creating instance of the plugin.')
-    plugin = NagiosPluginSNMP("helloSNMP", "1.0", "Just a SNMP test")
-    mainlog.info('Done.')
+        return snmp_next(self.options.hostname, self.options.snmpcommunity, oid_param, snmpv2=self.usesnmpv2)
