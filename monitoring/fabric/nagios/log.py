@@ -32,14 +32,14 @@ class Log(object):
        content attribute contains the full log file in memory.
     """
 
-    def __init__(self, sat_alias):
+    def __init__(self, logfile):
         self.content = ""
         self.host_has_no_service = ""
         self.duplicates = ""
         self.errors = ""
         
         try:
-            with open('log/nagdeploy_%s.log' % sat_alias, 'r') as self.logfile:
+            with open(logfile, 'r') as self.logfile:
                 self.content = self.logfile.read()
         except IOError as e:
             raise NagiosLogIOError("Error with the Nagios log file: %s" % e)
@@ -51,5 +51,3 @@ class Log(object):
         self.duplicates = "\n".join(re.findall(r"^Warning: Duplicate definition found for service.*", self.content, re.MULTILINE))
         self.errors = "\n".join(re.findall(r"^Error.*", self.content, re.MULTILINE))
 
-if __name__ == '__main__':
-    log = Log('nagios.frh.de.corp')
