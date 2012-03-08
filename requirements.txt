@@ -1,5 +1,7 @@
 # Requirements to deploy this code.
 
+Fabric==1.4.0
+
 # System Packages:
 # ================
 #
