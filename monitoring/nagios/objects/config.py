@@ -18,21 +18,26 @@
 #===============================================================================
 
 import os
+from ConfigParser import ConfigParser, Error
 import re
 import logging as log
 from StringIO import StringIO
 
 from monitoring.nagios.objects.hosts import Host, Hosts
 
+logger = log.getLogger('nagios.config')
+
 class Config(object):
     """
     This class handles the Nagios configuration.
     """
+    settings_file = os.path.expanduser('~/.monitoring')
+
     # Locations of Nagios config repositories
-    config_paths = (
-        '/home/besancon/Repos/svn/trunk/dc_global',
-        '/home/besancon/Repos/svn/trunk/dc_local',
-        '/home/besancon/Repos/svn/trunk/dc_features',
+    svnrepos = (
+        'dc_global',
+        'dc_local',
+        'dc_features',
     )
 
     # Object Types - {'type': ('Class', 'GroupClass', 'Property')}
@@ -52,22 +57,46 @@ class Config(object):
     }
     
     def __init__(self):
-        log.info('Init configuration.')
+        logger.info('Init configuration.')
+        settings_file = self.__class__.settings_file
+
+        # Init settings
+        logger.info('Reading settings file \'%s\'.' % settings_file)
+        self.settings = ConfigParser()
+        self.settings.read(settings_file)
+
+        # Attributes
         self.num_files = 0
+        self.svnrepos_path = self._locate_svn_repos()
+
+    # Private
+    def _locate_svn_repos(self):
+        settings_file = self.__class__.settings_file
+
+        try:
+            return self.settings.get('svn', 'basedir')
+        except Error as e:
+            logger.critical('Error: cannot parse settings file \'%s\' !' % settings_file)
+            logger.critical('\tMessage: %s' % e)
+            raise SystemExit(2)
 
     def _filenames(self):
         """
         Method generator that returns the full path of a config file.
         """
-        config_paths = self.__class__.config_paths
-        for repository in config_paths:
-            for root, dirs, files in os.walk(repository):
+        svnrepos = self.__class__.svnrepos
+        for repository in svnrepos:
+            path = os.path.join(self.svnrepos_path, repository)
+
+            logger.debug('Looking in path: %s' % path)
+            for root, dirs, files in os.walk(path):
                 for file in files:
                     if re.search('.*\.cfg$', file):
                         fullpath = os.path.join(root, file)
                         self.num_files += 1
                         yield fullpath
 
+    # Public
     def read_raw_config(self):
         """
         Return all Nagios configuration data like if we have only one BIG cfg file.
@@ -75,7 +104,7 @@ class Config(object):
         buffer = StringIO()
 
         for filename in self._filenames():
-            log.debug('Reading file "%s".' % filename)
+            logger.debug('Reading file "%s".' % filename)
             buffer.write('\n')
             buffer.write('# IMPORTED FROM: %s\n' % filename)
             content = open(filename, 'rU')
@@ -85,7 +114,7 @@ class Config(object):
         allinone_cfg = buffer.getvalue()
         buffer.close()
 
-        log.info('Processed %s file(s).' % self.num_files)
+        logger.info('Processed %s file(s).' % self.num_files)
         return allinone_cfg
 
     def read_config(self, raw_config):
@@ -110,12 +139,12 @@ class Config(object):
             if end_define:
                 in_define = False
                 objects[current_object_type].append(options)
-                log.debug("Leaving object definition...")
+                logger.debug("Leaving object definition...")
             elif define_line:
                 in_define = True
                 options = {}
                 current_object_type = define_line.group(1)
-                log.debug("Entering %s object definition..." % current_object_type)
+                logger.debug("Entering %s object definition..." % current_object_type)
             else:
                 if in_define:
                     option_line = re.match(r'\s+([a-zA-Z0-9_-]+)\s+(.*)$', line)
@@ -124,7 +153,7 @@ class Config(object):
                         value = option_line.group(2)
                         options[name] = value
 
-                        log.debug('\tReading option %s, with value: %s' % (name, value))
+                        logger.debug('\tReading option %s, with value: %s' % (name, value))
 
         return objects
 
@@ -132,7 +161,7 @@ class Config(object):
         """
         Create Python objects from Nagios one.
         """
-        log.info('Creating Python objects for %s.' % nagios_type)
+        logger.info('Creating Python objects for %s.' % nagios_type)
 
         object_types = self.__class__.object_types
         (cls, clss, prop) = object_types[nagios_type]
@@ -143,3 +172,4 @@ class Config(object):
             list_obj.append(python_obj)
 
         setattr(self, prop, clss(list_obj))
+
