@@ -27,6 +27,12 @@ from monitoring.nagios.objects.hosts import Host, Hosts
 
 logger = log.getLogger('nagios.config')
 
+class SettingsFileError(Exception):
+    """
+    Raised when there is a problem with the settings file.
+    """
+    pass
+
 class Config(object):
     """
     This class handles the Nagios configuration.
@@ -78,7 +84,7 @@ class Config(object):
         except Error as e:
             logger.critical('Error: cannot parse settings file \'%s\' !' % settings_file)
             logger.critical('\tMessage: %s' % e)
-            raise SystemExit(2)
+            raise SettingsFileError()
 
     def _filenames(self):
         """
