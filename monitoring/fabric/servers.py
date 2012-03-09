@@ -77,6 +77,7 @@ env.roledefs['puppet_managed'].extend(env.roledefs['admin'])
 env.roledefs['puppet_managed'].extend(env.roledefs['mas'])
 env.roledefs['puppet_managed'].extend(env.roledefs['sas'])
 env.roledefs['puppet_managed'].extend(env.roledefs['omnibus'])
+env.roledefs['puppet_managed'].extend(env.roledefs['central'])
 
 #-------------------------------------------------------------------------------
 env.roles.extend(env.roledefs.keys())
