@@ -87,7 +87,6 @@ class Config(object):
         svnrepos = self.__class__.svnrepos
         for repository in svnrepos:
             path = os.path.join(self.svnrepos_path, repository)
-
             logger.debug('Looking in path: %s' % path)
             for root, dirs, files in os.walk(path):
                 for file in files:
@@ -103,6 +102,7 @@ class Config(object):
         """
         buffer = StringIO()
 
+        logger.info('Reading configuration files...')
         for filename in self._filenames():
             logger.debug('Reading file "%s".' % filename)
             buffer.write('\n')
@@ -124,6 +124,8 @@ class Config(object):
         and List the list of dict for options in the object definition.
         """
         object_types = self.__class__.object_types
+
+        logger.info('Parsing the configuration and keep in global dict all datas about definitions...')
 
         objects = {}
         for t in object_types.keys():
