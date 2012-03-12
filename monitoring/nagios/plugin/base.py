@@ -44,8 +44,9 @@ class NagiosPlugin(object):
 
         # Check if debug mode is active
         if self.options.debug:
-            # Set root logger option
-            log.getLogger('').setLevel(log.DEBUG)
+            # Set monitoring logger option
+            log.getLogger('plugin').setLevel(log.DEBUG)
+            log.getLogger('monitoring').setLevel(log.DEBUG)
 
         # Debug init
         logger.debug('Debug mode is ON.')
