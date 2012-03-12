@@ -23,7 +23,7 @@ import logging as log
 from pysnmp.entity.rfc3413.oneliner import cmdgen
 from monitoring.nagios.plugin.exceptions import NagiosUnknown
 
-logger = log.getLogger('monitoring.nagios.utils.snmp')
+logger = log.getLogger('monitoring.utils.snmp')
 
 def snmp_next(host, community, oid_param, port=161, snmpv2=True):
     """
@@ -92,8 +92,10 @@ def snmp_get(host, community, oid_param, port=161, snmpv2=True):
     return varBinds[0]
 
 def convert_oid_to_tuple(oid_str):
+    logger.debug('Converting OID string to Tuple: %s' % oid_str)
     return tuple([int(chr) for chr in oid_str.split('.')])
 
 def convert_tuple_to_oid(oid_tuple):
+    logger.debug('Converting OID Tuple to string: %s' % oid_tuple)
     oid_str = [str(i) for i in oid_tuple]
     return ".".join(oid_str)
