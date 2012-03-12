@@ -23,7 +23,7 @@ import logging as log
 from pysnmp.entity.rfc3413.oneliner import cmdgen
 from monitoring.nagios.plugin.exceptions import NagiosUnknown
 
-logger = log.getLogger('nagios.utils.snmp')
+logger = log.getLogger('monitoring.nagios.utils.snmp')
 
 def snmp_next(host, community, oid_param, port=161, snmpv2=True):
     """

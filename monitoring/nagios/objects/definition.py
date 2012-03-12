@@ -20,6 +20,8 @@
 import logging as log
 import os
 
+logger = log.getLogger('monitoring.nagios.definition')
+
 class ObjectDefinition(object):
     """
     Class that define a Nagios object definition.
@@ -93,10 +95,10 @@ class ObjectGroup(object):
         try:
             import pygraphviz as pgv
         except ImportError:
-            log.critical('You need pygraphviz and graphviz to render templates graph !')
+            logger.critical('You need pygraphviz and graphviz to render templates graph !')
             raise SystemExit()
 
-        log.info('Generating the graph.')
+        logger.info('Generating the graph.')
 
         G = pgv.AGraph(strict=False, directed=True)
         G.graph_attr['root'] = 'htpl_generic_host'
@@ -115,7 +117,7 @@ class ObjectGroup(object):
             for father in tpl.templates:
                 G.add_edge(father, tpl)
 
-        log.info('Exporting to file: %s' % filename)
+        logger.info('Exporting to file: %s' % filename)
         G.draw(filename, prog=layout)
 
     # Private
@@ -131,7 +133,7 @@ class ObjectGroup(object):
         """
         Find a Template by name. Return a Python Object representation of the Nagios one.
         """
-        log.debug('Trying to find template %s by name.' % name)
+        logger.debug('Trying to find template %s by name.' % name)
         for obj in self.templates:
             if hasattr(obj, 'name') and obj.name == name:
                 return obj
@@ -150,7 +152,7 @@ class ObjectGroup(object):
                 if tpl_obj is not None:
                     object_templates.append(tpl_obj)
                 else:
-                    log.critical('Template %s is not defined !' % tpl)
+                    logger.critical('Template %s is not defined !' % tpl)
             obj.templates = object_templates
 
     # Specials methods

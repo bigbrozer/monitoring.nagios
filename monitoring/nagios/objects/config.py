@@ -25,7 +25,7 @@ from StringIO import StringIO
 
 from monitoring.nagios.objects.hosts import Host, Hosts
 
-logger = log.getLogger('nagios.config')
+logger = log.getLogger('monitoring.nagios.config')
 
 class SettingsFileError(Exception):
     """

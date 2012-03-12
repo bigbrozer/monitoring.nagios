@@ -23,7 +23,7 @@ import logging as log
 from monitoring.nagios.plugin.base import NagiosPlugin
 from monitoring.utils.snmp import snmp_get, snmp_next
 
-logger = log.getLogger('nagios.plugin.snmp')
+logger = log.getLogger('monitoring.nagios.plugin.snmp')
 
 class NagiosPluginSNMP(NagiosPlugin):
     """Base for a standard SNMP Nagios plugin"""

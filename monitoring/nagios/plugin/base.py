@@ -24,7 +24,7 @@ import logging as log
 
 from monitoring.nagios.plugin.exceptions import NagiosUnknown, NagiosCritical, NagiosWarning, NagiosOk
 
-logger = log.getLogger('nagios.plugin.base')
+logger = log.getLogger('monitoring.nagios.plugin.base')
 
 #-------------------------------------------------------------------------------
 # Class that define the default Nagios plugin structure
