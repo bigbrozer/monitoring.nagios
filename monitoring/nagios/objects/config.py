@@ -1,4 +1,4 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 #===============================================================================
 # Filename      : config.py
 # Author        : Vincent BESANCON <besancon.vincent@gmail.com>
@@ -24,6 +24,7 @@ import logging as log
 from StringIO import StringIO
 
 from monitoring.nagios.objects.hosts import Host, Hosts
+from monitoring.nagios.objects.hostgroups import Hostgroup, Hostgroups
 
 logger = log.getLogger('monitoring.nagios.config')
 
@@ -49,7 +50,7 @@ class Config(object):
     # Object Types - {'type': ('Class', 'GroupClass', 'Property')}
     object_types = {
         'host': (Host, Hosts, 'hosts'),
-        'hostgroup': '',
+        'hostgroup': (Hostgroup, Hostgroups, 'hostgroups'),
         'service': '',
         'servicegroup': '',
         'contact': '',
