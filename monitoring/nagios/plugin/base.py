@@ -19,6 +19,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #===============================================================================
 
+import sys
+import os
 import argparse
 import logging as log
 
@@ -31,8 +33,18 @@ logger = log.getLogger('monitoring.nagios.plugin.base')
 #-------------------------------------------------------------------------------
 #
 class NagiosPlugin(object):
-    def __init__(self, name, version, description):
-        """Initialize a new Nagios Plugin"""
+    """
+    Create a new Nagios plugin.
+
+    You may inherit from this class if you want to configure default behavior.
+    """
+
+    def __init__(self, name=os.path.basename(sys.argv[0]), version='', description=''):
+        """
+        Initialize a new Nagios Plugin.
+
+        Please avoid to override __init__ in derived classes. See :function:`initialize` to do this.
+        """
         self.name = name
         self.version = version
         self.description = description
@@ -57,6 +69,18 @@ class NagiosPlugin(object):
 
         # Sanity checks for plugin arguments
         self.verify_plugin_arguments()
+
+        # Second level of initialization
+        self.initialize()
+
+    def initialize(self):
+        """
+        Second level of initialization.
+
+        Overrides this method if you need to init some attributes after __init__.
+        Do the same things but at plugin level.
+        """
+        logger.debug('Calling initialize...')
 
     # Arguments processing
     def __init_plugin_arguments(self):
