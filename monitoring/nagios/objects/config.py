@@ -68,25 +68,25 @@ class Config(object):
 
         # Init settings
         logger.info('Reading settings file \'%s\'.' % settings_file)
-        self.settings = ConfigParser()
-        self.settings.read(settings_file)
+        self.__settings = ConfigParser()
+        self.__settings.read(settings_file)
 
         # Attributes
         self.num_files = 0
-        self.svnrepos_path = self._locate_svn_repos()
+        self.svnrepos_path = self.__locate_svn_repos()
 
     # Private
-    def _locate_svn_repos(self):
+    def __locate_svn_repos(self):
         settings_file = self.__class__.settings_file
 
         try:
-            return self.settings.get('svn', 'basedir')
+            return self.__settings.get('svn', 'basedir')
         except Error as e:
             logger.critical('Error: cannot parse settings file \'%s\' !' % settings_file)
             logger.critical('\tMessage: %s' % e)
             raise SettingsFileError()
 
-    def _filenames(self):
+    def __filenames(self):
         """
         Method generator that returns the full path of a config file.
         """
@@ -109,7 +109,7 @@ class Config(object):
         buffer = StringIO()
 
         logger.info('Reading configuration files...')
-        for filename in self._filenames():
+        for filename in self.__filenames():
             logger.debug('Reading file "%s".' % filename)
             buffer.write('\n')
             buffer.write('# IMPORTED FROM: %s\n' % filename)

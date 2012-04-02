@@ -33,14 +33,14 @@ logger = log.getLogger('monitoring.nagios.plugin.base')
 class NagiosPlugin(object):
     def __init__(self, name, version, description):
         """Initialize a new Nagios Plugin"""
-        self.pluginname = name
-        self.pluginversion = version
-        self.plugindesc = description
+        self.name = name
+        self.version = version
+        self.description = description
 
         # Initialize arguments stuff
-        self._init_plugin_arguments()
+        self.__init_plugin_arguments()
         self.define_plugin_arguments()
-        self._parse_plugin_arguments()
+        self.__parse_plugin_arguments()
 
         # Check if debug mode is active
         if self.options.debug:
@@ -51,21 +51,21 @@ class NagiosPlugin(object):
         # Debug init
         logger.debug('Debug mode is ON.')
         logger.debug('Plugin class: %s.' % self.__class__.__name__)
-        logger.debug('\tName: %s, v%s' % (self.pluginname, self.pluginversion))
-        logger.debug('\tDesc: %s' % self.plugindesc)
+        logger.debug('\tName: %s, v%s' % (self.name, self.version))
+        logger.debug('\tDesc: %s' % self.description)
         logger.debug('Arguments passed on command line %s.' % vars(self.options))
 
         # Sanity checks for plugin arguments
         self.verify_plugin_arguments()
 
     # Arguments processing
-    def _init_plugin_arguments(self):
+    def __init_plugin_arguments(self):
         """
         Initialize the argument parser.
         """
-        self.parser = argparse.ArgumentParser(description=self.plugindesc)
+        self.parser = argparse.ArgumentParser(description=self.description)
         self.parser.add_argument('--debug', action='store_true', dest='debug', help='Show debug information, Nagios may truncate output')
-        self.parser.add_argument('--version', action='version', version='%s %s' % (self.parser.prog, self.pluginversion))
+        self.parser.add_argument('--version', action='version', version='%s %s' % (self.parser.prog, self.version))
 
         self.required_args = self.parser.add_argument_group('required arguments')
 
@@ -82,7 +82,7 @@ class NagiosPlugin(object):
         if not self.options.hostname:
             raise NagiosUnknown('Missing host information ! (option -H)')
 
-    def _parse_plugin_arguments(self):
+    def __parse_plugin_arguments(self):
         """
         Parse arguments and values.
         """

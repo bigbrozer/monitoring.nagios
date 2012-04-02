@@ -30,7 +30,7 @@ class NagiosPluginSNMP(NagiosPlugin):
 
     def __init__(self, name, version, description):
         super(NagiosPluginSNMP, self).__init__(name, version, description)
-        self.usesnmpv2 = 0
+        self.__use_snmp_v2 = 0
 
     def define_plugin_arguments(self):
         """Define arguments for the plugin"""
@@ -48,16 +48,16 @@ class NagiosPluginSNMP(NagiosPlugin):
         
         if self.options.snmpv2:
             logger.debug('Using SNMP v2.')
-            self.usesnmpv2 = 1
+            self.__use_snmp_v2 = 1
 
     def snmpget(self, oid_param):
         """
         Query a SNMP OID using Get method.
         """
-        return snmp_get(self.options.hostname, self.options.snmpcommunity, oid_param, snmpv2=self.usesnmpv2)
+        return snmp_get(self.options.hostname, self.options.snmpcommunity, oid_param, snmpv2=self.__use_snmp_v2)
 
     def snmpnext(self, oid_param):
         """
         Query a SNMP OID using Next (walk) method.
         """
-        return snmp_next(self.options.hostname, self.options.snmpcommunity, oid_param, snmpv2=self.usesnmpv2)
+        return snmp_next(self.options.hostname, self.options.snmpcommunity, oid_param, snmpv2=self.__use_snmp_v2)

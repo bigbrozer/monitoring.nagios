@@ -30,7 +30,7 @@ class ObjectDefinition(object):
         self.templates = []
         self.customs = {}
 
-        self._process_options(options)
+        self.__process_options(options)
 
     # Public
     def get_templates(self):
@@ -62,7 +62,7 @@ class ObjectDefinition(object):
                 obj.get_inherited_templates()
 
     # Private
-    def _process_options(self, options):
+    def __process_options(self, options):
         """
         Processing options during instance initialization.
         """
@@ -83,8 +83,8 @@ class ObjectGroup(object):
         self.objects = objects
         self.templates = []
 
-        self._create_available_templates()
-        self._create_templates_dependencies()
+        self.__create_available_templates()
+        self.__create_templates_dependencies()
 
     # Public
     def render_templates_graph(self, filename=os.path.expanduser('~/templates.svg'), layout='twopi'):
@@ -121,7 +121,7 @@ class ObjectGroup(object):
         G.draw(filename, prog=layout)
 
     # Private
-    def _create_available_templates(self):
+    def __create_available_templates(self):
         """
         Create the list of available templates.
         """
@@ -129,7 +129,7 @@ class ObjectGroup(object):
             if obj.is_template():
                 self.templates.append(obj)
 
-    def _find_tpl_by_name(self, name):
+    def __find_tpl_by_name(self, name):
         """
         Find a Template by name. Return a Python Object representation of the Nagios one.
         """
@@ -139,7 +139,7 @@ class ObjectGroup(object):
                 return obj
         return None
 
-    def _create_templates_dependencies(self):
+    def __create_templates_dependencies(self):
         """
         Create the templates dependencies for each object definitions.
         """
@@ -148,7 +148,7 @@ class ObjectGroup(object):
             templates = obj.get_templates()
             object_templates = []
             for tpl in templates:
-                tpl_obj = self._find_tpl_by_name(tpl)
+                tpl_obj = self.__find_tpl_by_name(tpl)
                 if tpl_obj is not None:
                     object_templates.append(tpl_obj)
                 else:

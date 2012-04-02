@@ -33,21 +33,21 @@ class Log(object):
     """
 
     def __init__(self, logfile):
-        self.content = ""
+        self.__content = ""
         self.host_has_no_service = ""
         self.duplicates = ""
         self.errors = ""
         
         try:
-            with open(logfile, 'r') as self.logfile:
-                self.content = self.logfile.read()
+            with open(logfile, 'r') as log:
+                self.__content = log.read()
         except IOError as e:
             raise NagiosLogIOError("Error with the Nagios log file: %s" % e)
 
-        self._parse_log()
+        self.__parse_log()
 
-    def _parse_log(self):
-        self.host_has_no_service = "\n".join(re.findall(r"Warning: Host.*has no services associated with it!", self.content, re.MULTILINE))
-        self.duplicates = "\n".join(re.findall(r"^Warning: Duplicate definition found for service.*", self.content, re.MULTILINE))
-        self.errors = "\n".join(re.findall(r"^Error.*", self.content, re.MULTILINE))
+    def __parse_log(self):
+        self.host_has_no_service = "\n".join(re.findall(r"Warning: Host.*has no services associated with it!", self.__content, re.MULTILINE))
+        self.duplicates = "\n".join(re.findall(r"^Warning: Duplicate definition found for service.*", self.__content, re.MULTILINE))
+        self.errors = "\n".join(re.findall(r"^Error.*", self.__content, re.MULTILINE))
 
