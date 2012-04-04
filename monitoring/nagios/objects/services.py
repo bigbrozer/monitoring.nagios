@@ -21,16 +21,18 @@ from monitoring.nagios.objects.definition import ObjectDefinition, ObjectGroup
 
 class Service(ObjectDefinition):
     """
-    Represent a Host definition.
+    Represent a service definition.
     """
     def __str__(self):
-        if self.is_template():
+        if hasattr(self.service_description):
+            return self.service_description
+        elif hasattr(self.name):
             return self.name
         else:
-            return self.service_description
+            raise AttributeError("Service has no name !")
 
 class Services(ObjectGroup):
     """
-    Represent all hosts objects defined in the configuration.
+    Represent all services objects defined in the configuration.
     """
     pass
