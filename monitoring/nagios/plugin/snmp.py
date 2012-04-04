@@ -20,6 +20,8 @@
 #===============================================================================
 
 import logging as log
+import os
+import sys
 from monitoring.nagios.plugin.base import NagiosPlugin
 from monitoring.utils.snmp import snmp_get, snmp_next
 
@@ -28,7 +30,7 @@ logger = log.getLogger('monitoring.nagios.plugin.snmp')
 class NagiosPluginSNMP(NagiosPlugin):
     """Base for a standard SNMP Nagios plugin"""
 
-    def __init__(self, name, version, description):
+    def __init__(self, name=os.path.basename(sys.argv[0]), version='', description=''):
         super(NagiosPluginSNMP, self).__init__(name, version, description)
         self.__use_snmp_v2 = 0
 
