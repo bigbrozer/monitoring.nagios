@@ -24,6 +24,7 @@ import logging as log
 from StringIO import StringIO
 
 from monitoring.nagios.objects.hosts import Host, Hosts
+from monitoring.nagios.objects.services import Service, Services
 
 logger = log.getLogger('monitoring.nagios.config')
 
@@ -50,7 +51,7 @@ class Config(object):
     object_types = {
         'host': (Host, Hosts, 'hosts'),
         'hostgroup': '',
-        'service': '',
+        'service': (Service, Services, 'services'),
         'servicegroup': '',
         'contact': '',
         'contactgroup': '',

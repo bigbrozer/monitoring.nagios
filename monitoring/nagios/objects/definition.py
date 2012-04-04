@@ -87,7 +87,7 @@ class ObjectGroup(object):
         self.__create_templates_dependencies()
 
     # Public
-    def render_templates_graph(self, filename=os.path.expanduser('~/templates.svg'), layout='twopi'):
+    def render_templates_graph(self, root='', filename=os.path.expanduser('~/templates.svg'), layout='twopi'):
         """
         Render the graph of templates. Output format depends on the file extension.
         Could be svg, png, jpg.
@@ -101,7 +101,7 @@ class ObjectGroup(object):
         logger.info('Generating the graph.')
 
         G = pgv.AGraph(strict=False, directed=True)
-        G.graph_attr['root'] = 'htpl_generic_host'
+        G.graph_attr['root'] = root
         G.graph_attr['size'] = '10,15'
         G.graph_attr['page'] = '11.69,16.54'
         G.graph_attr['margin'] = '0.69,0.54'
