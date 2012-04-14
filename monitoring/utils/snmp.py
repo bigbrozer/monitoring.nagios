@@ -40,7 +40,6 @@ def snmp_next(host, community, oid_param, port=161, snmpv2=True):
     # Convert dotted OID notation to a tuple
     if type(oid_param) is str:
         oid = convert_oid_to_tuple(oid_param)
-
     try:
         errorIndication, errorStatus, errorIndex, varBinds = cmdgen.CommandGenerator().nextCmd(
             cmdgen.CommunityData('nagios-plugin', community, snmpv2),
@@ -48,7 +47,7 @@ def snmp_next(host, community, oid_param, port=161, snmpv2=True):
             oid
         )
     except Exception as e:
-        raise NagiosUnknown('''Unexpected error during SNMP Get query !\nHost: %s\nCommunity: %s\nOID: %s\nMessage: %s''' % (
+        raise NagiosUnknown('''Unexpected error during SNMP Getnext query !\nHost: %s\nCommunity: %s\nOID: %s\nMessage: %s''' % (
             host, community, oid_param, e))
 
     if errorIndication is not None: raise NagiosUnknown('SNMP query error: %s' % errorIndication)
