@@ -1,6 +1,7 @@
-.idea/
+.idea/workspace.xml
 build/
 dist/
 *.pyc
 *.swp
 *.egg-info
+.vagrant
