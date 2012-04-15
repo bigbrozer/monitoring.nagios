@@ -19,9 +19,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #===============================================================================
 
+# TODO: show monitoring package version with --version.
+
 import sys
 import os
 import argparse
+from pprint import pformat
 import logging as log
 
 from monitoring.nagios.plugin.exceptions import NagiosUnknown, NagiosCritical, NagiosWarning, NagiosOk
@@ -61,17 +64,21 @@ class NagiosPlugin(object):
             log.getLogger('monitoring').setLevel(log.DEBUG)
 
         # Debug init
+        logger.debug('=== BEGIN PLUGIN INIT ===')
         logger.debug('Debug mode is ON.')
         logger.debug('Plugin class: %s.' % self.__class__.__name__)
         logger.debug('\tName: %s, v%s' % (self.name, self.version))
         logger.debug('\tDesc: %s' % self.description)
-        logger.debug('Arguments passed on command line %s.' % vars(self.options))
+        logger.debug('Processed command line arguments:')
+        logger.debug(pformat(vars(self.options), indent=4))
 
         # Sanity checks for plugin arguments
         self.verify_plugin_arguments()
 
         # Second level of initialization
         self.initialize()
+
+        if 'NagiosPlugin' == self.__class__.__name__: logger.debug('=== END PLUGIN INIT ===')
 
     def initialize(self):
         """
@@ -80,7 +87,7 @@ class NagiosPlugin(object):
         Overrides this method if you need to init some attributes after __init__.
         Do the same things but at plugin level.
         """
-        logger.debug('Calling initialize...')
+        logger.debug('Calling second level of initialization.')
 
     # Arguments processing
     def __init_plugin_arguments(self):

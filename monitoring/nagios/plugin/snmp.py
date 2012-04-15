@@ -1,5 +1,4 @@
-# -*- coding: UTF-8 -*-
-#
+# -*- coding: utf-8 -*-
 #===============================================================================
 # Name          : snmp
 # Author        : Vincent BESANCON <besancon.vincent@gmail.com>
@@ -22,8 +21,9 @@
 import logging as log
 import os
 import sys
+
 from monitoring.nagios.plugin.base import NagiosPlugin
-from monitoring.utils.snmp import snmp_get, snmp_next
+from monitoring.nagios.plugin.probes import ProbeSNMP
 
 logger = log.getLogger('monitoring.nagios.plugin.snmp')
 
@@ -32,7 +32,13 @@ class NagiosPluginSNMP(NagiosPlugin):
 
     def __init__(self, name=os.path.basename(sys.argv[0]), version='', description=''):
         super(NagiosPluginSNMP, self).__init__(name, version, description)
-        self.__use_snmp_v2 = 0
+        self.__probe = ProbeSNMP(
+            hostaddress=self.options.hostname,
+            community=self.options.snmpcommunity,
+            snmpv2=self.options.snmpv2
+        )
+
+        if 'NagiosPluginSNMP' == self.__class__.__name__: logger.debug('=== END PLUGIN INIT ===')
 
     def define_plugin_arguments(self):
         """Define arguments for the plugin"""
@@ -42,6 +48,7 @@ class NagiosPluginSNMP(NagiosPlugin):
         # Add extra arguments
         self.required_args.add_argument('-C', dest='snmpcommunity', help='SNMP Community to use', required=True)
         self.parser.add_argument('-2', action='store_true', dest='snmpv2', default=False, help='Use SNMP v2c (default use version 1)')
+        self.parser.add_argument('-p', type=int, dest='port', default=161, help='Port to connect to (default to 161).')
 
     def verify_plugin_arguments(self):
         """Check syntax of all arguments"""
@@ -52,14 +59,14 @@ class NagiosPluginSNMP(NagiosPlugin):
             logger.debug('Using SNMP v2.')
             self.__use_snmp_v2 = 1
 
-    def snmpget(self, oid_param):
+    def snmp_get(self, oid):
         """
         Query a SNMP OID using Get method.
         """
-        return snmp_get(self.options.hostname, self.options.snmpcommunity, oid_param, snmpv2=self.__use_snmp_v2)
+        return self.__probe.snmp_get(oid)
 
-    def snmpnext(self, oid_param):
+    def snmp_getnext(self, oid):
         """
-        Query a SNMP OID using Next (walk) method.
+        Query a SNMP OID using Getnext (walk) method.
         """
-        return snmp_next(self.options.hostname, self.options.snmpcommunity, oid_param, snmpv2=self.__use_snmp_v2)
+        return self.__probe.snmp_getnext(oid)

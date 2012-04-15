@@ -23,6 +23,6 @@
 import logging as log
 
 # Setup basic logging
-log.basicConfig(format='%(asctime)s - %(name)-30s - [%(levelname)s] %(message)s')
+log.basicConfig(format='[%(levelname)s] %(message)s')
 logger = log.getLogger('monitoring')
 logger.setLevel(log.INFO)
