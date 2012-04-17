@@ -32,7 +32,9 @@ class NagiosPluginSNMP(NagiosPlugin):
 
     def __init__(self, name=os.path.basename(sys.argv[0]), version='', description=''):
         super(NagiosPluginSNMP, self).__init__(name, version, description)
-        self.__probe = ProbeSNMP(
+
+        # Init a new probe of type SNMP
+        self.snmp = ProbeSNMP(
             hostaddress=self.options.hostname,
             community=self.options.snmpcommunity,
             snmpv2=self.options.snmpv2
@@ -58,15 +60,3 @@ class NagiosPluginSNMP(NagiosPlugin):
         if self.options.snmpv2:
             logger.debug('Using SNMP v2.')
             self.__use_snmp_v2 = 1
-
-    def snmp_get(self, oid):
-        """
-        Query a SNMP OID using Get method.
-        """
-        return self.__probe.snmp_get(oid)
-
-    def snmp_getnext(self, oid):
-        """
-        Query a SNMP OID using Getnext (walk) method.
-        """
-        return self.__probe.snmp_getnext(oid)

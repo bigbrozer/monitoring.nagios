@@ -78,3 +78,13 @@ def percent_used(used, total, decimal=2):
     """
     percent_used = round((100. / total) * used, decimal)
     return percent_used
+
+def find_key_from_value(dic, val):
+    """
+    Return the key of dictionary dic given the value
+
+    :param dic: dict to search in.
+    :type dic: dict
+    :param val: the value you need the key.
+    """
+    return [k for k, v in dic.iteritems() if v in val][0]
