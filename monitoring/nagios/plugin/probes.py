@@ -19,10 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #===============================================================================
 
-# TODO: Allow to use more OIDs in methods snmp_*().
-# TODO: Rewrite methods snmp_*(), to much copy / paste.
-
-from pprint import pformat
+from pprint import pformat, pprint
 import logging as log
 from pysnmp.entity.rfc3413.oneliner import cmdgen
 
@@ -53,10 +50,11 @@ class ProbeSNMP(Probe):
         """
         Class that construct a SNMP query.
         """
-        def __init__(self, probe, oids, snmpcmd='get'):
+        def __init__(self, probe, oidkwargs, snmpcmd='get', with_index=False):
             self.__probe = probe
-            self.__oids = oids
+            self.__oids = oidkwargs
             self.__snmpcmd = snmpcmd
+            self.__with_index = with_index
 
         def execute(self):
             """
@@ -112,18 +110,28 @@ class ProbeSNMP(Probe):
                     for varBind in datas:
                         oid, value = varBind
                         oid = oid.prettyPrint()
+                        index = oid.split('.')[-1]
+                        value_with_index = {'index': index, 'val': value}
                         oid_name = find_key_from_value(self.__oids, oid)
 
                         if not results.has_key(oid_name):
                             results[oid_name] = []
                         else:
-                            results[oid_name].append(value)
+                            if self.__with_index:
+                                results[oid_name].append(value_with_index)
+                            else:
+                                results[oid_name].append(value)
                 else:
                     oid, value = datas
                     oid = oid.prettyPrint()
+                    index = oid.split('.')[-1]
+                    value_with_index = {'index': index, 'val': value}
                     oid_name = find_key_from_value(self.__oids, oid)
 
-                    results[oid_name] = value
+                    if self.__with_index:
+                        results[oid_name] = value_with_index
+                    else:
+                        results[oid_name] = value
 
             logger.debug('Returned results:')
             logger.debug(pformat(results, indent=4))
@@ -141,6 +149,51 @@ class ProbeSNMP(Probe):
             oid_str = [str(i) for i in oid_tuple]
             return ".".join(oid_str)
 
+    class __SNMPTable(object):
+        """
+        Represent a SNMP Table.
+        """
+        def __init__(self, columns, primary_key=''):
+            logger.debug('')
+            logger.debug('=== BEGIN NEW SNMP TABLE ===')
+            logger.debug('Initializing a new SNMP table...')
+            self.__keys = columns.pop(primary_key)
+            self.__cols = columns
+            self.__table = {}
+
+            logger.debug('Populating SNMP table...')
+            for primary_keys in self.__keys:
+                keyindex = primary_keys['index']
+                key = primary_keys['val']
+                key = key.prettyPrint()
+                if key:
+                    if not self.__table.has_key(key):
+                        logger.debug('\tCreating key \'%s\' with key index \'%s\'.' % (key, keyindex))
+                        self.__table[key] = {}
+
+                    # Find data associated to the key
+                    colvalues = {}
+                    for colname, coldatas in self.__cols.viewitems():
+                        for col in coldatas:
+                            if keyindex == col['index']:
+                                logger.debug('\t\tAdd key \'%s\' (keyindex: %s, colindex: %s) with value \'%s\'.' % (colname, keyindex, col['index'], col['val']))
+                                colvalues.update({colname: col['val']})
+                            if self.__table[key].has_key(colname):
+                                raise NagiosUnknown('Error: redefine your primary key oid \'%s\', you may loose data because primary keys are not unique in this OID ! I have found multiple values for key \'%s\'.' % (primary_key, key))
+
+                    self.__table[key].update(colvalues)
+
+            logger.debug('=== END SNMP TABLE ===')
+
+        def __getitem__(self, item):
+            return self.__table.__getitem__(item)
+
+        def __str__(self):
+            return str(self.__table)
+
+        def keys(self):
+            return self.__table.keys()
+
     def __init__(self, hostaddress='', port=161, community='public', snmpv2=False):
         super(ProbeSNMP, self).__init__(hostaddress, port)
 
@@ -155,22 +208,30 @@ class ProbeSNMP(Probe):
     # Public methods
     # ==============
     #
-    def get(self, **oids):
+    def get(self, index=False, **kwargs):
         """
         Query a SNMP OID using Get command.
         """
-        query = self.__query(oids)
+        query = self.__query(show_index=index, **kwargs)
         return query.execute()
 
-    def getnext(self, **oids):
+    def getnext(self, index=False, **kwargs):
         """
         Query a SNMP OID using Getnext command.
         """
-        query = self.__query(oids, snmpcmd='getnext')
+        query = self.__query(snmpcmd='getnext', show_index=index, **kwargs)
         return query.execute()
+
+    def table(self, primary_key='', **kwargs):
+        """
+        Query a SNMP OID and return data as a table of values.
+        """
+        columns = self.__query(snmpcmd='getnext', show_index=True, **kwargs).execute()
+        table = self.__SNMPTable(columns, primary_key)
+        return table
 
     # Private methods
     # ==============
     #
-    def __query(self, settings, snmpcmd='get'):
-        return self.__SNMPQuery(self, settings, snmpcmd)
+    def __query(self, snmpcmd='get', show_index=False, **kwargs):
+        return self.__SNMPQuery(self, kwargs, snmpcmd, with_index=show_index)
