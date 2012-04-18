@@ -32,6 +32,7 @@ class Probe(object):
     """
     Class Probe.
     """
+
     def __init__(self, hostaddress='', port=None):
         logger.debug('')
         logger.debug('=== BEGIN NEW PROBE INIT ===')
@@ -42,19 +43,22 @@ class Probe(object):
 
         if 'Probe' == self.__class__.__name__: logger.debug('=== END PROBE INIT ===')
 
+
 class ProbeSNMP(Probe):
     """
     Class ProbeSNMP.
     """
+
     class __SNMPQuery(object):
         """
         Class that construct a SNMP query.
         """
-        def __init__(self, probe, oidkwargs, snmpcmd='get', with_index=False):
+
+        def __init__(self, probe, oidstable, snmpcmd='get', show_index=False):
             self.__probe = probe
-            self.__oids = oidkwargs
+            self.__oids = oidstable
             self.__snmpcmd = snmpcmd
-            self.__with_index = with_index
+            self.__with_index = show_index
 
         def execute(self):
             """
@@ -96,8 +100,9 @@ class ProbeSNMP(Probe):
                     *oids
                 )
             except Exception as e:
-                raise NagiosUnknown('''Unexpected error during SNMP %s query !\nHost: %s\nCommunity: %s\nOID: %s\nMessage: %s''' % (
-                    self.__snmpcmd.upper(), self.__probe._hostaddress, self.__probe._community, oids, e))
+                raise NagiosUnknown(
+                    '''Unexpected error during SNMP %s query !\nHost: %s\nCommunity: %s\nOID: %s\nMessage: %s''' % (
+                        self.__snmpcmd.upper(), self.__probe._hostaddress, self.__probe._community, oids, e))
 
             if errorIndication is not None: raise NagiosUnknown('SNMP query error: %s' % errorIndication)
 
@@ -139,7 +144,6 @@ class ProbeSNMP(Probe):
 
             return results
 
-            # Private methods for internal processing
         def __convert_oid_to_tuple(self, oid_str):
             logger.debug('-- Converting OID string to Tuple: %s' % oid_str)
             return tuple([int(chr) for chr in oid_str.split('.')])
@@ -153,6 +157,7 @@ class ProbeSNMP(Probe):
         """
         Represent a SNMP Table.
         """
+
         def __init__(self, columns, primary_key=''):
             logger.debug('')
             logger.debug('=== BEGIN NEW SNMP TABLE ===')
@@ -176,10 +181,14 @@ class ProbeSNMP(Probe):
                     for colname, coldatas in self.__cols.viewitems():
                         for col in coldatas:
                             if keyindex == col['index']:
-                                logger.debug('\t\tAdd key \'%s\' (keyindex: %s, colindex: %s) with value \'%s\'.' % (colname, keyindex, col['index'], col['val']))
+                                logger.debug('\t\tAdd key \'%s\' (keyindex: %s, colindex: %s) with value \'%s\'.' % (
+                                colname, keyindex, col['index'], col['val']))
                                 colvalues.update({colname: col['val']})
                             if self.__table[key].has_key(colname):
-                                raise NagiosUnknown('Error: redefine your primary key oid \'%s\', you may loose data because primary keys are not unique in this OID ! I have found multiple values for key \'%s\'.' % (primary_key, key))
+                                raise NagiosUnknown(
+                                    'Error: redefine your primary key oid \'%s\', you may loose data because primary ' \
+                                    'keys are not unique in this OID ! I have found multiple values for key \'%s\'.'
+                                    % (primary_key, key))
 
                     self.__table[key].update(colvalues)
 
@@ -205,33 +214,24 @@ class ProbeSNMP(Probe):
 
         if 'ProbeSNMP' == self.__class__.__name__: logger.debug('=== END PROBE INIT ===')
 
-    # Public methods
-    # ==============
-    #
-    def get(self, index=False, **kwargs):
+    def get(self, oidstable, show_index=False):
         """
         Query a SNMP OID using Get command.
         """
-        query = self.__query(show_index=index, **kwargs)
+        query = self.__SNMPQuery(self, oidstable, show_index=show_index)
         return query.execute()
 
-    def getnext(self, index=False, **kwargs):
+    def getnext(self, oidstable, show_index=False):
         """
         Query a SNMP OID using Getnext command.
         """
-        query = self.__query(snmpcmd='getnext', show_index=index, **kwargs)
+        query = self.__SNMPQuery(self, oidstable, snmpcmd='getnext', show_index=show_index)
         return query.execute()
 
-    def table(self, primary_key='', **kwargs):
+    def table(self, oidstable, primary_key=''):
         """
         Query a SNMP OID and return data as a table of values.
         """
-        columns = self.__query(snmpcmd='getnext', show_index=True, **kwargs).execute()
+        columns = self.__SNMPQuery(self, oidstable, snmpcmd='getnext', show_index=True).execute()
         table = self.__SNMPTable(columns, primary_key)
         return table
-
-    # Private methods
-    # ==============
-    #
-    def __query(self, snmpcmd='get', show_index=False, **kwargs):
-        return self.__SNMPQuery(self, kwargs, snmpcmd, with_index=show_index)
