@@ -19,38 +19,36 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #===============================================================================
 
+# TODO: Convert to unittest.
+
 import sys
 from pprint import pprint
+
 sys.path.insert(0, '..')
 
 from monitoring.nagios.plugin import NagiosPluginSNMP
 
 plugin = NagiosPluginSNMP(version='1.0', description='Test SNMPQuery class')
 
-query_get = plugin.snmp.get(name='1.3.6.1.4.1.1588.2.1.1.1.6.2.1.36.65',
-                        alias='1.3.6.1.4.1.1588.2.1.1.1.6.2.1.37.65',
-                        crc='1.3.6.1.4.1.1588.2.1.1.1.6.2.1.22.65',
-                        index=True,
-)
-pprint(query_get)
+query_get = plugin.snmp.get({
+    'name': '1.3.6.1.4.1.1588.2.1.1.1.6.2.1.36.65',
+    'alias': '1.3.6.1.4.1.1588.2.1.1.1.6.2.1.37.65',
+    'crc': '1.3.6.1.4.1.1588.2.1.1.1.6.2.1.22.65',
+    })
 
 print '=' * 80
 
-query_getnext = plugin.snmp.getnext(
-    name='1.3.6.1.4.1.1588.2.1.1.1.6.2.1.36',
-    alias='1.3.6.1.4.1.1588.2.1.1.1.6.2.1.37',
-    crc='1.3.6.1.4.1.1588.2.1.1.1.6.2.1.22',
-    index=True,
-)
-pprint(query_getnext)
+query_getnext = plugin.snmp.getnext({
+    'name': '1.3.6.1.4.1.1588.2.1.1.1.6.2.1.36',
+    'alias': '1.3.6.1.4.1.1588.2.1.1.1.6.2.1.37',
+    'crc': '1.3.6.1.4.1.1588.2.1.1.1.6.2.1.22',
+    }, show_index=False)
 
 print '=' * 80
 
-query_table = plugin.snmp.table(
-    name='1.3.6.1.4.1.1588.2.1.1.1.6.2.1.36',
-    alias='1.3.6.1.4.1.1588.2.1.1.1.6.2.1.37',
-    crc='1.3.6.1.4.1.1588.2.1.1.1.6.2.1.22',
-    primary_key='alias',
-)
-print(query_table)
-print query_table['6/2']['crc']
+query_table = plugin.snmp.table({
+    'indexes': '1.3.6.1.4.1.1588.2.1.1.1.6.2.1.1',
+    'name': '1.3.6.1.4.1.1588.2.1.1.1.6.2.1.36',
+    'alias': '1.3.6.1.4.1.1588.2.1.1.1.6.2.1.37',
+    'crc': '1.3.6.1.4.1.1588.2.1.1.1.6.2.1.22',
+    }, primary_key='indexes')
