@@ -18,9 +18,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #===============================================================================
 
-""":mod:`nagppt.utility` -- Some misc utility functions."""
-
 from __future__ import division
+import logging as log
+
+logger = log.getLogger('monitoring.nagios.plugin.utilities')
 
 def ip_rm_leading_zero(ip):
     """
