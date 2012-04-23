@@ -1,6 +1,6 @@
 # Requirements to deploy this code.
 
 Fabric>=1.4.0
-pysnmp>=4.1.9
+pysnmp>=4.1
 pygraphviz>=1.0
 
