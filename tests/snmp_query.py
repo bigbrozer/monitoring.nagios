@@ -22,7 +22,6 @@
 # TODO: Convert to unittest.
 
 import sys
-from pprint import pprint
 
 sys.path.insert(0, '..')
 
@@ -34,21 +33,14 @@ query_get = plugin.snmp.get({
     'name': '1.3.6.1.4.1.1588.2.1.1.1.6.2.1.36.65',
     'alias': '1.3.6.1.4.1.1588.2.1.1.1.6.2.1.37.65',
     'crc': '1.3.6.1.4.1.1588.2.1.1.1.6.2.1.22.65',
-    })
+})
+print query_get
 
 print '=' * 80
 
 query_getnext = plugin.snmp.getnext({
-    'name': '1.3.6.1.4.1.1588.2.1.1.1.6.2.1.36',
-    'alias': '1.3.6.1.4.1.1588.2.1.1.1.6.2.1.37',
-    'crc': '1.3.6.1.4.1.1588.2.1.1.1.6.2.1.22',
-    }, show_index=False)
-
-print '=' * 80
-
-query_table = plugin.snmp.table({
     'indexes': '1.3.6.1.4.1.1588.2.1.1.1.6.2.1.1',
-    'name': '1.3.6.1.4.1.1588.2.1.1.1.6.2.1.36',
     'alias': '1.3.6.1.4.1.1588.2.1.1.1.6.2.1.37',
-    'crc': '1.3.6.1.4.1.1588.2.1.1.1.6.2.1.22',
-    }, primary_key='indexes')
+})
+
+print query_getnext
