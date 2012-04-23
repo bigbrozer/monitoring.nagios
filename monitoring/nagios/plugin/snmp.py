@@ -22,10 +22,11 @@ import logging as log
 import os
 import sys
 
-from monitoring.nagios.plugin.base import NagiosPlugin
 from monitoring.nagios.plugin.probes import ProbeSNMP
+from monitoring.nagios.plugin import NagiosPlugin
 
 logger = log.getLogger('monitoring.nagios.plugin.snmp')
+
 
 class NagiosPluginSNMP(NagiosPlugin):
     """Base for a standard SNMP Nagios plugin"""
