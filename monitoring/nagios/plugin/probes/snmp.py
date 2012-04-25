@@ -30,6 +30,34 @@ from monitoring.nagios.plugin.utilities import find_key_from_value
 logger = log.getLogger('monitoring.nagios.plugin.probes')
 
 
+class _OidValue(object):
+    """
+    Class that represents a value from an OID.
+    """
+
+    def __init__(self, varBind):
+        oid, value = varBind
+
+        self.oid = oid.prettyPrint()
+        self.value = value
+
+        logger.debug('-- Instance of OidValue created: %r' % self)
+
+    def pretty(self):
+        """Return the pretty format of a value."""
+        return self.value.prettyPrint()
+
+    def __str__(self):
+        return self.value.prettyPrint()
+
+    def __repr__(self):
+        return '{0}({1}, {2})'.format(
+            self.__class__.__name__,
+            repr(self.oid),
+            repr(self.value),
+        )
+
+
 class _SNMPQuery(object):
     """
     Class that construct a SNMP query. This is used internally. Should not be used separatly.
@@ -75,7 +103,7 @@ class _SNMPQuery(object):
                     self.__snmpcmd.upper(), self.__probe._hostaddress, self.__probe._community, oid, e))
 
         logger.debug('Returned varBinds:')
-        logger.debug(pformat(varBinds, indent=8))
+        logger.debug(pformat(varBinds, indent=4))
 
         return varBinds
 
@@ -96,26 +124,22 @@ class _SNMPQuery(object):
             varBindsTable.extend(self.__get_raw_oid_values(oid))
 
         # Map varBinds to the user provided name for OIDs
-        for datas in varBindsTable:
-            if type(datas) is list:
-                for varBind in datas:
-                    oid, value = varBind
-                    index = oid[-1]
-                    oid_name = find_key_from_value(self.__oids, oid.prettyPrint())
+        for varBinds in varBindsTable:
+            if type(varBinds) is list:
+                for varBind in varBinds:
+                    data = _OidValue(varBind)
+                    oid_name = find_key_from_value(self.__oids, data.oid)
 
                     if not results.has_key(oid_name):
                         results[oid_name] = []
 
-                    results[oid_name].append((index, value))
+                    results[oid_name].append(data)
             else:
-                oid, value = datas
-                index = oid[-1]
-                oid_name = find_key_from_value(self.__oids, oid.prettyPrint())
+                data = _OidValue(varBinds)
+                oid_name = find_key_from_value(self.__oids, data.oid)
 
-                results[oid_name] = (index, value)
+                results[oid_name] = data
 
-        logger.debug('Returned results:')
-        logger.debug(pformat(results, indent=4))
         logger.debug('=== END SNMP QUERY ===')
 
         return results
