@@ -18,9 +18,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #===============================================================================
 
-from pprint import pformat
 import logging as log
+from pprint import pformat
 from pysnmp.entity.rfc3413.oneliner import cmdgen
+from UserDict import IterableUserDict
 
 from monitoring.nagios.plugin.probes import Probe
 from monitoring.nagios.plugin.exceptions import NagiosUnknown
@@ -29,9 +30,9 @@ from monitoring.nagios.plugin.utilities import find_key_from_value
 logger = log.getLogger('monitoring.nagios.plugin.probes')
 
 
-class SNMPQuery(object):
+class _SNMPQuery(object):
     """
-    Class that construct a SNMP query.
+    Class that construct a SNMP query. This is used internally. Should not be used separatly.
     """
 
     def __init__(self, probe, oidstable, snmpcmd='get'):
@@ -39,12 +40,14 @@ class SNMPQuery(object):
         self.__oids = oidstable
         self.__snmpcmd = snmpcmd
 
-    def __get_raw_oid_values(self, oid):
+    def __get_raw_oid_values(self, oidinfo):
         """
-                    Launch a SNMP query on a OID, return raw data as a list.
-                    """
+        Launch a SNMP query on a OID (name, oid), return raw data as a list.
+        """
 
-        logger.debug('-- Probe OID: %s ...' % oid)
+        name, oid = oidinfo
+
+        logger.debug('-- Probing OID \'%s\': %s ...' % (name, oid))
 
         # Define SNMP command to use
         if self.__snmpcmd == 'get':
@@ -85,12 +88,11 @@ class SNMPQuery(object):
         logger.debug('=== BEGIN SNMP %s QUERY ===' % self.__snmpcmd.upper())
 
         # Prepare OIDs to fetch
-        oids = self.__oids.values()
         varBindsTable = []
         results = {}
 
         # Fetch OID values
-        for oid in oids:
+        for oid in self.__oids.iteritems():
             varBindsTable.extend(self.__get_raw_oid_values(oid))
 
         # Map varBinds to the user provided name for OIDs
@@ -107,7 +109,6 @@ class SNMPQuery(object):
                     results[oid_name].append((index, value))
             else:
                 oid, value = datas
-                print datas
                 index = oid[-1]
                 oid_name = find_key_from_value(self.__oids, oid.prettyPrint())
 
@@ -127,6 +128,39 @@ class SNMPQuery(object):
         """Convert an OID tuple representation to a string \"1.3.6...\"."""
         oid_str = [str(i) for i in oid_tuple]
         return ".".join(oid_str)
+
+
+class _SNMPTable(IterableUserDict):
+    """
+    Construct a SNMP table. This is not a full table like in MIBs.
+    """
+
+
+    def __init__(self, probe, columns):
+        logger.debug('=== BEGIN NEW SNMP TABLE===')
+
+        # This is the SNMP probe that handle SNMP communication
+        self.__probe = probe
+
+        # Get indexes and oid values
+        indexes = self.__probe.getnext({'indexes': columns.pop('indexes')})['indexes']
+
+        # Append index to all OIDs
+        values = dict.fromkeys(columns, list())
+        for i, index in indexes:
+            cols = {}
+            for name, oid in columns.viewitems():
+                o = '%s.%s' % (oid, index)
+                cols[name] = o
+            # Query values
+            results = self.__probe.get(cols)
+            for k, v in results.viewitems():
+                values[k].append(v)
+                print values
+
+        IterableUserDict.__init__(self, values)
+
+        logger.debug('=== BEGIN NEW SNMP TABLE===')
 
 
 class ProbeSNMP(Probe):
@@ -159,12 +193,18 @@ class ProbeSNMP(Probe):
         """
         Query a SNMP OID using Get command.
         """
-        query = SNMPQuery(self, oidstable)
+        query = _SNMPQuery(self, oidstable)
         return query.execute()
 
     def getnext(self, oidstable):
         """
         Query a SNMP OID using Getnext command.
         """
-        query = SNMPQuery(self, oidstable, snmpcmd='getnext')
+        query = _SNMPQuery(self, oidstable, snmpcmd='getnext')
         return query.execute()
+
+    def table(self, columns):
+        """
+        Query SNMP OIDs and format results like SNMP table but use a dict.
+        """
+        raise NotImplementedError('Method table() of ProbeSNMP instances will be implemented in next release !')
