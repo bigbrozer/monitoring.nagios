@@ -38,6 +38,7 @@ class _OidValue(object):
     def __init__(self, varBind):
         oid, value = varBind
 
+        self.index = oid[-1]
         self.oid = oid.prettyPrint()
         self.value = value
 
