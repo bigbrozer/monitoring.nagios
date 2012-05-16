@@ -48,7 +48,8 @@ def get_satellites_list():
 #
 env.roledefs = {
     'central'       : ['monitoring-dc.app.corp',],          # The central instance
-    'admin'         : ['frseldev0002.sel.fr.corp',],        # Monitoring Admin Server
+    'admin'         : ['frseldev0002.sel.fr.corp',          # Monitoring Admin Servers
+                       'euedcmon0009.edc.eu.corp'],
     'satellite_tpl' : ['frseltmp0001.sel.fr.corp',],        # Nagios Satellite Template
     'satellite_dev' : ['frseldev0001.sel.fr.corp',],        # Nagios Dev Satellite
     'mas'           : ['mas-master.app.corp',],             # MAS - Monitoring Automation Server
