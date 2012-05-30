@@ -98,7 +98,7 @@ class NagiosPlugin(object):
         self.parser.add_argument('--debug', action='store_true', dest='debug', help='Show debug information, Nagios may truncate output')
         self.parser.add_argument('--version', action='version', version='%s %s' % (self.parser.prog, self.version))
 
-        self.required_args = self.parser.add_argument_group('required arguments')
+        self.required_args = self.parser.add_argument_group('Plugin arguments', 'This arguments are required by the plugin.')
 
     def define_plugin_arguments(self):
         """
