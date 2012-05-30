@@ -30,9 +30,11 @@ setup(name='monitoring',
     license='GPL',
     packages=find_packages(),
     install_requires = [
-        'Fabric>=1.4',
         'pysnmp>=4.1',
-        'pygraphviz>=1.0',
         'ssh>=1.7.13',
     ],
+    extras_require = {
+        'automation':  ['Fabric>=1.4'],
+        'graph': ['pygraphviz>=1.0'],
+    },
 )
