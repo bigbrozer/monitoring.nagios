@@ -29,4 +29,10 @@ setup(name='monitoring',
     author_email='besancon.vincent@gmail.com',
     license='GPL',
     packages=find_packages(),
+    install_requires = [
+        'Fabric>=1.4',
+        'pysnmp>=4.1',
+        'pygraphviz>=1.0',
+        'ssh>=1.7.13',
+    ],
 )
