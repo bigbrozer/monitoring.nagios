@@ -1,3 +1,3 @@
 import monitoring.log
 
-__version__ = '1.0.41'
+__version__ = '1.0.50'
