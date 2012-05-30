@@ -2,7 +2,7 @@
 #===============================================================================
 # Filename      : snmp
 # Author        : Vincent BESANCON <besancon.vincent@gmail.com>
-# Description   : 
+# Description   : Module that define a SNMP probe.
 #-------------------------------------------------------------------------------
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
