@@ -27,4 +27,4 @@ from monitoring.fabric import servers
 @roles('satellites', 'satellite_dev', 'satellite_tpl')
 def upgrade():
     """Upgrade Monitoring package."""
-    sudo('pip install git+http://monitoring-dc.app.corp/git/lib/monitoring.git --upgrade')
+    sudo('http_proxy=\"http://monitoring-dc.app.corp:8080/\" pip install git+http://monitoring-dc.app.corp/git/lib/monitoring.git')
