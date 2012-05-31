@@ -19,11 +19,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #===============================================================================
 
-# TODO: show monitoring package version with --version.
-
 import sys
 import os
 import argparse
+import traceback
+import pickle
 from pprint import pformat
 import logging as log
 
@@ -72,6 +72,9 @@ class NagiosPlugin(object):
         logger.debug('Processed command line arguments:')
         logger.debug(pformat(vars(self.options), indent=4))
 
+        # Pickle file name
+        self.picklefile = '/var/tmp/{plugin.name}_{opt.hostname}.pkl'.format(plugin=self, opt=self.options)
+
         # Sanity checks for plugin arguments
         self.verify_plugin_arguments()
 
@@ -118,6 +121,63 @@ class NagiosPlugin(object):
         Parse arguments and values.
         """
         self.options = self.parser.parse_args()
+
+    def load_data(self):
+        """
+        Load pickled data.
+
+        :return: list
+        :raise IOError: raise IOError if pickle file is not found / readable.
+        """
+        logger.debug('-- Try to find pickle file \'%s\'...' % self.picklefile)
+
+        if os.path.isfile(self.picklefile):
+            logger.debug('\t - Pickle file is found, processing.')
+            data = list()
+            try:
+                with open(self.picklefile, 'rb') as pkl:
+                    data = pickle.load(pkl)
+            except (IOError, IndexError):
+                message = """Unable to read retention file !
+If you see this message that would mean that the retention file located in \'%s\' does not exists or it is not
+readable. Check permissions or try to delete it to generate a new one. It may be possible that this version of this
+plugin has changed and the retention file is outdated, so delete it if this is the case.
+
+%s
+""" % (self.picklefile, traceback.format_exc(limit=1))
+                self.unknown(message)
+
+            logger.debug('\t - Pickle data found, loading %d records.' % len(data))
+            return data
+        else:
+            logger.debug('\t - No pickle file to load, continue.')
+            raise IOError('Pickle file not found. You may save something first.')
+
+    def save_data(self, data, limit=100):
+        """
+        Save data into a pickle file.
+
+        :param data: A list of objects to save in the pickle file.
+        :type data: list
+        """
+        logger.debug('-- Saving data to file \'%s\'...' % self.picklefile)
+        try:
+            # Avoid having a large pickle file if above 100 recorded values (plugin executions)
+            if limit:
+                while len(data) > limit:
+                    logger.debug('\t - Records limit reached, purging old records.')
+                    del data[0]
+
+            # Save data with pickle module
+            with open(self.picklefile, 'wb') as pkl:
+                pickle.dump(data, pkl)
+        except IOError:
+            message = """Unable to save retention file !
+If you see this message that would mean that the retention file located in \'%s\' is not writable. Check permissions.
+
+%s
+""" % (self.picklefile, traceback.format_exc(limit=1))
+            self.unknown(message)
 
     # Nagios status methods
     def ok(self, msg):
