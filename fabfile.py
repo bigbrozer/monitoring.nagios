@@ -24,7 +24,7 @@ from fabric.api import task, sudo, roles
 from monitoring.fabric import servers
 
 @task
-@roles('satellites', 'admin', 'satellite_dev', 'satellite_tpl')
+@roles('satellites', 'satellite_dev', 'satellite_tpl')
 def upgrade():
     """Upgrade Monitoring package."""
     sudo('pip install git+http://monitoring-dc.app.corp/git/lib/monitoring.git --upgrade')
