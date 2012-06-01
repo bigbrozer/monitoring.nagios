@@ -57,9 +57,6 @@ class NagiosPlugin(object):
         self.define_plugin_arguments()
         self.__parse_plugin_arguments()
 
-        # Plugin initialization
-        self.initialize()
-
         # Check if debug mode is active
         if self.options.debug:
             # Set monitoring logger option
@@ -74,6 +71,9 @@ class NagiosPlugin(object):
         logger.debug('\tDesc: %s' % self.description)
         logger.debug('Processed command line arguments:')
         logger.debug(pformat(vars(self.options), indent=4))
+
+        # Plugin initialization
+        self.initialize()
 
         # Pickle file name
         self.picklefile = '/var/tmp/{plugin.name}_{opt.hostname}.pkl'.format(plugin=self, opt=self.options)
