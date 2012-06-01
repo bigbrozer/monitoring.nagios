@@ -57,6 +57,9 @@ class NagiosPlugin(object):
         self.define_plugin_arguments()
         self.__parse_plugin_arguments()
 
+        # Plugin initialization
+        self.initialize()
+
         # Check if debug mode is active
         if self.options.debug:
             # Set monitoring logger option
@@ -78,17 +81,14 @@ class NagiosPlugin(object):
         # Sanity checks for plugin arguments
         self.verify_plugin_arguments()
 
-        # Second level of initialization
-        self.initialize()
-
         if 'NagiosPlugin' == self.__class__.__name__: logger.debug('=== END PLUGIN INIT ===')
 
     def initialize(self):
         """
-        Second level of initialization.
+        Plugin level initialization.
 
-        Overrides this method if you need to init some attributes after __init__.
-        Do the same things but at plugin level.
+        Overrides this method if you need to init some attributes after __init__. This avoid to ovverrides __init__
+        base class.
         """
         logger.debug('Calling second level of initialization.')
 
@@ -120,7 +120,10 @@ class NagiosPlugin(object):
         """
         Parse arguments and values.
         """
-        self.options = self.parser.parse_args()
+        try:
+            self.options = self.parser.parse_args()
+        except Exception as e:
+            self.unknown('Error argument parser: %s' % e)
 
     def load_data(self):
         """
@@ -131,9 +134,9 @@ class NagiosPlugin(object):
         """
         logger.debug('-- Try to find pickle file \'%s\'...' % self.picklefile)
 
+        data = None
         if os.path.isfile(self.picklefile):
             logger.debug('\t - Pickle file is found, processing.')
-            data = list()
             try:
                 with open(self.picklefile, 'rb') as pkl:
                     data = pickle.load(pkl)
@@ -153,7 +156,7 @@ plugin has changed and the retention file is outdated, so delete it if this is t
             logger.debug('\t - No pickle file to load, continue.')
             raise IOError('Pickle file not found. You may save something first.')
 
-    def save_data(self, data, limit=100):
+    def save_data(self, data, limit=0):
         """
         Save data into a pickle file.
 
@@ -162,8 +165,8 @@ plugin has changed and the retention file is outdated, so delete it if this is t
         """
         logger.debug('-- Saving data to file \'%s\'...' % self.picklefile)
         try:
-            # Avoid having a large pickle file if above 100 recorded values (plugin executions)
-            if limit:
+            # Avoid having a large pickle file if above limit of recorded values (plugin executions)
+            if limit and type(data) is list:
                 while len(data) > limit:
                     logger.debug('\t - Records limit reached, purging old records.')
                     del data[0]
