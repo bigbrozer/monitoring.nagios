@@ -24,6 +24,22 @@ import sys
 
 from monitoring.nagios.plugin import NagiosPlugin
 
+
+class PluginCustom(NagiosPlugin):
+    def initialize(self):
+        super(PluginCustom, self).initialize()
+        self.toto = 'youpie'
+
+    def define_plugin_arguments(self):
+        super(PluginCustom, self).define_plugin_arguments()
+        self.parser.add_argument('-t', action='store_true', dest='toto')
+
+    def verify_plugin_arguments(self):
+        super(PluginCustom, self).verify_plugin_arguments()
+        if self.options.toto:
+            self.toto = 'yourah'
+
+
 class TestBasePluginPickle(unittest.TestCase):
     """
     Test pickling data.
@@ -74,3 +90,31 @@ class TestBasePluginPickle(unittest.TestCase):
         l = self.plugin.load_data()
         self.assertEqual(20, l[0])
 
+
+class TestBasePlugin(unittest.TestCase):
+    """
+    Test base plugin class.
+    """
+
+    def setUp(self):
+        sys.argv[1] = '-H'
+        sys.argv[2] = 'monitoring-dc.app.corp'
+        self.plugin = NagiosPlugin()
+
+    def tearDown(self):
+        try:
+            del sys.argv[3]
+        except:
+            pass
+
+    def test_plugin_initialize(self):
+        p = PluginCustom()
+        self.assertEqual('youpie', p.toto)
+
+    def test_plugin_initialize_from_args(self):
+        sys.argv.append('-t')
+        p = PluginCustom()
+        self.assertEqual('yourah', p.toto)
+
+    def test_arguments_parser(self):
+        self.assertEqual('monitoring-dc.app.corp', self.plugin.options.hostname)
