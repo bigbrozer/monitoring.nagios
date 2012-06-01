@@ -72,11 +72,17 @@ class NagiosPlugin(object):
         logger.debug('Processed command line arguments:')
         logger.debug(pformat(vars(self.options), indent=4))
 
+        # Pickle file name path and default pattern
+        self._picklefile_path = '/var/tmp'
+        self._picklefile_name = '{plugin.name}_{opt.hostname}'.format(plugin=self, opt=self.options)
+        self.picklefile_pattern = 'p'
+
         # Plugin initialization
         self.initialize()
 
-        # Pickle file name
-        self.picklefile = '/var/tmp/{plugin.name}_{opt.hostname}.pkl'.format(plugin=self, opt=self.options)
+        # Set the full pickle file name and path (can be modified in second level of init)
+        self.picklefile = '{0}/{1}_{2}.pkl'.format(self._picklefile_path, self._picklefile_name,
+                                                   self.picklefile_pattern)
 
         # Sanity checks for plugin arguments
         self.verify_plugin_arguments()
