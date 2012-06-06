@@ -26,5 +26,5 @@ from monitoring.fabric import servers
 @task
 @roles('satellites', 'satellite_dev', 'satellite_tpl')
 def upgrade():
-    """Upgrade Monitoring package."""
-    sudo('http_proxy=\"http://monitoring-dc.app.corp:8080/\" pip install git+http://monitoring-dc.app.corp/git/lib/monitoring.git')
+    """Upgrade monitoring.nagios package."""
+    sudo('http_proxy=\"http://monitoring-dc.app.corp:8080/\" pip install git+http://monitoring-dc.app.corp/git/lib/monitoring.nagios.git')

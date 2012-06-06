@@ -20,21 +20,21 @@
 #===============================================================================
 
 from setuptools import setup, find_packages
-import monitoring
+import monitoring.nagios
 
-setup(name='monitoring',
-    version=monitoring.__version__,
-    description='Monitoring Python Package',
-    author='Vincent BESANCON',
-    author_email='besancon.vincent@gmail.com',
-    license='GPL',
-    packages=find_packages(),
+setup(name = 'monitoring.nagios',
+    version = monitoring.nagios.__version__,
+    description = 'Monitoring Python Package',
+    author = 'Vincent BESANCON',
+    author_email = 'besancon.vincent@gmail.com',
+    license = 'GPL',
+    namespace_packages = ['monitoring'],
+    packages = find_packages(),
     install_requires = [
         'pysnmp>=4.1',
         'ssh>=1.7.13',
     ],
     extras_require = {
-        'automation':  ['Fabric>=1.4'],
         'graph': ['pygraphviz>=1.0'],
     },
 )
