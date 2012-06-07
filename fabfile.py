@@ -20,11 +20,24 @@
 # along with NagiosPPT.  If not, see <http://www.gnu.org/licenses/>.
 #===============================================================================
 
+"""
+Fabric tasks for project monitoring.nagios.
+"""
+
 from fabric.api import task, sudo, roles
 from monitoring.fabric import servers
 
+#-------------------------------------------------------------------------------
 @task
 @roles('satellites', 'satellite_dev', 'satellite_tpl')
-def upgrade():
-    """Upgrade monitoring.nagios package."""
+def install():
+    """Install / upgrade package on all Nagios satellites."""
     sudo('http_proxy=\"http://monitoring-dc.app.corp:8080/\" pip install git+http://monitoring-dc.app.corp/git/lib/monitoring.nagios.git')
+
+#-------------------------------------------------------------------------------
+@task
+@roles('satellites', 'satellite_dev', 'satellite_tpl')
+def uninstall():
+    """Uninstall package on all Nagios satellites."""
+    sudo('pip uninstall -y monitoring.nagios')
+
