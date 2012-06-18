@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #===============================================================================
-# Filename      : monitoring.nagios.plugin.probes.secureshell
+# Filename      : secureshell
 # Author        : Vincent BESANCON <besancon.vincent@gmail.com>
 # Description   : Module that define a SSH probe.
 #-------------------------------------------------------------------------------
@@ -21,11 +21,11 @@
 import logging as log
 import string
 
-from monitoring.nagios.plugin.probes import Probe
+from monitoring.nagios.probes import Probe
 from monitoring.nagios.plugin.exceptions import NagiosUnknown
 import ssh
 
-logger = log.getLogger('monitoring.nagios.plugin.probes')
+logger = log.getLogger('monitoring.nagios.probes')
 
 
 class ProbeSSH(Probe):

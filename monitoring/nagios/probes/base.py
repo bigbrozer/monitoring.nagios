@@ -20,7 +20,7 @@
 
 import logging as log
 
-logger = log.getLogger('monitoring.nagios.plugin.probes')
+logger = log.getLogger('monitoring.nagios.probes')
 
 class Probe(object):
     """

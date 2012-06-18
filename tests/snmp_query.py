@@ -26,7 +26,7 @@ import sys
 sys.path.insert(0, '..')
 
 from monitoring.nagios.plugin import NagiosPluginSNMP
-from monitoring.nagios.plugin.probes import ProbeSNMP
+from monitoring.nagios.probes import ProbeSNMP
 
 plugin = NagiosPluginSNMP(version='1.0', description='Test SNMPQuery class')
 

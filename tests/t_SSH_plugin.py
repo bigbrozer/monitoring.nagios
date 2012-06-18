@@ -22,7 +22,7 @@ import unittest
 import sys
 
 from monitoring.nagios.plugin import NagiosPluginSSH
-from monitoring.nagios.plugin.probes import ProbeSSH
+from monitoring.nagios.probes import ProbeSSH
 
 class TestPluginPubKey(unittest.TestCase):
     """

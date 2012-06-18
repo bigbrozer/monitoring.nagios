@@ -121,3 +121,19 @@ class NagiosOk(Exception):
     def __init__(self, msg):
         print "OK - %s" % msg
         raise SystemExit(0)
+
+class PluginError(StandardError):
+    """
+    Exception when a plugin error occur.
+    :param output: Message to show in Nagios status information output.
+    :type output: str
+    :param longoutput: Message to show in long output (extra infos).
+    :type longoutput: str
+    """
+    def __init__(self, output, longoutput, *args, **kwargs):
+        super(PluginError, self).__init__(*args, **kwargs)
+
+        self.message = '%s\n%s' % (output, longoutput)
+
+    def __str__(self):
+        return self.message

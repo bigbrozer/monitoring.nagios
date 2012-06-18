@@ -23,7 +23,7 @@ import os
 import sys
 
 from monitoring.nagios.plugin import NagiosPlugin
-from monitoring.nagios.plugin.probes import ProbeSSH
+from monitoring.nagios.probes import ProbeSSH
 
 logger = log.getLogger('monitoring.nagios.plugin.ssh')
 

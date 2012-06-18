@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 #===============================================================================
-# Filename      : log
+# Filename      : nagdeploy
 # Author        : Vincent BESANCON <besancon.vincent@gmail.com>
 # Description   : Manipulate log file returned by Nagios verification action.
 #-------------------------------------------------------------------------------
@@ -21,12 +21,12 @@
 import re
 
 # Exceptions
-class NagiosLogIOError(Exception):
+class NagiosVerificationIOError(Exception):
     """Triggered if there is a problem parsing the Nagios log file."""
     pass
 
 # Classes
-class Log(object):
+class VerificationLog(object):
     """This represents the Nagios log file as returned by nagverif.
 
        content attribute contains the full log file in memory.
@@ -42,7 +42,7 @@ class Log(object):
             with open(logfile, 'r') as log:
                 self.__content = log.read()
         except IOError as e:
-            raise NagiosLogIOError("Error with the Nagios log file: %s" % e)
+            raise NagiosVerificationIOError("Error with the Nagios log file: %s" % e)
 
         self.__parse_log()
 
