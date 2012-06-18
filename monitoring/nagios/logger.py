@@ -23,6 +23,11 @@
 import logging as log
 
 # Setup basic logging
-log.basicConfig(format='[%(levelname)s] %(message)s')
+log.basicConfig(format='[%(levelname)s] (%(module)s) %(message)s')
 logger = log.getLogger('monitoring')
 logger.setLevel(log.INFO)
+
+# TODO: find a way to show the correct module name where this is called.
+def debug_multiline(message):
+    for line in message.splitlines():
+        logger.debug("\t%s" % line)
