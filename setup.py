@@ -33,8 +33,8 @@ setup(name = 'monitoring.nagios',
     install_requires = [
         'pysnmp>=4.1',
         'ssh>=1.7.13',
-        'Cython',
-        'pymssql',
+        'Cython>=0.15',
+        'pymssql>=1.0.2',
     ],
     extras_require = {
         'graph': ['pygraphviz>=1.0'],
