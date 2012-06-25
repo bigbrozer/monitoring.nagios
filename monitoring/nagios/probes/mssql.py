@@ -84,3 +84,9 @@ class ProbeMSSQL(Probe):
             return cursor
         except pymssql.Error as e:
             raise PluginError('Error during query execution !\nQuery: %s' % query, e[1])
+
+    def close(self):
+        """
+        Close the connection.
+        """
+        self._db_connection.close()

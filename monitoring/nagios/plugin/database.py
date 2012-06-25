@@ -112,7 +112,7 @@ class NagiosPluginMSSQL(NagiosPlugin):
 
         :return: dict
         """
-        query = plugin.query("SELECT * FROM {0.database}.sys.sysfiles".format(self.options))
+        query = self.query("SELECT * FROM {0.database}.sys.sysfiles".format(self.options))
         db_size = {}
         for result in query:
             db_size[result['name']] = {
@@ -122,3 +122,9 @@ class NagiosPluginMSSQL(NagiosPlugin):
             }
 
         return db_size
+
+    def close(self):
+        """
+        Close the database connection.
+        """
+        self.mssql.close()
