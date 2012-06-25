@@ -18,6 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #===============================================================================
 
+from __future__ import division
 import logging as log
 import os
 import sys
@@ -30,6 +31,7 @@ from monitoring.nagios.probes import ProbeMSSQL
 logger = log.getLogger('monitoring.nagios.plugin.database')
 
 
+#TODO: write tests for this class.
 class NagiosPluginMSSQL(NagiosPlugin):
     """Base for a standard SSH Nagios plugin"""
 
@@ -89,7 +91,7 @@ class NagiosPluginMSSQL(NagiosPlugin):
         Execute a SQL query and fetch all data.
 
         :param sql_query: SQL query.
-        :type sql_query: str
+        :type sql_query: str, unicode
         :return: Results of the SQL query
         :rtype: list
         """
@@ -102,8 +104,21 @@ class NagiosPluginMSSQL(NagiosPlugin):
         except PluginError as e:
             self.unknown(e)
 
+    def get_db_size(self):
+        """
+        Get the size of the database connected on. Also return the used percent. This returns a dict with a key per
+        filename (eg. db.Data / db.Log) that is also a dict with keys 'size', 'maxsize' and 'used' (sizes are in
+        bytes and used in percent).
 
-if __name__ == '__main__':
-    from pprint import pprint
-    plugin = NagiosPluginMSSQL()
-    pprint(plugin.query('SELECT * FROM gIMM.sys.sysfiles'))
+        :return: dict
+        """
+        query = plugin.query("SELECT * FROM {0.database}.sys.sysfiles".format(self.options))
+        db_size = {}
+        for result in query:
+            db_size[result['name']] = {
+                'size': result['size'],
+                'maxsize': result['maxsize'],
+                'used': result['size'] / result['maxsize'] * 100,
+            }
+
+        return db_size
