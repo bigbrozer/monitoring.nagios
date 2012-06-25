@@ -73,6 +73,7 @@ class ProbeMSSQL(Probe):
     def execute(self, query):
         """
         Execute a SQL query.
+
         :param query: SQL query.
         :type query: str
         :return: pymssql.Cursor
@@ -82,4 +83,4 @@ class ProbeMSSQL(Probe):
             cursor.execute(query)
             return cursor
         except pymssql.Error as e:
-            raise PluginError('Error during query execution !', e[1])
+            raise PluginError('Error during query execution !\nQuery: %s' % query, e[1])
