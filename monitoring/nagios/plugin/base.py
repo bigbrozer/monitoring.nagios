@@ -48,9 +48,16 @@ class NagiosPlugin(object):
 
         Please avoid to override __init__ in derived classes. See :function:`initialize` to do this.
         """
+        # Plugin infos
         self.name = name
         self.version = version
         self.description = description
+
+        # Output handling
+        self._output = ""
+        self.shortoutput = ""
+        self.longoutput = []
+        self.perfdata = []
 
         # Initialize arguments stuff
         self.__init_plugin_arguments()
@@ -94,7 +101,8 @@ class NagiosPlugin(object):
         Plugin level initialization.
 
         Overrides this method if you need to init some attributes after __init__. This avoid to ovverrides __init__
-        base class.
+        in base class and also provide a way to init things before arguments sanity checks are run by
+        :py:func:`verify_plugin_arguments`.
         """
         logger.debug('Calling second level of initialization.')
 
@@ -187,6 +195,28 @@ If you see this message that would mean that the retention file located in \'%s\
 %s
 """ % (self.picklefile, traceback.format_exc(limit=1))
             self.unknown(message)
+
+    def output(self, substitute=None):
+        """
+        Construct and format the full string that should be returned to Nagios. Includes short output,
+        long output and perf data (if any).
+
+        :param substitute: A dict wih key/value pair that should be replaced in string (see :py:func:`str.format`).
+        :type substitute: dict
+
+        :return: str, unicode
+        """
+        if not substitute:
+            substitute = {}
+
+        self._output += "{0}".format(self.shortoutput)
+        if self.longoutput:
+            self._output = self._output.rstrip("\n")
+            self._output += "\n{0}".format("\n".join(self.longoutput))
+        if self.perfdata:
+            self._output = self._output.rstrip("\n")
+            self._output += " | {0}".format(" ".join(self.perfdata))
+        return self._output.format(**substitute)
 
     # Nagios status methods
     def ok(self, msg):
