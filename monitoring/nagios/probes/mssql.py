@@ -52,14 +52,15 @@ class ProbeMSSQL(Probe):
                                                                                                      username))
         try:
             self._db_connection = pymssql.connect(host=self._hostaddress,
-                                      user=username,
-                                      password=password,
-                                      database=database,
-                                      timeout=query_timeout,
-                                      login_timeout=login_timeout,
-                                      as_dict=True)
+                                                  user=username,
+                                                  password=password,
+                                                  database=database,
+                                                  timeout=query_timeout,
+                                                  login_timeout=login_timeout,
+                                                  as_dict=True)
         except pymssql.Error as e:
-            raise PluginError('Cannot connect to the database %s on server %s !' % (database, host), e.message[1])
+            raise PluginError('Cannot connect to the database %s on server %s !' % (database, host),
+                              "\n".join(list(e)))
 
     def _get_cursor(self):
         """
@@ -83,7 +84,7 @@ class ProbeMSSQL(Probe):
             cursor.execute(query)
             return cursor
         except pymssql.Error as e:
-            raise PluginError('Error during query execution !\nQuery: %s' % query, e[1])
+            raise PluginError('Error during query execution !\nQuery: %s' % query, e.message)
 
     def close(self):
         """
