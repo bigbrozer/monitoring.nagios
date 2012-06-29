@@ -123,6 +123,26 @@ class NagiosPluginMSSQL(NagiosPlugin):
 
         return db_size
 
+    def get_all_db_status(self):
+        """
+        Query the status of all databases on the connected SQL Server. Return a list of tuples [(db_name, db_state),
+        ...].
+
+        :return: list(tuple)
+        """
+        query_result = self.query(
+r"""SELECT db.name,
+db.create_date,
+db.collation_name,
+db.state_desc,
+sdb.filename
+from sys.databases db
+join sys.sysdatabases sdb
+on db.database_id= sdb.dbid""")
+
+        db_states = [(db['name'], db['state_desc']) for db in query_result]
+        return db_states
+
     def close(self):
         """
         Close the database connection.
