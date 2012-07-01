@@ -1,0 +1,39 @@
+.. class:: NagiosPluginSNMP(version='', description='')
+
+    Init a new Nagios plugin that is SNMP based.
+
+    :param version: the plugin version. Used by argument ``--version``.
+    :type version: str
+    :param description: the plugin description. Used by argument ``--help``.
+    :type description: str
+
+    When you create an instance of :class:`NagiosPluginSNMP`, you can access
+    instance attribute :attr:`snmp` which is an instance of :class:`ProbeSNMP`
+    to query the host.
+
+    You use :meth:`snmp.get` or :meth:`snmp.next` methods of :attr:`snmp` attribute to query
+    the host.
+    
+    .. attribute:: NagiosPluginSNMP.snmp
+
+        This is the default probe for the plugin. This is a :class:`ProbeSNMP`
+        object.
+
+        .. method:: NagiosPluginSNMP.snmp.get(oid_dict)
+
+            Execute a SNMP get command.
+
+            :param oid_dict: a dict with name for this OID as key and the dotted OID notation as its value.
+
+.. class:: ProbeSNMP(hostaddress, port=161, community='public', snmpv2=False)
+
+    Init a new Nagios plugin that is SNMP based.
+
+    :param hostaddress: the host address either FQDN or IP address.
+    :type hostaddress: str
+    :param port: the port on which SNMP agent listen (default: ``161``).
+    :type port: int
+    :param snmpv2: use SNMPv2c instead of SNMPv1 (default: ``False``).
+    :type port: bool
+
+

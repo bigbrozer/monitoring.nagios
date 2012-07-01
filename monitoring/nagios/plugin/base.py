@@ -37,17 +37,18 @@ logger = log.getLogger('monitoring.nagios.plugin.base')
 #
 class NagiosPlugin(object):
     """
-    Create a new Nagios plugin.
+    Initialize a new Nagios Plugin.
 
-    You may inherit from this class if you want to configure default behavior.
+    Please avoid to override __init__ in derived classes. See :func:`initialize` to do this.
+
+    :param name: the name of the plugin. This is set to the name of the file by default.
+    :param version: the version of the plugin. Set it to anything you want.
+    :type version: str, unicode
+    :param description: a description of what is doing the plugin.
+    :type description: str, unicode
     """
 
     def __init__(self, name=os.path.basename(sys.argv[0]), version='', description=''):
-        """
-        Initialize a new Nagios Plugin.
-
-        Please avoid to override __init__ in derived classes. See :function:`initialize` to do this.
-        """
         # Plugin infos
         self.name = name
         self.version = version

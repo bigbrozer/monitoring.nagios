@@ -29,7 +29,9 @@ logger = log.getLogger('monitoring.nagios.plugin.snmp')
 
 
 class NagiosPluginSNMP(NagiosPlugin):
-    """Base for a standard SNMP Nagios plugin"""
+    """
+    A standard SNMP Nagios plugin.
+    """
 
     def __init__(self, name=os.path.basename(sys.argv[0]), version='', description=''):
         super(NagiosPluginSNMP, self).__init__(name, version, description)
