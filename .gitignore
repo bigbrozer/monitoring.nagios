@@ -1,6 +1,7 @@
 .idea/workspace.xml
 build/
 dist/
+docs/_build/
 *.pyc
 *.swp
 *.egg-info
