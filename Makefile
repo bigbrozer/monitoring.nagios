@@ -1,9 +1,13 @@
 clean: py-bytecode backup-files
 
-#dochtml:
-#	@echo 'Creating HTML documentation...'
-#	@(cd doc; $(MAKE) html)
-#	@xdg-open doc/build/html/index.html
+doc: clean-doc
+	@echo 'Creating HTML documentation...'
+	@(cd docs; $(MAKE) html)
+	@xdg-open docs/_build/html/index.html
+
+clean-doc:
+	@echo 'Cleaning documentation build...'
+	@(cd docs; $(MAKE) clean )
 
 py-bytecode:
 	@echo 'Cleaning Python byte code files...'
@@ -18,6 +22,4 @@ backup-files:
 	@find . -name '*~' -exec rm -f {} +
 	@find . -name '#*#' -exec rm -f {} +
 
-#doc-build:
-#	@echo 'Cleaning documentation build...'
-#	@(cd doc; $(MAKE) clean )
+
