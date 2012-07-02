@@ -24,7 +24,10 @@
 Fabric tasks for project monitoring.nagios.
 """
 
-from fabric.api import task, sudo, roles
+import os
+
+from fabric.api import *
+from fabric.contrib.project import rsync_project
 from monitoring.fabric import servers
 
 #-------------------------------------------------------------------------------
@@ -32,12 +35,17 @@ from monitoring.fabric import servers
 @roles('satellites', 'satellite_dev', 'satellite_tpl')
 def install():
     """Install / upgrade package on all Nagios satellites."""
-    sudo('http_proxy=\"http://monitoring-dc.app.corp:8080/\" pip install git+http://monitoring-dc.app.corp/git/lib/monitoring.nagios.git')
+    sudo('pip uninstall -y monitoring.nagios')
+    sudo('http_proxy=\"http://monitoring-dc.app.corp:8080/\" pip install --upgrade git+http://monitoring-dc.app.corp/git/lib/monitoring.nagios.git')
 
 #-------------------------------------------------------------------------------
 @task
-@roles('satellites', 'satellite_dev', 'satellite_tpl')
-def uninstall():
-    """Uninstall package on all Nagios satellites."""
-    sudo('pip uninstall -y monitoring.nagios')
+@roles('central')
+def doc():
+    """Upload doc to central server"""
+    DOCROOT = '/var/www/project'
+    DOCDIR = os.path.join(DOCROOT, 'monitoring.nagios')
+
+    local('make doc')
+    rsync_project(DOCDIR, 'docs/_build/html/', delete=True)
 

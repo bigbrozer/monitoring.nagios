@@ -3,7 +3,6 @@ clean: py-bytecode backup-files
 doc: clean-doc
 	@echo 'Creating HTML documentation...'
 	@(cd docs; $(MAKE) html)
-	@xdg-open docs/_build/html/index.html
 
 clean-doc:
 	@echo 'Cleaning documentation build...'
