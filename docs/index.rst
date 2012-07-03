@@ -14,6 +14,7 @@ Contents:
     :maxdepth: 2
 
     new_plugin
+    snmp
     api
 
 
