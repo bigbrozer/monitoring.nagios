@@ -197,13 +197,15 @@ If you see this message that would mean that the retention file located in \'%s\
 """ % (self.picklefile, traceback.format_exc(limit=1))
             self.unknown(message)
 
-    def output(self, substitute=None):
+    def output(self, substitute=None, long_output_limit=20):
         """
         Construct and format the full string that should be returned to Nagios. Includes short output,
         long output and perf data (if any).
 
-        :param substitute: A dict wih key/value pair that should be replaced in string (see :py:func:`str.format`).
+        :param substitute: dict wih key/value pair that should be replaced in string (see :py:func:`str.format`).
         :type substitute: dict
+        :param long_output_limit: limit the number of lines of long output, default to ``20``. Set it to ``None`` for no limit.
+        :type long_output_limit: int, None
 
         :return: str, unicode
         """
@@ -213,7 +215,12 @@ If you see this message that would mean that the retention file located in \'%s\
         self._output += "{0}".format(self.shortoutput)
         if self.longoutput:
             self._output = self._output.rstrip("\n")
-            self._output += "\n{0}".format("\n".join(self.longoutput))
+            self._output += "\n{0}".format("\n".join(self.longoutput[:long_output_limit]))
+            if long_output_limit:
+                self._output += "\n(...showing only first {0} lines, {1} elements remaining...)".format(
+                    long_output_limit,
+                    len(self.longoutput[long_output_limit:])
+                )
         if self.perfdata:
             self._output = self._output.rstrip("\n")
             self._output += " | {0}".format(" ".join(self.perfdata))
