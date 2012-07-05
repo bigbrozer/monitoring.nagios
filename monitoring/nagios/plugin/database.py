@@ -20,6 +20,7 @@
 
 from __future__ import division
 import logging as log
+from datetime import datetime
 import os
 import sys
 
@@ -142,6 +143,16 @@ on db.database_id= sdb.dbid""")
 
         db_states = [(db['name'], db['state_desc']) for db in query_result]
         return db_states
+
+    def get_server_time(self):
+        """
+        Return the local time of the SQL server.
+
+        :return: local time of SQL server
+        :rtype: datetime
+        """
+        server_datetime = self.query(r"SELECT GETDATE() AS ServerDateTime")[0]['ServerDateTime']
+        return server_datetime
 
     def close(self):
         """
