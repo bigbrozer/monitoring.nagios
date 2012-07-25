@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 #===============================================================================
-# Filename      : definition.py
+# Filename      : definition
 # Author        : Vincent BESANCON <besancon.vincent@gmail.com>
 #-------------------------------------------------------------------------------
 # This program is free software: you can redistribute it and/or modify
@@ -27,12 +27,22 @@ class ObjectDefinition(object):
     Class that define a Nagios object definition.
     """
     def __init__(self, options):
+        self.name= None
         self.templates = []
         self.customs = {}
 
         self.__process_options(options)
 
     # Public
+    def get_name(self):
+        """Get the name of the object definition."""
+        if self.is_template():
+            return self.name
+        elif hasattr(self, 'service_description'):
+            return self.service_description
+        else:
+            raise AttributeError("Object has no name !")
+
     def get_templates(self):
         """
         Get templates from use option.
@@ -50,9 +60,9 @@ class ObjectDefinition(object):
         """
         Return True if object is a template or False if not.
         """
-        try:
-            return self.register == '0'
-        except AttributeError:
+        if self.name:
+            return True
+        else:
             return False
 
     def get_inherited_templates(self):
@@ -83,15 +93,17 @@ class ObjectGroup(object):
         self.objects = objects
         self.templates = []
 
-        self.__create_available_templates()
-        self.__create_templates_dependencies()
+        self.__create_template_list()
+        self.__create_template_dependencies()
 
     # Public
-    def render_templates_graph(self, root='', filename=os.path.expanduser('~/templates.svg'), layout='twopi'):
+    def render_templates_graph(self, root='', filename='~/templates.svg', layout='twopi'):
         """
         Render the graph of templates. Output format depends on the file extension.
         Could be svg, png, jpg.
         """
+        filename = os.path.expanduser(filename)
+
         try:
             import pygraphviz as pgv
         except ImportError:
@@ -121,25 +133,26 @@ class ObjectGroup(object):
         G.draw(filename, prog=layout)
 
     # Private
-    def __create_available_templates(self):
+    def __create_template_list(self):
         """
         Create the list of available templates.
         """
         for obj in self:
             if obj.is_template():
+                logger.debug('Object \"{}\" is a template.'.format(obj))
                 self.templates.append(obj)
 
-    def __find_tpl_by_name(self, name):
+    def __find_template_by_name(self, name):
         """
         Find a Template by name. Return a Python Object representation of the Nagios one.
         """
-        logger.debug('Trying to find template %s by name.' % name)
         for obj in self.templates:
-            if hasattr(obj, 'name') and obj.name == name:
+            if obj.is_template() and obj.name == name:
                 return obj
+        logger.critical('\tUnable to find template %s by name.' % name)
         return None
 
-    def __create_templates_dependencies(self):
+    def __create_template_dependencies(self):
         """
         Create the templates dependencies for each object definitions.
         """
@@ -148,7 +161,7 @@ class ObjectGroup(object):
             templates = obj.get_templates()
             object_templates = []
             for tpl in templates:
-                tpl_obj = self.__find_tpl_by_name(tpl)
+                tpl_obj = self.__find_template_by_name(tpl)
                 if tpl_obj is not None:
                     object_templates.append(tpl_obj)
                 else:

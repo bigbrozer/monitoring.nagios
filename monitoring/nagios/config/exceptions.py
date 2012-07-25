@@ -1,6 +1,6 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 #===============================================================================
-# Filename      : hosts.py
+# Filename      : exceptions.py
 # Author        : Vincent BESANCON <besancon.vincent@gmail.com>
 #-------------------------------------------------------------------------------
 # This program is free software: you can redistribute it and/or modify
@@ -17,27 +17,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #===============================================================================
 
-from monitoring.nagios.objects.definition import ObjectDefinition, ObjectGroup
+"""
+This module defines exceptions used by :mod:`monitoring.nagios.config`.
+"""
 
-class Host(ObjectDefinition):
+
+class SettingsFileError(Exception):
     """
-    Represent a Host definition.
+    Raised when there is a problem with the settings file.
     """
-
-    def __init__(self, options):
-        super(Host, self).__init__(options)
-
-    def __str__(self):
-        if self.is_template():
-            return self.name
-        else:
-            return self.host_name
-
-class Hosts(ObjectGroup):
-    """
-    Represent all hosts objects defined in the configuration.
-    """
-
-    def __init__(self, objects):
-        super(Hosts, self).__init__(objects)
-
+    pass

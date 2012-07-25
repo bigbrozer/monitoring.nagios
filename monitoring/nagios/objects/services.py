@@ -23,16 +23,17 @@ class Service(ObjectDefinition):
     """
     Represent a service definition.
     """
+
+    def __init__(self, options):
+        super(Service, self).__init__(options)
+
     def __str__(self):
-        if hasattr(self.service_description):
-            return self.service_description
-        elif hasattr(self.name):
-            return self.name
-        else:
-            raise AttributeError("Service has no name !")
+        return self.get_name()
 
 class Services(ObjectGroup):
     """
     Represent all services objects defined in the configuration.
     """
-    pass
+
+    def __init__(self, objects):
+        super(Services, self).__init__(objects)
