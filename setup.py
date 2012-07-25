@@ -49,6 +49,6 @@ setup(name = 'monitoring.nagios',
     packages = find_packages(),
     install_requires = dependencies,
     extras_require = {
-        'graph': ['pygraphviz>=1.0'],
+        'graph': ['pygraphviz>=1.0,<=1.1'],
     },
 )
