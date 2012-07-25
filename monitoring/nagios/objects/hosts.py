@@ -23,6 +23,10 @@ class Host(ObjectDefinition):
     """
     Represent a Host definition.
     """
+
+    def __init__(self, options):
+        super(Host, self).__init__(options)
+
     def __str__(self):
         if self.is_template():
             return self.name
@@ -33,4 +37,7 @@ class Hosts(ObjectGroup):
     """
     Represent all hosts objects defined in the configuration.
     """
-    pass
+
+    def __init__(self, objects):
+        super(Hosts, self).__init__(objects)
+

@@ -23,6 +23,10 @@ class Hostgroup(ObjectDefinition):
     """
     Represent a hostgroup definition.
     """
+
+    def __init__(self, options):
+        super(Hostgroup, self).__init__(options)
+
     def __str__(self):
         if hasattr(self.hostgroup_name):
             return self.hostgroup_name
@@ -35,4 +39,6 @@ class Hostgroups(ObjectGroup):
     """
     Represent all hostgroups objects defined in the configuration.
     """
-    pass
+
+    def __init__(self, objects):
+        super(Hostgroups, self).__init__(objects)
