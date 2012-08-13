@@ -113,13 +113,21 @@ class NagiosPluginMSSQL(NagiosPlugin):
 
         :return: dict
         """
-        query = self.query("SELECT * FROM {0.database}.sys.sysfiles".format(self.options))
+        query = self.query("""SELECT TOP 1000
+                                   [file_id]
+                                  ,[type_desc]
+                                  ,[name]
+                                  ,[state_desc]
+                                  ,[size]
+                                  ,[max_size]
+                              FROM [{0.database}].[sys].[database_files]""".format(self.options))
         db_size = {}
         for result in query:
             db_size[result['name']] = {
+                'type': result['type_desc'].lower(),
                 'size': result['size'],
-                'maxsize': result['maxsize'],
-                'used': result['size'] / result['maxsize'] * 100,
+                'maxsize': result['max_size'],
+                'used': result['size'] / result['max_size'] * 100 if result['max_size'] > 0 else None,
             }
 
         return db_size
