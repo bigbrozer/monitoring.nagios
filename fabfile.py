@@ -40,7 +40,7 @@ def install():
 
 #-------------------------------------------------------------------------------
 @task
-@roles('central')
+@hosts('monitoring-dc.app.corp')
 def doc():
     """Upload doc to central server"""
     DOCROOT = '/var/www/project'
