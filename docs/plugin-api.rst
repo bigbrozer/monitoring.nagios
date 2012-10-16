@@ -1,6 +1,6 @@
-=============
-API reference
-=============
+====================
+Plugin API reference
+====================
 
 .. module:: monitoring.nagios.plugin
 
