@@ -18,6 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #===============================================================================
 
+import os
 import logging as log
 import string
 
@@ -41,6 +42,13 @@ class ProbeSSH(Probe):
     :param password: Login user password. Default is to use the public key.
     :type password: str
     """
+    class SSHError(Exception):
+        pass
+
+
+    class SSHCommandFailed(SSHError):
+        pass
+
 
     def __init__(self, hostaddress='', port=22, username=None, password=None):
         super(ProbeSSH, self).__init__(hostaddress, port)
@@ -61,10 +69,10 @@ Message: %s''' % (self._hostaddress, self._port, e))
         Execute a command on the remote server and return results.
 
         :param cmd: Command line to execute on the remote server.
-        :type cmd: str
+        :type cmd: str, unicode
         :return: Tuple of the form (stdout, stderr) each values are file objects.
         """
-
+        logger.debug('Execute SSH command: {}'.format(cmd))
         stdin, stdout, stderr = self._ssh_client.exec_command(cmd)
         return (stdout, stderr)
 
@@ -92,3 +100,30 @@ Message: %s''' % (self._hostaddress, self._port, e))
         stdout = self.execute(find)[0]
         files = map(string.strip, stdout.readlines())
         return files
+
+    def get_file_lastmodified_timestamp(self, filename, stime='/usr/local/nagios/bin/stime'):
+        """
+        Return the last modified Unix Epoch timestamp of a file.
+
+        :param filename: path to the file that should be checked.
+        :param stime: location of the stime binary. Default to ``/usr/local/nagios/bin/stime``.
+        :return: Unix timestamp.
+        :rtype: int
+        """
+        logger.debug('Calling method get_file_lastmodified_timestamp().')
+
+        if not os.path.exists(stime):
+            raise self.SSHCommandFailed('Unable to locate stime command !\nPath: {}'.format(stime))
+
+        stime = "{0} -m {1}".format(stime, filename)
+        out, err = self.execute(stime)
+        if err.read():
+            raise self.SSHCommandFailed('Problem during the execution of stime !\nCommand: {}'.format(stime))
+
+        ts = out.read()
+        try:
+            ts = int(ts)
+        except ValueError as e:
+            raise self.SSHError("Unexpected result in output of stime: {}".format(e))
+
+        return ts

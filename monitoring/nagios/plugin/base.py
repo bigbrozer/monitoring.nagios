@@ -27,6 +27,7 @@ import pickle
 from pprint import pformat
 import logging as log
 
+import monitoring.nagios
 from monitoring.nagios.plugin.exceptions import NagiosUnknown, NagiosCritical, NagiosWarning, NagiosOk
 
 logger = log.getLogger('monitoring.nagios.plugin.base')
@@ -74,6 +75,7 @@ class NagiosPlugin(object):
         # Debug init
         logger.debug('=== BEGIN PLUGIN INIT ===')
         logger.debug('Debug mode is ON.')
+        logger.debug('Library version: %s.' % monitoring.nagios.__version__)
         logger.debug('Plugin class: %s.' % self.__class__.__name__)
         logger.debug('\tName: %s, v%s' % (self.name, self.version))
         logger.debug('\tDesc: %s' % self.description)
