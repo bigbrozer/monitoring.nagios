@@ -19,6 +19,7 @@
 #===============================================================================
 
 import os
+from datetime import datetime
 import logging as log
 import string
 
@@ -127,3 +128,19 @@ Message: %s''' % (self._hostaddress, self._port, e))
             raise self.SSHError("Unexpected result in output of stime: {}".format(e))
 
         return ts
+
+    def get_file_lastmodified_minutes(self, filename, **kwargs):
+        """
+        Return minutes since file was last modified.
+
+        :param filename: path to the file that should be checked.
+        :return: Minutes.
+        :rtype: int
+        """
+        logger.debug('Calling method get_file_lastmodified_minutes().')
+
+        last_modified_timestamp = self.get_file_lastmodified_timestamp(filename, **kwargs)
+        now = datetime.today()
+        last_modified_totalsecs = (now - datetime.fromtimestamp(last_modified_timestamp)).total_seconds()
+        last_modified_time = divmod(last_modified_totalsecs, 60)
+        return int(last_modified_time[0])
