@@ -56,8 +56,7 @@ class ProbeSSH(Probe):
 
         try:
             self._ssh_client = ssh.SSHClient()
-            self._ssh_client.load_system_host_keys()
-            self._ssh_client.set_missing_host_key_policy(ssh.AutoAddPolicy())
+            self._ssh_client.set_missing_host_key_policy(ssh.MissingHostKeyPolicy())
             self._ssh_client.connect(hostaddress, port, username, password, compress=True)
         except ssh.SSHException as e:
             raise NagiosUnknown('''Cannot establish a SSH connection on remote server !
