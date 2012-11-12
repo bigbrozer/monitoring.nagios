@@ -56,6 +56,7 @@ class NagiosPluginSSH(NagiosPlugin):
                                  help='Login user password. Default is to use pub key of the current user.',
                                  required=False)
         self.parser.add_argument('-P', type=int, dest='port', default=22, help='Port to connect to (default to 22).')
+        self.parser.add_argument('-t', '--timeout', type=float, dest='timeout', default=10, help='Connection timeout in seconds (default to 10 secs).')
 
     def verify_plugin_arguments(self):
         """Check syntax of all arguments"""

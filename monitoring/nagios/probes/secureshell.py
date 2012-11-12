@@ -42,6 +42,8 @@ class ProbeSSH(Probe):
     :type username: str
     :param password: Login user password. Default is to use the public key.
     :type password: str
+    :param timeout: Connection timeout in seconds (default to 10 secs).
+    :type timeout: float
     """
     class SSHError(Exception):
         pass
@@ -51,15 +53,20 @@ class ProbeSSH(Probe):
         pass
 
 
-    def __init__(self, hostaddress='', port=22, username=None, password=None):
+    def __init__(self, hostaddress='', port=22, username=None, password=None, timeout=10.0):
         super(ProbeSSH, self).__init__(hostaddress, port)
 
         try:
             self._ssh_client = ssh.SSHClient()
             self._ssh_client.set_missing_host_key_policy(ssh.MissingHostKeyPolicy())
-            self._ssh_client.connect(hostaddress, port, username, password, compress=True)
+            self._ssh_client.connect(hostaddress, port, username, password, timeout=timeout, compress=True)
         except ssh.SSHException as e:
             raise NagiosUnknown('''Cannot establish a SSH connection on remote server !
+Host: %s
+Port: %s
+Message: %s''' % (self._hostaddress, self._port, e))
+        except Exception as e:
+            raise NagiosUnknown('''Unexpected error during SSH connection !
 Host: %s
 Port: %s
 Message: %s''' % (self._hostaddress, self._port, e))
