@@ -46,8 +46,12 @@ class TestBasePluginPickle(unittest.TestCase):
     """
 
     def setUp(self):
-        sys.argv[1] = '-H'
-        sys.argv[2] = 'monitoring-dc.app.corp'
+        sys.argv= sys.argv[:1]
+        args = [
+            '-H', 'monitoring-dc.app.corp',
+        ]
+        sys.argv.extend(args)
+
         self.plugin = NagiosPlugin()
         self.delete_file(self.plugin.picklefile)
 
@@ -97,8 +101,12 @@ class TestBasePlugin(unittest.TestCase):
     """
 
     def setUp(self):
-        sys.argv[1] = '-H'
-        sys.argv[2] = 'monitoring-dc.app.corp'
+        sys.argv= sys.argv[:1]
+        args = [
+            '-H', 'monitoring-dc.app.corp',
+        ]
+        sys.argv.extend(args)
+
         self.plugin = NagiosPlugin()
 
     def tearDown(self):

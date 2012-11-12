@@ -30,8 +30,11 @@ class TestPluginPubKey(unittest.TestCase):
     """
 
     def setUp(self):
-        sys.argv[1] = '-H'
-        sys.argv[2] = 'monitoring-dc.app.corp'
+        sys.argv= sys.argv[:1]
+        args = [
+            '-H', 'monitoring-dc.app.corp',
+        ]
+        sys.argv.extend(args)
         self.plugin = NagiosPluginSSH()
 
     def tearDown(self):
@@ -56,6 +59,7 @@ class TestPluginUserPass(unittest.TestCase):
     """
 
     def setUp(self):
+        sys.argv= sys.argv[:1]
         args = [
             '-H', 'srv1faurdca.idc.us.corp',
             '-u', 'fcspi',
@@ -78,10 +82,22 @@ class TestProbeSSH(unittest.TestCase):
     """
 
     def tearDown(self):
-        self.ssh.close()
+        if hasattr(self, 'ssh'): self.ssh.close()
 
     def test_ssh_pubkey_login(self):
         self.ssh = ProbeSSH('monitoring-dc.app.corp')
 
     def test_ssh_askpass_login(self):
         self.ssh = ProbeSSH('srv1faurdca.idc.us.corp', username='fcspi', password='fcspi1')
+
+    def test_ssh_timeout(self):
+        with self.assertRaises(SystemExit):
+            self.ssh = ProbeSSH('wwfcsunia316.fcs.toa.prim', timeout=1)
+
+    def test_ssh_host_not_found(self):
+        with self.assertRaises(SystemExit):
+            self.ssh = ProbeSSH('wwfcsunigdsa316.fcs.toa.prim')
+
+    def test_ssh_no_route(self):
+        with self.assertRaises(SystemExit):
+            self.ssh = ProbeSSH('10.56.89.45')

@@ -31,14 +31,14 @@ class TestMSSQLPlugin(unittest.TestCase):
 
     def setUp(self):
         #-H frselind0023.sel.fr.corp -u monitoring -p monitoring -d gIMM
-        sys.argv[1] = '-H'
-        sys.argv[2] = 'frselind0023.sel.fr.corp'
-        sys.argv[3] = '-u'
-        sys.argv[4] = 'monitoring'
-        sys.argv[5] = '-p'
-        sys.argv[6] = 'monitoring'
-        sys.argv[7] = '-d'
-        sys.argv[8] = 'gIMM'
+        sys.argv= sys.argv[:1]
+        args = [
+            '-H', 'frselind0023.sel.fr.corp',
+            '-u', 'monitoring',
+            '-p', 'monitoring',
+            '-d', 'gIMM',
+        ]
+        sys.argv.extend(args)
         self.plugin = NagiosPluginMSSQL()
 
     def tearDown(self):
