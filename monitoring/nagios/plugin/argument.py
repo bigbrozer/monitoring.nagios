@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 #===============================================================================
-# Filename      : arguments
 # Author        : Vincent BESANCON <besancon.vincent@gmail.com>
-# Description   : Specify, apply type conversion, etc... for arguments.
+# Description   : This is a list of pre-defined argument types.
 #-------------------------------------------------------------------------------
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,21 +20,73 @@
 """
 .. module:: monitoring.nagios.plugin.arguments
 
-:mod:`monitoring.nagios.plugin.arguments` --- Argument conversion and specification
-===================================================================================
+:mod:`monitoring.nagios.plugin.arguments` --- Pre-defined argument types
+========================================================================
 
 This module contains a set of functions to convert or specify argument types.
 """
 
 from datetime import timedelta
 
-def hours(hour):
-    """
-    Set argument type to hour. Convert ``hour`` to a timedelta object.
 
-    :param hour: the number of hour.
-    :type hour: str, unicode
-    :return: Equivalent to ``timedelta(hours=hour)``
-    :rtype: timedelta
+def days(integer):
     """
-    return timedelta(hours=int(hour))
+    Convert ``integer`` to a timedelta object. ``integer`` is a number of days.
+
+    :param integer: the number of days.
+    :type integer: str, unicode
+    :return: the number of days as a timedelta object.
+    :rtype: timedelta
+
+    # Tests
+    >>> days(5)
+    datetime.timedelta(5)
+    """
+    return timedelta(days=int(integer))
+
+def hours(integer):
+    """
+    Convert ``integer`` to a timedelta object. ``integer`` is a number of hours.
+
+    :param integer: the number of hours.
+    :type integer: str, unicode
+    :return: the number of hours as a timedelta object.
+    :rtype: timedelta
+
+    # Tests
+    >>> hours(4)
+    datetime.timedelta(0, 14400)
+    """
+    return timedelta(hours=int(integer))
+
+def minutes(integer):
+    """
+    Convert ``integer`` to a timedelta object. ``integer`` is a number of
+    minutes.
+
+    :param integer: the number of minutes.
+    :type integer: str, unicode
+    :return: the number of minutes as a timedelta object.
+    :rtype: timedelta
+
+    # Tests
+    >>> minutes(32)
+    datetime.timedelta(0, 1920)
+    """
+    return timedelta(minutes=int(integer))
+
+def seconds(integer):
+    """
+    Convert ``integer`` to a timedelta object. ``integer`` is a number of
+    seconds.
+
+    :param integer: the number of seconds.
+    :type integer: str, unicode
+    :return: the number of seconds as a timedelta object.
+    :rtype: timedelta
+
+    # Tests
+    >>> seconds(54)
+    datetime.timedelta(0, 54)
+    """
+    return timedelta(seconds=int(integer))
