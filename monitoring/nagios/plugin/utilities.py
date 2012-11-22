@@ -19,9 +19,18 @@
 #===============================================================================
 
 from __future__ import division
+from datetime import timedelta
 import logging as log
 
 logger = log.getLogger('monitoring.nagios.plugin.utilities')
+
+__all__ = [
+    'ip_rm_leading_zero',
+    'humanize_bytes',
+    'percent_used',
+    'find_key_from_value',
+    'humanize_duration',
+]
 
 def ip_rm_leading_zero(ip):
     """
@@ -89,3 +98,45 @@ def find_key_from_value(dic, val):
     :param val: the value you need the key.
     """
     return [k for k, v in dic.iteritems() if v in val][0]
+
+def humanize_duration(time_delta, show=None, sep=" "):
+    """
+    Humanize a timedelta object.
+
+    :param time_delta: the timedelta object to humanize.
+    :param sep: specify a separator for days, hours, minutes and seconds in the final string.
+    :return: a dict with keys: ``days``, ``hours``, ``minutes``, ``minutes`` and ``seconds``.
+    :rtype: dict
+
+    # Examples
+    >>> age = humanize_duration(timedelta(days=1, hours=2, minutes=34, seconds=22), sep=", ")
+    >>> age
+    {'timedelta': datetime.timedelta(1, 9262), 'seconds': 22, 'as_string': '1 days, 2 hours, 34 minutes, 22 seconds', 'days': 1, 'hours': 2, 'minutes': 34}
+    >>> age_filter = humanize_duration(timedelta(days=1, hours=2, minutes=34, seconds=22), sep=", ", show=['days', 'hours'])
+    >>> age_filter['as_string']
+    '1 days, 2 hours'
+    """
+    if not show: show = ['days', 'hours', 'minutes', 'seconds']
+    duration = {}
+    as_string = []
+
+    # Get data about duration
+    duration['timedelta'] = time_delta
+    duration['days'], remains = divmod(int(duration['timedelta'].total_seconds()), int(timedelta(days=1).total_seconds()))
+    duration['hours'], remains = divmod(remains, int(timedelta(hours=1).total_seconds()))
+    duration['minutes'], remains = divmod(remains, 60)
+    duration['seconds'] = int(remains)
+
+    if duration['days'] and 'days' in show:
+        as_string.append('{days} days')
+    if duration['hours'] and 'hours' in show:
+        as_string.append('{hours} hours')
+    if duration['minutes'] and 'minutes' in show:
+        as_string.append('{minutes} minutes')
+    if 'seconds' in show or not as_string:
+        as_string.append('{seconds} seconds')
+    as_string = sep.join(as_string).format(**duration)
+
+    duration['as_string'] = as_string
+
+    return duration
