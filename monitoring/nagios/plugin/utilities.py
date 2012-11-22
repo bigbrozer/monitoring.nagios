@@ -18,6 +18,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #===============================================================================
 
+"""
+.. module:: monitoring.nagios.plugin.utilities
+
+This module contains a set of usefull utilities.
+"""
+
 from __future__ import division
 from datetime import timedelta
 import logging as log
@@ -108,13 +114,14 @@ def humanize_duration(time_delta, show=None, sep=" "):
     :return: a dict with keys: ``days``, ``hours``, ``minutes``, ``minutes`` and ``seconds``.
     :rtype: dict
 
-    # Examples
-    >>> age = humanize_duration(timedelta(days=1, hours=2, minutes=34, seconds=22), sep=", ")
-    >>> age
-    {'timedelta': datetime.timedelta(1, 9262), 'seconds': 22, 'as_string': '1 days, 2 hours, 34 minutes, 22 seconds', 'days': 1, 'hours': 2, 'minutes': 34}
-    >>> age_filter = humanize_duration(timedelta(days=1, hours=2, minutes=34, seconds=22), sep=", ", show=['days', 'hours'])
-    >>> age_filter['as_string']
-    '1 days, 2 hours'
+    **Example**::
+
+     >>> age = humanize_duration(timedelta(days=1, hours=2, minutes=34, seconds=22), sep=", ")
+     >>> age
+     {'timedelta': datetime.timedelta(1, 9262), 'seconds': 22, 'as_string': '1 days, 2 hours, 34 minutes, 22 seconds', 'days': 1, 'hours': 2, 'minutes': 34}
+     >>> age_filter = humanize_duration(timedelta(days=1, hours=2, minutes=34, seconds=22), sep=", ", show=['days', 'hours'])
+     >>> age_filter['as_string']
+     '1 days, 2 hours'
     """
     if not show: show = ['days', 'hours', 'minutes', 'seconds']
     duration = {}

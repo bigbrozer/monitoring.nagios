@@ -9,4 +9,6 @@ Complete API reference.
 
     plugin-api
     probe-api
+    arguments
+    utilities
 

@@ -20,9 +20,6 @@
 """
 .. module:: monitoring.nagios.plugin.arguments
 
-:mod:`monitoring.nagios.plugin.arguments` --- Pre-defined argument types
-========================================================================
-
 This module contains a set of functions to convert or specify argument types.
 """
 
@@ -38,9 +35,10 @@ def days(integer):
     :return: the number of days as a timedelta object.
     :rtype: timedelta
 
-    # Tests
-    >>> days(5)
-    datetime.timedelta(5)
+    **Example**::
+
+     >>> days(5)
+     datetime.timedelta(5)
     """
     return timedelta(days=int(integer))
 
@@ -53,9 +51,10 @@ def hours(integer):
     :return: the number of hours as a timedelta object.
     :rtype: timedelta
 
-    # Tests
-    >>> hours(4)
-    datetime.timedelta(0, 14400)
+    **Example**::
+
+     >>> hours(4)
+     datetime.timedelta(0, 14400)
     """
     return timedelta(hours=int(integer))
 
@@ -69,9 +68,10 @@ def minutes(integer):
     :return: the number of minutes as a timedelta object.
     :rtype: timedelta
 
-    # Tests
-    >>> minutes(32)
-    datetime.timedelta(0, 1920)
+    **Example**::
+
+     >>> minutes(32)
+     datetime.timedelta(0, 1920)
     """
     return timedelta(minutes=int(integer))
 
@@ -85,8 +85,9 @@ def seconds(integer):
     :return: the number of seconds as a timedelta object.
     :rtype: timedelta
 
-    # Tests
-    >>> seconds(54)
-    datetime.timedelta(0, 54)
+    **Example**::
+
+     >>> seconds(54)
+     datetime.timedelta(0, 54)
     """
     return timedelta(seconds=int(integer))
