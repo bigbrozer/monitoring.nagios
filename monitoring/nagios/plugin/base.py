@@ -230,13 +230,25 @@ If you see this message that would mean that the retention file located in \'%s\
 
     # Nagios status methods
     def ok(self, msg):
+        """
+        Raise a :exc:`NagiosOk` exception.
+        """
         raise NagiosOk(msg)
 
     def warning(self, msg):
+        """
+        Raise a :exc:`NagiosWarning` exception.
+        """
         raise NagiosWarning(msg)
 
     def critical(self, msg):
+        """
+        Raise a :exc:`NagiosCritical` exception.
+        """
         raise NagiosCritical(msg)
 
     def unknown(self, msg):
+        """
+        Raise a :exc:`NagiosUnknown` exception.
+        """
         raise NagiosUnknown(msg)
