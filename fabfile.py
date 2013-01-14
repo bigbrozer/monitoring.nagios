@@ -43,6 +43,8 @@ def install():
 @hosts('monitoring-dc.app.corp')
 def doc():
     """Upload doc to central server"""
+    env.user = "webcontent"
+
     DOCROOT = '/var/www/project'
     DOCDIR = os.path.join(DOCROOT, 'monitoring.nagios')
 
