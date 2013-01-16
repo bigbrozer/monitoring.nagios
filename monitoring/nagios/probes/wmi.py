@@ -54,7 +54,7 @@ class ProbeWMI(Probe):
 
         :param query: The WMI query.
         :type query: str, unicode
-        :return: Formated CSV.
+        :return: CSV with delimiter ``|``.
         """
         self.command = [
             'wmic',
