@@ -1,3 +1,3 @@
 import monitoring.nagios.logger
 
-__version__ = '1.0.84'
+__version__ = '1.1.0'
