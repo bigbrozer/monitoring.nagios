@@ -29,18 +29,21 @@ Plugins that interact with SNMP or SSH protocols.
 
 .. autoclass:: ProbeSNMP
     :members:
+    :inherited-members:
 
 :class:`ProbeSSH` --- Probe to connect to a host using SSH
 ----------------------------------------------------------
 
 .. autoclass:: ProbeSSH
     :members:
+    :inherited-members:
 
 :class:`ProbeWMI` --- Probe to connect to a host using WMI
 ----------------------------------------------------------
 
 .. autoclass:: ProbeWMI
     :members:
+    :inherited-members:
 
 Databases
 =========
@@ -52,3 +55,4 @@ Plugins that interact with a database.
 
 .. autoclass:: ProbeMSSQL
     :members:
+    :inherited-members:

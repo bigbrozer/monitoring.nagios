@@ -18,12 +18,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #===============================================================================
 
-"""
-.. module:: monitoring.nagios.plugin.utilities
-
-This module contains a set of usefull utilities.
-"""
-
 from __future__ import division
 from datetime import timedelta
 import logging as log
