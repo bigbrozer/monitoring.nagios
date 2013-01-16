@@ -36,6 +36,12 @@ Plugins that interact with SNMP or SSH protocols.
 .. autoclass:: NagiosPluginSSH
     :members:
 
+:class:`NagiosPluginWMI` --- Plugin WMI based
+---------------------------------------------
+
+.. autoclass:: NagiosPluginWMI
+    :members:
+
 Databases
 =========
 

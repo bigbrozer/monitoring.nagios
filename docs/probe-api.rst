@@ -36,6 +36,12 @@ Plugins that interact with SNMP or SSH protocols.
 .. autoclass:: ProbeSSH
     :members:
 
+:class:`ProbeWMI` --- Probe to connect to a host using WMI
+----------------------------------------------------------
+
+.. autoclass:: ProbeWMI
+    :members:
+
 Databases
 =========
 
