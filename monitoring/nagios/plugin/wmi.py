@@ -20,6 +20,8 @@
 import logging
 import os
 import sys
+import csv
+from pprint import pformat
 
 from monitoring.nagios.plugin import NagiosPlugin
 from monitoring.nagios.probes import ProbeWMI
@@ -77,13 +79,27 @@ class NagiosPluginWMI(NagiosPlugin):
     def execute(self, query):
         """
         Wrapper arround :meth:`monitoring.nagios.probes.ProbeWMI.execute`
-        method. Handles exceptions.
+        method. Handles exceptions and parse CSV results.
+
+        :return: A dict with keys as WMI columns and their values.
+        :rtype: dict
         """
+        wmic_output = None
+
         try:
-            output = self.probe.execute(query)
+            wmic_output = self.probe.execute(query)
         except OSError:
             self.unknown('Unable to find \'wmic\' binary !')
         except Exception as e:
-            self.unknown('Error during the WMI query !\n%s' % e.output)
+            self.unknown('Error during the WMI query !\nCommand: {0.cmd}\nOutput: {0.output}'.format(e))
 
-        return output
+        # Split lines in list, remove headers
+        wmic_output = wmic_output.splitlines()[1:]
+
+        # Parse CSV result
+        csv_reader = csv.DictReader(wmic_output, delimiter='|')
+        query_results = list(csv_reader)
+
+        logger.debug('WMI results:\n%s', pformat(query_results))
+
+        return query_results

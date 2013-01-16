@@ -44,7 +44,7 @@ class ProbeWMI(Probe):
     def __init__(self, host, login, password, domain, namespace='root/cimv2'):
         super(ProbeWMI, self).__init__(host)
 
-        self.credentials = '{0}/{1}%{2}'.format(domain, login, password)
+        self.credentials = '{0}\{1}%{2}'.format(domain, login, password)
         self.hosturl = '//{0}'.format(host)
         self.namespace = namespace
 
@@ -58,14 +58,13 @@ class ProbeWMI(Probe):
         """
         self.command = [
             'wmic',
-            '-U', '\'{}\''.format(self.credentials),
+            '-U', self.credentials,
             self.hosturl,
-            '--namespace', '\'{}\''.format(self.namespace),
-            '\'{}\''.format(query),
+            '--namespace', self.namespace,
+            query,
         ]
-        
-        logger.debug('Executing command: {}'.format(" ".join(self.command)))
 
-        results = sp.check_output(self.command)
-        
-        return results
+        logger.debug('Executing command: %s', " ".join(self.command))
+        wmic_output = sp.check_output(self.command)
+
+        return wmic_output
