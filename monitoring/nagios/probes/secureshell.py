@@ -30,6 +30,36 @@ import ssh
 logger = log.getLogger('monitoring.nagios.probes')
 
 
+class CommandResult(object):
+    """
+    This class is for manipulating a remote command execution result.
+
+    It takes a :class:`ssh.Channel` object as his first parameter. Then provides
+    the following attributes:
+
+    .. attribute:: CommandResult.input
+
+        This is stdin for the command.
+
+    .. attribute:: CommandResult.output
+
+        This is stdout or output of the command.
+
+    .. attribute:: CommandResult.errors
+
+        This is stderr or all errors for the command.
+
+    .. attribute:: CommandResult.status
+
+        The command exit code.
+    """
+    def __init__(self, channel):
+        self.input = channel.makefile('wb', -1)
+        self.output = channel.makefile('rb', -1).readlines()
+        self.errors = channel.makefile_stderr('rb', -1).readlines()
+        self.status = channel.recv_exit_status()
+
+
 class ProbeSSH(Probe):
     """
     A SSH probe.
@@ -56,10 +86,12 @@ class ProbeSSH(Probe):
     def __init__(self, hostaddress='', port=22, username=None, password=None, timeout=10.0):
         super(ProbeSSH, self).__init__(hostaddress, port)
 
+        self.timeout = timeout
+
         try:
             self._ssh_client = ssh.SSHClient()
             self._ssh_client.set_missing_host_key_policy(ssh.MissingHostKeyPolicy())
-            self._ssh_client.connect(hostaddress, port, username, password, timeout=timeout, compress=True)
+            self._ssh_client.connect(hostaddress, port, username, password, timeout=self.timeout, compress=True)
         except ssh.SSHException as e:
             raise NagiosUnknown('''Cannot establish a SSH connection on remote server !
 Host: %s
@@ -71,17 +103,28 @@ Host: %s
 Port: %s
 Message: %s''' % (self._hostaddress, self._port, e))
 
-    def execute(self, cmd):
+    def execute(self, command, timeout=None):
         """
         Execute a command on the remote server and return results.
 
-        :param cmd: Command line to execute on the remote server.
-        :type cmd: str, unicode
-        :return: Tuple of the form (stdout, stderr) each values are file objects.
+        :param command: Command line to execute on the remote server.
+        :type command: str, unicode
+        :param timeout: Command execution timeout. Default to 10 secs.
+        :type timeout: float
+        :return: An instance of :class:`CommandResult`.
         """
-        logger.debug('Execute SSH command: {}'.format(cmd))
-        stdin, stdout, stderr = self._ssh_client.exec_command(cmd)
-        return (stdout, stderr)
+        logger.debug('Execute SSH command: {}'.format(command))
+
+        # Set global timeout if not specified
+        if not timeout: timeout = self.timeout
+        logger.debug('Timeout is set to %f.', timeout)
+
+        chan = self._ssh_client.get_transport().open_session()
+        chan.settimeout(timeout)
+        chan.exec_command(command)
+        cmd_results = CommandResult(chan)
+
+        return cmd_results
 
     def close(self):
         """
@@ -104,8 +147,8 @@ Message: %s''' % (self._hostaddress, self._port, e))
         """
 
         find = 'find {0} -name \'{1}\' -maxdepth {2}'.format(directory, glob, depth)
-        stdout = self.execute(find)[0]
-        files = map(string.strip, stdout.readlines())
+        stdout = self.execute(find).output
+        files = map(string.strip, stdout)
         return files
 
     def get_file_lastmodified_timestamp(self, filename, stime='/usr/local/nagios/bin/stime'):
@@ -123,11 +166,11 @@ Message: %s''' % (self._hostaddress, self._port, e))
             raise self.SSHCommandFailed('Unable to locate stime command !\nPath: {}'.format(stime))
 
         stime = "{0} -m {1}".format(stime, filename)
-        out, err = self.execute(stime)
-        if err.read():
+        command = self.execute(stime)
+        if command.status:
             raise self.SSHCommandFailed('Problem during the execution of stime !\nCommand: {}'.format(stime))
 
-        ts = out.read()
+        ts = command.output.pop()
         try:
             ts = int(ts)
         except ValueError as e:

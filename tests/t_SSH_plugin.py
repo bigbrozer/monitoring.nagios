@@ -41,8 +41,8 @@ class TestPluginPubKey(unittest.TestCase):
         self.plugin.ssh.close()
 
     def test_ssh_remote_cmd(self):
-        stdout, stderr = self.plugin.ssh.execute('ls -ld /boot')
-        self.assertIn('/boot', stdout.readline())
+        command = self.plugin.ssh.execute('ls -ld /boot')
+        self.assertIn('/boot', command.output.pop())
 
     def test_ssh_list_files_in_dir(self):
         files = self.plugin.ssh.list_files('/')
@@ -72,8 +72,8 @@ class TestPluginUserPass(unittest.TestCase):
         self.plugin.ssh.close()
 
     def test_ssh_user_password(self):
-        stdout, stderr = self.plugin.ssh.execute('ls -ld /boot')
-        self.assertIn('/boot', stdout.readline())
+        command = self.plugin.ssh.execute('ls -ld /boot')
+        self.assertIn('/boot', command.output.pop())
 
 
 class TestProbeSSH(unittest.TestCase):
