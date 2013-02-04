@@ -55,8 +55,8 @@ class CommandResult(object):
     """
     def __init__(self, channel):
         self.input = channel.makefile('wb', -1)
-        self.output = channel.makefile('rb', -1).readlines()
-        self.errors = channel.makefile_stderr('rb', -1).readlines()
+        self.output = map(string.strip, channel.makefile('rb', -1).readlines())
+        self.errors = map(string.strip, channel.makefile_stderr('rb', -1).readlines())
         self.status = channel.recv_exit_status()
 
 
@@ -147,8 +147,7 @@ Message: %s''' % (self._hostaddress, self._port, e))
         """
 
         find = 'find {0} -name \'{1}\' -maxdepth {2}'.format(directory, glob, depth)
-        stdout = self.execute(find).output
-        files = map(string.strip, stdout)
+        files = self.execute(find).output
         return files
 
     def get_file_lastmodified_timestamp(self, filename, stime='/usr/local/nagios/bin/stime'):
