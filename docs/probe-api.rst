@@ -13,35 +13,36 @@ Base class
 
 This is the base class for all plugin classes.
 
-:class:`Probe` --- Base class for all probes
---------------------------------------------
+:mod:`base` --- Base class for all probes
+-----------------------------------------
 
-.. autoclass:: Probe
+.. automodule:: monitoring.nagios.probes.base
     :members:
+    :inherited-members:
 
 Network protocols
 =================
 
 Plugins that interact with SNMP or SSH protocols.
 
-:class:`ProbeSNMP` --- Probe to connect to a host using SNMP
-------------------------------------------------------------
+:mod:`snmp` --- Probe to connect to a host using SNMP
+-----------------------------------------------------
 
-.. autoclass:: ProbeSNMP
+.. automodule:: monitoring.nagios.probes.snmp
     :members:
     :inherited-members:
 
-:class:`ProbeSSH` --- Probe to connect to a host using SSH
-----------------------------------------------------------
+:mod:`secureshell` --- Probe to connect to a host using SSH
+-----------------------------------------------------------
 
-.. autoclass:: ProbeSSH
+.. automodule:: monitoring.nagios.probes.secureshell
     :members:
     :inherited-members:
 
-:class:`ProbeWMI` --- Probe to connect to a host using WMI
-----------------------------------------------------------
+:mod:`wmi` --- Probe to connect to a host using WMI
+---------------------------------------------------
 
-.. autoclass:: ProbeWMI
+.. automodule:: monitoring.nagios.probes.wmi
     :members:
     :inherited-members:
 
@@ -50,9 +51,9 @@ Databases
 
 Plugins that interact with a database.
 
-:class:`ProbeMSSQL` --- Probe to connect to a Microsoft SQL Server
-------------------------------------------------------------------
+:mod:`mssql` --- Probe to connect to a Microsoft SQL Server
+-----------------------------------------------------------
 
-.. autoclass:: ProbeMSSQL
+.. automodule:: monitoring.nagios.probes.mssql
     :members:
     :inherited-members:
