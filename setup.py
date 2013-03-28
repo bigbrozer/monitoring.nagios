@@ -25,9 +25,9 @@ import monitoring.nagios
 
 # Package dependencies
 dependencies = [
-    'pysnmp==4.2.1',
+    'pysnmp==4.2.4',
     'ssh==1.7.14',
-    'Cython==0.16',
+    'Cython==0.18',
 ]
 
 # OS dependent
