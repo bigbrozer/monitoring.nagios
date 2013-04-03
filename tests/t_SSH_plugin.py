@@ -52,6 +52,14 @@ class TestPluginPubKey(unittest.TestCase):
         files = self.plugin.ssh.list_files('/var/log', '*.log')
         self.assertIn('/var/log/kern.log', files)
 
+    def test_ssh_get_file_lastmodified_timestamp(self):
+        timestamp = self.plugin.ssh.get_file_lastmodified_timestamp('/var/log/kern.log', stime='~/stime')
+        self.assertIsInstance(timestamp, int)
+
+    def test_ssh_missing_stime(self):
+        with self.assertRaises(ProbeSSH.SSHError):
+            timestamp = self.plugin.ssh.get_file_lastmodified_timestamp('/var/log/kern.log')
+
 
 class TestPluginUserPass(unittest.TestCase):
     """

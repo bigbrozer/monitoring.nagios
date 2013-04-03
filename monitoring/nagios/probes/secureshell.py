@@ -83,6 +83,10 @@ class ProbeSSH(Probe):
         pass
 
 
+    class SSHCommandNotFound(SSHError):
+        pass
+
+
     def __init__(self, hostaddress='', port=22, username=None, password=None, timeout=10.0):
         super(ProbeSSH, self).__init__(hostaddress, port)
 
@@ -161,13 +165,15 @@ Message: %s''' % (self._hostaddress, self._port, e))
         """
         logger.debug('Calling method get_file_lastmodified_timestamp().')
 
-        if not os.path.exists(stime):
-            raise self.SSHCommandFailed('Unable to locate stime command !\nPath: {}'.format(stime))
-
-        stime = "{0} -m {1}".format(stime, filename)
-        command = self.execute(stime)
-        if command.status:
-            raise self.SSHCommandFailed('Problem during the execution of stime !\nCommand: {}'.format(stime))
+        stime_command = "{0} -m {1}".format(stime, filename)
+        command = self.execute(stime_command)
+        if command.status == 127:
+            raise self.SSHCommandNotFound('Unable to find stime binary: {} !'.format(stime))
+        elif command.status != 0:
+            raise self.SSHCommandFailed('Problem during the execution of stime !\n' \
+                                        'Command: {0}\n'                            \
+                                        'Output: {1.output}\n'                      \
+                                        'Errors: {1.errors}'.format(stime_command, command))
 
         ts = command.output.pop()
         try:
