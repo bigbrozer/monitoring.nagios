@@ -33,10 +33,10 @@ dependencies = [
 # OS dependent
 if 'x86_64' in os.uname()[-1]:
     # We are in 64 bits
-    dependencies.append('pymssql >1.0.2')
+    dependencies.append('pymssql==2.0.0b1-dev-20130403')
 else:
     # We are in 32 bits
-    dependencies.append('pymssql ==1.0.2')
+    dependencies.append('pymssql==1.0.2')
 
 # Init distribute
 setup(name = 'monitoring.nagios',
