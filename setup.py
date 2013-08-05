@@ -26,7 +26,7 @@ from setuptools import setup, find_packages
 dependencies = [
     'pysnmp==4.2.4',
     'ssh==1.7.14',
-    'Cython==0.18',
+    'Cython==0.19.1',
 ]
 
 # OS dependent
