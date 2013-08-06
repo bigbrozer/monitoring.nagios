@@ -31,7 +31,7 @@ dependencies = [
 
 # Init distribute
 setup(name='monitoring.nagios',
-      version="1.2.3",
+      version="1.2.4",
       description='Monitoring Python Package',
       author='Vincent BESANCON',
       author_email='besancon.vincent@gmail.com',
