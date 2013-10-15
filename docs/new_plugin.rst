@@ -396,3 +396,61 @@ to::
 This will exit with code 0 for OK. We also prepend to
 :attr:`shortoutput` the current status.
 
+Plugin template
+===============
+
+Here is a template that you can use to create new plugin::
+
+ #!/usr/bin/env python2.7
+ # -*- coding: utf-8 -*-
+ #===============================================================================
+ # Copyright (c) 2013 Faurecia, Monitoring & Reporting
+ #
+ # Permission is hereby granted, free of charge, to any person obtaining a copy
+ # of this software and associated documentation files (the "Software"), to deal
+ # in the Software without restriction, including without limitation the rights
+ # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ # copies of the Software, and to permit persons to whom the Software is
+ # furnished to do so, subject to the following conditions:
+ #
+ # The above copyright notice and this permission notice shall be included in
+ # all copies or substantial portions of the Software.
+ #
+ # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ # THE SOFTWARE.
+ #===============================================================================
+ 
+ import logging
+ import traceback
+ 
+ from monitoring.nagios.plugin import NagiosPlugin
+ 
+ 
+ # Initialize default logger
+ logger = logging.getLogger("plugin.default")
+ 
+ 
+ # Customize plugin here
+ class CustomPlugin(NagiosPlugin):
+     """
+     Customize Plugin definition.
+     """
+     pass
+ 
+ 
+ # Initialize the plugin
+ plugin = CustomPlugin(version="1.0.0",
+                       description="Parse JSON data via HTTP.")
+ 
+ try:
+     # Plugin execution code goes here.
+     logger.debug("Plugin execution started...")
+ except Exception:
+     plugin.shortoutput = "Unexpected plugin behavior ! Traceback attached."
+     plugin.longoutput = traceback.format_exc().splitlines()
+     plugin.unknown(plugin.output())
