@@ -33,10 +33,10 @@ class TestMSSQLPlugin(unittest.TestCase):
         #-H frselind0023.sel.fr.corp -u monitoring -p monitoring -d gIMM
         sys.argv= sys.argv[:1]
         args = [
-            '-H', 'frselind0023.sel.fr.corp',
-            '-u', 'monitoring',
-            '-p', 'monitoring',
-            '-d', 'gIMM',
+            '-H', 'wweassql0005.eas.ww.corp',
+            '-u', '9NagiosDC',
+            '-p', 'NglP(23M,n',
+            '-d', 'master',
         ]
         sys.argv.extend(args)
         self.plugin = NagiosPluginMSSQL()
@@ -49,4 +49,4 @@ class TestMSSQLPlugin(unittest.TestCase):
 
     def test_get_db_size(self):
         db_size = self.plugin.get_db_size()
-        self.assertTrue('gIMM.Data' in db_size.keys())
+        self.assertTrue('master' in db_size.keys())
