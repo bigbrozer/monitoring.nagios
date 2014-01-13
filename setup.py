@@ -26,12 +26,19 @@ from setuptools import setup, find_packages
 dependencies = [
     'pysnmp==4.2.4',
     'ssh==1.8.0',
-    'pymssql==1.0.2',
 ]
+
+# OS dependent
+if 'x86_64' in os.uname()[-1]:
+    # We are in 64 bits
+    dependencies.append('pymssql==2.0.1')
+else:
+    # We are in 32 bits
+    dependencies.append('pymssql==1.0.2')
 
 # Init distribute
 setup(name='monitoring.nagios',
-      version="1.2.4",
+      version="1.2.5",
       description='Monitoring Python Package',
       author='Vincent BESANCON',
       author_email='besancon.vincent@gmail.com',
