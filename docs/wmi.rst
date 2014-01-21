@@ -28,7 +28,7 @@ Getting started
  plugin = NagiosPluginWMI()
  system_infos = plugin.execute(r'SELECT * FROM Win32_OperatingSystem')
 
- for attribute in system_infos
+ for attribute in system_infos:
     print "Hostname: ", attribute['CSName']
 
 - :data:`plugin` is a :class:`NagiosPluginWMI` instance.
