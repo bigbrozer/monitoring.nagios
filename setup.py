@@ -35,14 +35,15 @@ project_namespace = {}
 with open("monitoring/nagios/__init__.py") as version_file:
     exec(version_file.read(), project_namespace)
 
-# Init distribute
-setup(name='monitoring.nagios',
-      version=project_namespace["__version__"],
-      description='Monitoring Python Package',
-      author='Vincent BESANCON',
-      author_email='besancon.vincent@gmail.com',
-      license='GPL',
-      namespace_packages=['monitoring'],
-      packages=find_packages(),
-      install_requires=dependencies,
-      extras_require={'graph': ['pygraphviz>=1.0,<=1.1']})
+# Init distribution
+setup(
+    name='monitoring.nagios',
+    version=project_namespace["__version__"],
+    description='Nagios plugin creation framework',
+    author='Vincent BESANCON',
+    author_email='besancon.vincent@gmail.com',
+    license='MIT',
+    namespace_packages=['monitoring'],
+    packages=find_packages(),
+    install_requires=dependencies
+)
