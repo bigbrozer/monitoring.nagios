@@ -29,10 +29,15 @@ dependencies = [
     'pymssql==2.0.1',
 ]
 
+# Way to obtain the project version if project is already installed somewhere
+# in the Python path.
+project_namespace = {}
+with open("monitoring/nagios/__init__.py") as version_file:
+    exec(version_file.read(), project_namespace)
 
 # Init distribute
 setup(name='monitoring.nagios',
-      version="1.2.5",
+      version=project_namespace["__version__"],
       description='Monitoring Python Package',
       author='Vincent BESANCON',
       author_email='besancon.vincent@gmail.com',
