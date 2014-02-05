@@ -1,6 +1,6 @@
 #!/usr/bin/env python2.7
 # -*- coding: utf-8 -*-
-# Copyright (C) Faurecia <http://www.faurecia.com/>
+# Copyright (C) Vincent BESANCON <besancon.vincent@gmail.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the "Software"),
