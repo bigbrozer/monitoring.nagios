@@ -1,26 +1,30 @@
 # -*- coding: utf-8 -*-
-#===============================================================================
-# Filename      : t_MSSQL_plugin
-# Author        : Vincent BESANCON <besancon.vincent@gmail.com>
-# Description   : Test MSSQL plugin class.
-#-------------------------------------------------------------------------------
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# Copyright (C) Vincent BESANCON <besancon.vincent@gmail.com>
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# Permission is hereby granted, free of charge, to any person obtaining
+# a copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
 #
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#===============================================================================
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+# OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+"""Test module for MSSQL based plugins."""
 
 import unittest
 import sys
 
+sys.path.insert(0, "..")
 from monitoring.nagios.plugin import NagiosPluginMSSQL
 
 
@@ -31,7 +35,7 @@ class TestMSSQLPlugin(unittest.TestCase):
 
     def setUp(self):
         #-H frselind0023.sel.fr.corp -u monitoring -p monitoring -d gIMM
-        sys.argv= sys.argv[:1]
+        sys.argv = sys.argv[:1]
         args = [
             '-H', 'wweassql0005.eas.ww.corp',
             '-u', '9NagiosDC',
@@ -45,8 +49,10 @@ class TestMSSQLPlugin(unittest.TestCase):
         self.plugin.close()
 
     def test_db_connection(self):
+        """Test connection to the database server."""
         self.assertTrue(self.plugin)
 
     def test_get_db_size(self):
+        """Test retrieving the size of a database."""
         db_size = self.plugin.get_db_size()
         self.assertTrue('master' in db_size.keys())
