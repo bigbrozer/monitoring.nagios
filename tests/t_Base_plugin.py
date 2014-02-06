@@ -1,31 +1,36 @@
 # -*- coding: utf-8 -*-
-#===============================================================================
-# Filename      : t_Base_plugin
-# Author        : Vincent BESANCON <besancon.vincent@gmail.com>
-# Description   : Test Base plugin class.
-#-------------------------------------------------------------------------------
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# Copyright (C) Vincent BESANCON <besancon.vincent@gmail.com>
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# Permission is hereby granted, free of charge, to any person obtaining
+# a copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
 #
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#===============================================================================
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+# OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+"""Testing module for Base class plugin."""
 
 import unittest
 import os
 import sys
 
+sys.path.insert(0, "..")
 from monitoring.nagios.plugin import NagiosPlugin
 
 
 class PluginCustom(NagiosPlugin):
+    """Custom plugin for tests."""
     def initialize(self):
         super(PluginCustom, self).initialize()
         self.toto = 'youpie'
@@ -46,7 +51,7 @@ class TestBasePluginPickle(unittest.TestCase):
     """
 
     def setUp(self):
-        sys.argv= sys.argv[:1]
+        sys.argv = sys.argv[:1]
         args = [
             '-H', 'monitoring-dc.app.corp',
         ]
@@ -55,9 +60,9 @@ class TestBasePluginPickle(unittest.TestCase):
         self.plugin = NagiosPlugin()
         self.delete_file(self.plugin.picklefile)
 
-    def delete_file(self, file):
+    def delete_file(self, filename):
         try:
-            os.remove(file)
+            os.remove(filename)
         except OSError:
             pass
 
@@ -65,13 +70,16 @@ class TestBasePluginPickle(unittest.TestCase):
         self.delete_file(self.plugin.picklefile)
 
     def test_pickle_file_not_found(self):
+        """Test case when pickle file cannot be found."""
         self.assertRaises(IOError, self.plugin.load_data)
 
     def test_pickle_save(self):
+        """Test saving to pickle file."""
         l = [1, 2, 3, 4, 5]
         self.plugin.save_data(l)
 
     def test_pickle_load(self):
+        """Test loading of pickled data."""
         l = [1, 2, 3, 4, 5]
         self.plugin.save_data(l)
 
@@ -79,6 +87,7 @@ class TestBasePluginPickle(unittest.TestCase):
         self.assertIn(4, l)
 
     def test_pickle_limit_record(self):
+        """Test limiting number of records in pickle file."""
         l = []
         for i in range(0, 30):
             l.append(i)
@@ -87,6 +96,7 @@ class TestBasePluginPickle(unittest.TestCase):
         self.assertEqual(10, len(l))
 
     def test_pickle_limit_continue(self):
+        """Test continuation after loading next pickle data on next run."""
         l = []
         for i in range(0, 30):
             l.append(i)
@@ -96,12 +106,9 @@ class TestBasePluginPickle(unittest.TestCase):
 
 
 class TestBasePlugin(unittest.TestCase):
-    """
-    Test base plugin class.
-    """
-
+    """Test base plugin class."""
     def setUp(self):
-        sys.argv= sys.argv[:1]
+        sys.argv = sys.argv[:1]
         args = [
             '-H', 'monitoring-dc.app.corp',
         ]
@@ -112,17 +119,21 @@ class TestBasePlugin(unittest.TestCase):
     def tearDown(self):
         try:
             del sys.argv[3]
-        except:
+        except IndexError:
             pass
 
     def test_plugin_initialize(self):
+        """Test base plugin initialization."""
         p = PluginCustom()
         self.assertEqual('youpie', p.toto)
 
     def test_plugin_initialize_from_args(self):
+        """Test base plugin argument processing."""
         sys.argv.append('-t')
         p = PluginCustom()
         self.assertEqual('yourah', p.toto)
 
     def test_arguments_parser(self):
-        self.assertEqual('monitoring-dc.app.corp', self.plugin.options.hostname)
+        """Test base plugin argument value getter."""
+        self.assertEqual('monitoring-dc.app.corp',
+                         self.plugin.options.hostname)
