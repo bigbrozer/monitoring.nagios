@@ -1,26 +1,28 @@
 # -*- coding: utf-8 -*-
-#===============================================================================
-# Filename      : monitoring.nagios.plugin.database
-# Author        : Vincent BESANCON <besancon.vincent@gmail.com>
-# Description   : Class to define a plugin using a database.
-#-------------------------------------------------------------------------------
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# Copyright (C) Vincent BESANCON <besancon.vincent@gmail.com>
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# Permission is hereby granted, free of charge, to any person obtaining
+# a copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
 #
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#===============================================================================
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+# OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+"""Database plugin module."""
 
 from __future__ import division
 import logging as log
-from datetime import datetime
 import os
 import sys
 
@@ -35,22 +37,23 @@ logger = log.getLogger('monitoring.nagios.plugin.database')
 #TODO: write tests for this class.
 class NagiosPluginMSSQL(NagiosPlugin):
     """Base for a standard SSH Nagios plugin"""
-
-    def __init__(self, name=os.path.basename(sys.argv[0]), version='', description=''):
+    def __init__(self, name=os.path.basename(sys.argv[0]), version='',
+                 description=''):
         super(NagiosPluginMSSQL, self).__init__(name, version, description)
 
         # Init default plugin probe
         try:
             self.mssql = ProbeMSSQL(host=self.options.hostname,
-                                username=self.options.username,
-                                password=self.options.password,
-                                database=self.options.database,
-                                query_timeout=self.options.query_timeout,
-                                login_timeout=self.options.login_timeout)
+                                    username=self.options.username,
+                                    password=self.options.password,
+                                    database=self.options.database,
+                                    query_timeout=self.options.query_timeout,
+                                    login_timeout=self.options.login_timeout)
         except PluginError as e:
             self.critical(e)
 
-        if 'NagiosPluginMSSQL' == self.__class__.__name__: logger.debug('=== END PLUGIN INIT ===')
+        if 'NagiosPluginMSSQL' == self.__class__.__name__:
+            logger.debug('=== END PLUGIN INIT ===')
 
     def define_plugin_arguments(self):
         """Define arguments for the plugin"""
@@ -77,14 +80,17 @@ class NagiosPluginMSSQL(NagiosPlugin):
                                         dest='query_timeout',
                                         type=int,
                                         default=30,
-                                        help='Query timeout in seconds, default is 30 secs.',
+                                        help='Query timeout in seconds, '
+                                             'default is 30 secs.',
                                         required=False)
 
         self.required_args.add_argument('-lt', '--login-timeout',
                                         dest='login_timeout',
                                         type=int,
                                         default=15,
-                                        help='Timeout for connection and login in seconds, default is 15 secs.',
+                                        help='Timeout for connection and '
+                                             'login in seconds, default is '
+                                             '15 secs.',
                                         required=False)
 
     def query(self, sql_query):
@@ -107,47 +113,42 @@ class NagiosPluginMSSQL(NagiosPlugin):
 
     def get_db_size(self):
         """
-        Get the size of the database connected on. Also return the used percent. This returns a dict with a key per
-        filename (eg. db.Data / db.Log) that is also a dict with keys 'size', 'maxsize' and 'used' (sizes are in
-        bytes and used in percent).
+        Get the size of the database connected on. Also return the used
+        percent. This returns a dict with a key per filename (eg. db.Data /
+        db.Log) that is also a dict with keys 'size', 'maxsize' and 'used'
+        (sizes are in bytes and used in percent).
 
         :return: dict
         """
-        query = self.query("""SELECT TOP 1000
-                                   [file_id]
-                                  ,[type_desc]
-                                  ,[name]
-                                  ,[state_desc]
-                                  ,[size]
-                                  ,[max_size]
-                              FROM [{0.database}].[sys].[database_files]""".format(self.options))
+        query = self.query(
+            r"""SELECT TOP 1000
+            [file_id] ,[type_desc] ,[name] ,[state_desc] ,[size] ,[max_size]
+            FROM [{0.database}].[sys].[database_files]""".format(self.options))
         db_size = {}
         for result in query:
             db_size[result['name']] = {
                 'type': result['type_desc'].lower(),
                 'size': result['size'],
                 'maxsize': result['max_size'],
-                'used': result['size'] / result['max_size'] * 100 if result['max_size'] > 0 else None,
+                'used': result['size'] / result['max_size'] * 100
+                if result['max_size'] > 0 else None,
             }
 
         return db_size
 
     def get_all_db_status(self):
         """
-        Query the status of all databases on the connected SQL Server. Return a list of tuples [(db_name, db_state),
-        ...].
+        Query the status of all databases on the connected SQL Server.
+
+        Return a list of tuples [(db_name, db_state), ...].
 
         :return: list(tuple)
         """
         query_result = self.query(
-r"""SELECT db.name,
-db.create_date,
-db.collation_name,
-db.state_desc,
-sdb.filename
-from sys.databases db
-join sys.sysdatabases sdb
-on db.database_id= sdb.dbid""")
+            r"""SELECT db.name, db.create_date, db.collation_name,
+            db.state_desc, sdb.filename
+            FROM sys.databases db
+            JOIN sys.sysdatabases sdb ON db.database_id = sdb.dbid""")
 
         db_states = [(db['name'], db['state_desc']) for db in query_result]
         return db_states
@@ -159,11 +160,10 @@ on db.database_id= sdb.dbid""")
         :return: local time of SQL server
         :rtype: datetime
         """
-        server_datetime = self.query(r"SELECT GETDATE() AS ServerDateTime")[0]['ServerDateTime']
+        server_datetime = self.query(
+            r"SELECT GETDATE() AS ServerDateTime")[0]['ServerDateTime']
         return server_datetime
 
     def close(self):
-        """
-        Close the database connection.
-        """
+        """Close the database connection."""
         self.mssql.close()
