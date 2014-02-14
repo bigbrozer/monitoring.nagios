@@ -28,14 +28,11 @@ logger = log.getLogger('monitoring.nagios.probes')
 
 class Probe(object):
     """Base class for defining a new Probe."""
-    def __init__(self, hostaddress='', port=None):
+    def __init__(self):
         logger.debug('')
         logger.debug('=== BEGIN NEW PROBE INIT ===')
         logger.debug('Instanciating a new probe of type %s.',
                      self.__class__.__name__)
-
-        self._hostaddress = hostaddress
-        self._port = port
 
         if 'Probe' == self.__class__.__name__:
             logger.debug('=== END PROBE INIT ===')
