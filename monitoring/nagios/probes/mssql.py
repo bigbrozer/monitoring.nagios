@@ -34,8 +34,8 @@ class ProbeMSSQL(Probe):
     """
     A MS SQL Server probe.
 
-    :param host: The host to connect to.
-    :type host: str
+    :param hostaddress: The host to connect to.
+    :type hostaddress: str
     :param username: Login user name.
     :type username: str
     :param password: Login user password.
@@ -49,24 +49,33 @@ class ProbeMSSQL(Probe):
     is 15 secs.
     :type login_timeout: int
     """
-    def __init__(self, host, username, password, database=None,
+    def __init__(self, hostaddress, username, password, database=None,
                  query_timeout=30, login_timeout=15):
-        super(ProbeMSSQL, self).__init__(host)
+        super(ProbeMSSQL, self).__init__()
 
-        logger.debug('Establishing MS SQL server connection '
-                     'to %s on database %s with user %s...',
-                     host, database, username)
+        self.hostaddress = hostaddress
+        self.username = username
+        self._password = password
+        self.database = database
+        self.query_timeout = query_timeout
+        self.login_timeout = login_timeout
+
+        logger.debug('Establishing MS SQL server connection to {0.hostaddress} '
+                     'on database {0.database} with user '
+                     '{0.username}...'.format(self))
         try:
-            self._db_connection = pymssql.connect(host=self._hostaddress,
-                                                  user=username,
-                                                  password=password,
-                                                  database=database,
-                                                  timeout=query_timeout,
-                                                  login_timeout=login_timeout,
-                                                  as_dict=True)
+            self._db_connection = pymssql.connect(
+                host=self.hostaddress,
+                user=self.username,
+                password=self._password,
+                database=self.database,
+                timeout=self.query_timeout,
+                login_timeout=self.login_timeout,
+                as_dict=True)
         except pymssql.Error as e:
             raise PluginError('Cannot connect to the database %s on server '
-                              '%s !' % (database, host), "\n".join(list(e)))
+                              '%s !' % (self.database, self.hostaddress),
+                              "\n".join(list(e)))
 
     def _get_cursor(self):
         """
