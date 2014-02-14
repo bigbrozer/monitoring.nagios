@@ -41,7 +41,7 @@ class NagiosPluginWMI(NagiosPlugin):
 
         # Init a new probe of type WMI
         self.probe = ProbeWMI(
-            host=self.options.hostname,
+            hostaddress=self.options.hostname,
             login=self.options.login,
             password=self.options.password,
             domain=self.options.domain,

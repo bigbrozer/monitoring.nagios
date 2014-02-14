@@ -33,8 +33,8 @@ class ProbeWMI(Probe):
     """
     A WMI probe.
 
-    :param host: The IP address of host to connect to.
-    :type host: str
+    :param hostaddress: The IP address of host to connect to.
+    :type hostaddress: str
     :param login: Login name.
     :type login: str
     :param password: Login password.
@@ -44,11 +44,20 @@ class ProbeWMI(Probe):
     :param namespace: WMI namespace (default is ``root/cimv2``).
     :type namespace: str
     """
-    def __init__(self, host, login, password, domain, namespace='root/cimv2'):
-        super(ProbeWMI, self).__init__(host)
+    def __init__(self,
+                 hostaddress,
+                 login,
+                 password,
+                 domain,
+                 namespace='root/cimv2'):
+        super(ProbeWMI, self).__init__()
 
-        self.credentials = "{0}\\{1}%{2}".format(domain, login, password)
-        self.hosturl = "//{0}".format(host)
+        self.hostaddress = hostaddress
+        self.login = login
+        self._password = password
+        self.domain = domain
+        self.credentials = "{0.domain}\\{0.login}%{0._password}".format(self)
+        self.hosturl = "//{0.hostaddress}".format(self)
         self.namespace = namespace
         self.command = []
 

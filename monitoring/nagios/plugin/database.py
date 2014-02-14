@@ -43,7 +43,7 @@ class NagiosPluginMSSQL(NagiosPlugin):
 
         # Init default plugin probe
         try:
-            self.mssql = ProbeMSSQL(host=self.options.hostname,
+            self.mssql = ProbeMSSQL(hostaddress=self.options.hostname,
                                     username=self.options.username,
                                     password=self.options.password,
                                     database=self.options.database,
