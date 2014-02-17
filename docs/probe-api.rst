@@ -46,6 +46,13 @@ Plugins that interact with SNMP or SSH protocols.
     :members:
     :inherited-members:
 
+:mod:`http` --- Probe to make HTTP requests
+-------------------------------------------
+
+.. automodule:: monitoring.nagios.probes.http
+    :members:
+    :inherited-members:
+
 Databases
 =========
 
