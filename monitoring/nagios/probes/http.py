@@ -38,13 +38,13 @@ class ProbeHTTP(Probe):
     This is basically just a wrapper arround `requests
     <http://www.python-requests.org/en/latest/>`_ library.
     """
-    def __init__(self, hostaddress, port=80, protocol="http", auth=None):
+    def __init__(self, hostaddress, port=80, ssl=False, auth=None):
         super(ProbeHTTP, self).__init__()
 
         self.hostaddress = hostaddress
-        self.port = port
+        self.port = 80 if not port else port
         self.auth = () if not auth else auth
-        self.protocol = protocol
+        self.protocol = "http" if not ssl else "https"
         self.baseurl = "{0.protocol}://{0.hostaddress}:{0.port}".format(self)
 
         logger.debug("Initialized a new HTTP probe on %s.", self.baseurl)
@@ -71,7 +71,7 @@ class ProbeHTTP(Probe):
                      ``hostaddress``.
         :type path: str, unicode
         :param data: Dictionary, bytes, or file-like object to send in the body
-        of the Request.
+                     of the Request.
         :param kwargs: optional arguments that requests takes.
         :returns: return of :func:`requests.get`.
         """
