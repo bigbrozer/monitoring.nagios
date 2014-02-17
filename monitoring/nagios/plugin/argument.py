@@ -28,6 +28,23 @@ This module contains a set of functions to convert or specify argument types.
 from datetime import timedelta
 
 
+def http_basic_auth(auth_string):
+    """
+    Convert a HTTP Basic Authentication string to a tuple.
+
+    :param auth_string: the basic auth string of the form ``login:passwd``.
+    :type auth_string: str, unicode
+    :returns: Basic auth as a tuple ``(login, passwd)``.
+    :rtype: tuple
+
+    **Example**::
+
+     >>> http_basic_auth("besancon:8jj_767hhgy")
+     ('besancon', '8jj_767hhgy')
+    """
+    return tuple(auth_string.split(":"))
+
+
 def days(integer):
     """
     Convert ``integer`` to a timedelta object. ``integer`` is a number of days.
