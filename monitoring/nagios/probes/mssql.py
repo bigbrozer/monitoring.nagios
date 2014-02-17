@@ -22,10 +22,10 @@
 """MSSQL probe module."""
 
 import logging as log
+import pymssql
 
 from monitoring.nagios.probes import Probe
-from monitoring.nagios.plugin.exceptions import PluginError
-import pymssql
+from monitoring.nagios.exceptions import PluginError
 
 logger = log.getLogger('monitoring.nagios.probes.mssql')
 

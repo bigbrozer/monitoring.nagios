@@ -25,9 +25,11 @@ from datetime import datetime
 import logging as log
 import string
 
-from monitoring.nagios.probes import Probe
-from monitoring.nagios.plugin.exceptions import NagiosUnknown
 import ssh
+
+from monitoring.nagios.probes import Probe
+from monitoring.nagios.exceptions import NagiosUnknown
+
 
 logger = log.getLogger('monitoring.nagios.probes')
 

@@ -26,7 +26,7 @@ import logging as log
 import os
 import sys
 
-from monitoring.nagios.plugin.exceptions import PluginError
+from monitoring.nagios.exceptions import PluginError
 from monitoring.nagios.logger import debug_multiline
 from monitoring.nagios.plugin import NagiosPlugin
 from monitoring.nagios.probes import ProbeMSSQL

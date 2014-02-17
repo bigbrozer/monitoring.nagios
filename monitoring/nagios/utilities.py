@@ -25,7 +25,7 @@ from __future__ import division
 from datetime import timedelta
 import logging as log
 
-logger = log.getLogger('monitoring.nagios.plugin.utilities')
+logger = log.getLogger('monitoring.nagios.utilities')
 
 __all__ = [
     'ip_rm_leading_zero',

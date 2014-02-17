@@ -23,12 +23,14 @@
 
 import logging as log
 from pprint import pformat
-from pysnmp.entity.rfc3413.oneliner import cmdgen
 from UserDict import IterableUserDict
 
+from pysnmp.entity.rfc3413.oneliner import cmdgen
+
 from monitoring.nagios.probes import Probe
-from monitoring.nagios.plugin.exceptions import NagiosUnknown
-from monitoring.nagios.plugin.utilities import find_key_from_value
+from monitoring.nagios.exceptions import NagiosUnknown
+from monitoring.nagios.utilities import find_key_from_value
+
 
 logger = log.getLogger('monitoring.nagios.probes')
 

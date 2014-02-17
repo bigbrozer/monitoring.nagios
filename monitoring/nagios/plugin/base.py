@@ -32,7 +32,7 @@ from pprint import pformat
 import logging as log
 
 import monitoring.nagios
-from monitoring.nagios.plugin.exceptions import (
+from monitoring.nagios.exceptions import (
     NagiosUnknown,
     NagiosCritical,
     NagiosWarning,
