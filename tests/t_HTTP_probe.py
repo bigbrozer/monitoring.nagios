@@ -24,6 +24,8 @@
 import unittest
 import sys
 
+from requests.exceptions import HTTPError
+
 sys.path.insert(0, "..")
 from monitoring.nagios.probes import ProbeHTTP
 
@@ -34,3 +36,28 @@ class TestHTTPProbe(unittest.TestCase):
         """Test instance initialization."""
         http = ProbeHTTP("monitoring-dc.app.corp")
         self.assertEqual(http.baseurl, "http://monitoring-dc.app.corp:80")
+
+    def test_http_get(self):
+        """Test HTTP GET request."""
+        http = ProbeHTTP("www.google.com")
+        http_get_response = http.get("/")
+        self.assertTrue(http_get_response.status_code == 200)
+
+    def test_http_post(self):
+        """Test HTTP POST request."""
+        http = ProbeHTTP("httpbin.org")
+        http_get_response = http.post("/post", data={"hello": "world"})
+        self.assertTrue(http_get_response.status_code == 200)
+
+    def test_status_404(self):
+        """Test HTTP GET that returns 404 error code."""
+        http = ProbeHTTP("monitoring-dc.app.corp")
+        http_get_response = http.get("/rueyuzeytzeytiuytuez")
+        self.assertTrue(http_get_response.status_code == 404)
+
+    def test_bad_status_exception(self):
+        """Test that HTTP request returns bad code."""
+        http = ProbeHTTP("monitoring-dc.app.corp")
+        http_get_response = http.get("/rueyuzeytzeytiuytuez")
+        with self.assertRaises(HTTPError):
+            http_get_response.raise_for_status()
