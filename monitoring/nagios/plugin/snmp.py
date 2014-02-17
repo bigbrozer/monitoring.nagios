@@ -22,8 +22,6 @@
 """SNMP module for plugins."""
 
 import logging as log
-import os
-import sys
 
 from monitoring.nagios.probes import ProbeSNMP
 from monitoring.nagios.plugin import NagiosPlugin
@@ -33,9 +31,8 @@ logger = log.getLogger('monitoring.nagios.plugin.snmp')
 
 class NagiosPluginSNMP(NagiosPlugin):
     """A standard SNMP Nagios plugin."""
-    def __init__(self, name=os.path.basename(sys.argv[0]), version='',
-                 description=''):
-        super(NagiosPluginSNMP, self).__init__(name, version, description)
+    def __init__(self, *args, **kwargs):
+        super(NagiosPluginSNMP, self).__init__(*args, **kwargs)
 
         self.__use_snmp_v2 = 0
 

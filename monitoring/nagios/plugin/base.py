@@ -57,10 +57,10 @@ class NagiosPlugin(object):
     :param description: a description of what is doing the plugin.
     :type description: str, unicode
     """
-    def __init__(self, name=os.path.basename(sys.argv[0]), version='',
+    def __init__(self, name=None, version='',
                  description=''):
         # Plugin infos
-        self.name = name
+        self.name = os.path.basename(sys.argv[0]) if not name else name
         self.version = version
         self.description = description
 

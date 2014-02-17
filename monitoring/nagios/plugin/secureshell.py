@@ -22,8 +22,6 @@
 """SSH module for plugins."""
 
 import logging as log
-import os
-import sys
 
 from monitoring.nagios.plugin import NagiosPlugin
 from monitoring.nagios.probes import ProbeSSH
@@ -33,9 +31,8 @@ logger = log.getLogger('monitoring.nagios.plugin.ssh')
 
 class NagiosPluginSSH(NagiosPlugin):
     """Base for a standard SSH Nagios plugin"""
-    def __init__(self, name=os.path.basename(sys.argv[0]), version='',
-                 description=''):
-        super(NagiosPluginSSH, self).__init__(name, version, description)
+    def __init__(self, *args, **kwargs):
+        super(NagiosPluginSSH, self).__init__(*args, **kwargs)
 
         # Init a new probe of type SSH
         self.ssh = ProbeSSH(

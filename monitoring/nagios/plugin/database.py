@@ -23,8 +23,6 @@
 
 from __future__ import division
 import logging as log
-import os
-import sys
 
 from monitoring.nagios.exceptions import PluginError
 from monitoring.nagios.logger import debug_multiline
@@ -37,9 +35,8 @@ logger = log.getLogger('monitoring.nagios.plugin.database')
 #TODO: write tests for this class.
 class NagiosPluginMSSQL(NagiosPlugin):
     """Base for a standard SSH Nagios plugin"""
-    def __init__(self, name=os.path.basename(sys.argv[0]), version='',
-                 description=''):
-        super(NagiosPluginMSSQL, self).__init__(name, version, description)
+    def __init__(self, *args, **kwargs):
+        super(NagiosPluginMSSQL, self).__init__(*args, **kwargs)
 
         # Init default plugin probe
         try:
