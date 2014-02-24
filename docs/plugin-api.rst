@@ -29,21 +29,18 @@ Plugins that interact with SNMP or SSH protocols.
 
 .. autoclass:: NagiosPluginSNMP
     :members:
-    :inherited-members:
 
 :class:`NagiosPluginSSH` --- Plugin SSH based
 ---------------------------------------------
 
 .. autoclass:: NagiosPluginSSH
     :members:
-    :inherited-members:
 
 :class:`NagiosPluginWMI` --- Plugin WMI based
 ---------------------------------------------
 
 .. autoclass:: NagiosPluginWMI
     :members:
-    :inherited-members:
 
 Databases
 =========
@@ -55,4 +52,3 @@ Plugins that interact with a database.
 
 .. autoclass:: NagiosPluginMSSQL
     :members:
-    :inherited-members:
