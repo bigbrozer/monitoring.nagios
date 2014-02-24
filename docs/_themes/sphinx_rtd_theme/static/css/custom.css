@@ -1,0 +1,6 @@
+/* CUSTOMIZE THEME */
+
+/* Add support for third level in toctree */
+.wy-menu-vertical li.toctree-l3>a {
+    padding-left: 3.427em;
+}
