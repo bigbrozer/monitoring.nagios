@@ -24,11 +24,55 @@
 import logging
 
 import requests
+from bs4 import BeautifulSoup
 
 from monitoring.nagios.probes import Probe
-
+from monitoring.nagios.exceptions import NagiosUnknown
 
 logger = logging.getLogger('monitoring.nagios.probes.http')
+
+
+class HTTPResponse(object):
+    """
+    This class represents the HTTP response from the server.
+
+    This is a wrapper arround ``requests.Response`` object with extensions like
+    parsing response to others formats.
+
+    Check out `requests.Response API reference <http://www.python-requests.org/en/latest/api/#requests.Response>`_ for more details.
+    """
+    __attributes = ()
+
+    def __init__(self, response):
+        self.__response = response
+
+    def __getattr__(self, item):
+        """
+        Basic wrapper for getting attributes of ``HTTPResponse`` and
+        ``requests.Response`` objects.
+        """
+        if item in self.__attributes:
+            return getattr(self, item)
+        else:
+            return getattr(self.__response, item)
+
+    def xml(self):
+        """
+        Parse response as XML and make a BeautifulSoup out of it.
+
+        :returns: an instance of ``BeautifulSoup`` class.
+        """
+        if self.status_code == ProbeHTTP.status_codes.ok:
+            xml = BeautifulSoup(self.text)
+            if xml.find_all(True):
+                return xml
+            else:
+                raise NagiosUnknown("Cannot parse XML data ! "
+                                    "Please investigate.")
+        else:
+            raise NagiosUnknown(
+                "HTTP Error {0.status_code}: Unable to fetch "
+                "XML data from {0.url} !".format(self))
 
 
 class ProbeHTTP(Probe):
@@ -38,6 +82,8 @@ class ProbeHTTP(Probe):
     This is basically just a wrapper arround `requests
     <http://www.python-requests.org/en/latest/>`_ library.
     """
+    status_codes = requests.codes
+
     def __init__(self, hostaddress, port=80, ssl=False, auth=None):
         super(ProbeHTTP, self).__init__()
 
@@ -60,8 +106,9 @@ class ProbeHTTP(Probe):
         :returns: return of :func:`requests.get`.
         """
         path = path.lstrip("/")
-        return requests.get("{0}/{1}".format(self.baseurl, path),
-                            **kwargs)
+        response = requests.get("{0}/{1}".format(self.baseurl, path),
+                                **kwargs)
+        return HTTPResponse(response)
 
     def post(self, path, data, **kwargs):
         """
@@ -76,6 +123,7 @@ class ProbeHTTP(Probe):
         :returns: return of :func:`requests.get`.
         """
         path = path.lstrip("/")
-        return requests.post("{0}/{1}".format(self.baseurl, path),
-                             data,
-                             **kwargs)
+        response = requests.post("{0}/{1}".format(self.baseurl, path),
+                                 data,
+                                 **kwargs)
+        return HTTPResponse(response)

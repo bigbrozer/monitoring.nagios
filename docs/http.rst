@@ -62,8 +62,9 @@ This will post the ``data`` to the ``/post_path`` URL.
 Playing with response
 =====================
 
-The ``response`` variable now contains the server answer that makes new
-attributes available to you in order to process server response.
+The ``response`` object now contains the server answer that makes new
+attributes available to you in order to process server response. This is an
+instance of :class:`monitoring.nagios.probes.http.HTTPResponse`
 
 Response content
 ----------------
@@ -88,3 +89,22 @@ objects like so::
 
 You will obtain formatted object usable for Python. ``response.json()``
 will raise a ``ValueError`` exception if any error occurs.
+
+XML output
+----------
+
+If the response returned by the server is XML data, you can obtain a
+``BeautifulSoup`` parser object and play with it like so::
+
+ # Find all tags "<alert></alert>" in XML results
+ >>> xml_data = response.xml()
+ >>> xml_data.find_all("alert")
+
+ # Get a last_update value using attributes like in XML
+ # "<alert><last_update>10:00</last_update></alert>"
+ >>> xml_data.alert.last_update
+ '10:00'
+
+Check out the documentation of
+`BeautifulSoup 4 <http://www.crummy.com/software/BeautifulSoup/bs4/doc/>`_ for
+more information about the available methods and attributes.

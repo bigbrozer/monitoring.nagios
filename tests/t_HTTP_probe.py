@@ -25,6 +25,7 @@ import unittest
 import sys
 
 from requests.exceptions import HTTPError
+from bs4 import BeautifulSoup
 
 sys.path.insert(0, "..")
 from monitoring.nagios.probes import ProbeHTTP
@@ -32,15 +33,16 @@ from monitoring.nagios.probes import ProbeHTTP
 
 class TestHTTPProbe(unittest.TestCase):
     """Basic tests of HTTP probe functionalities."""
+    def setUp(self):
+        self.http = ProbeHTTP("monitoring-dc.app.corp")
+
     def test_instance_init(self):
         """Test instance initialization."""
-        http = ProbeHTTP("monitoring-dc.app.corp")
-        self.assertEqual(http.baseurl, "http://monitoring-dc.app.corp:80")
+        self.assertEqual(self.http.baseurl, "http://monitoring-dc.app.corp:80")
 
     def test_http_get(self):
         """Test HTTP GET request."""
-        http = ProbeHTTP("www.google.com")
-        http_get_response = http.get("/")
+        http_get_response = self.http.get("/")
         self.assertTrue(http_get_response.status_code == 200)
 
     def test_http_post(self):
@@ -51,13 +53,24 @@ class TestHTTPProbe(unittest.TestCase):
 
     def test_status_404(self):
         """Test HTTP GET that returns 404 error code."""
-        http = ProbeHTTP("monitoring-dc.app.corp")
-        http_get_response = http.get("/rueyuzeytzeytiuytuez")
+        http_get_response = self.http.get("/rueyuzeytzeytiuytuez")
         self.assertTrue(http_get_response.status_code == 404)
 
     def test_bad_status_exception(self):
         """Test that HTTP request returns bad code."""
-        http = ProbeHTTP("monitoring-dc.app.corp")
-        http_get_response = http.get("/rueyuzeytzeytiuytuez")
+        http_get_response = self.http.get("/rueyuzeytzeytiuytuez")
         with self.assertRaises(HTTPError):
             http_get_response.raise_for_status()
+
+    def test_xml_parser_init(self):
+        """Test fetching a XML file and parsing it."""
+        http = ProbeHTTP("wweasapp0611.eas.ww.corp")
+        response = http.get("/wweasapp0611.xml")
+        self.assertIsInstance(response.xml(), BeautifulSoup)
+
+    def test_xml_find_tag(self):
+        """Test fetching a XML file and find a tag in it."""
+        http = ProbeHTTP("wweasapp0611.eas.ww.corp")
+        response = http.get("/wweasapp0611.xml")
+        xml = response.xml()
+        self.assertTrue(xml.alert.last_update)
