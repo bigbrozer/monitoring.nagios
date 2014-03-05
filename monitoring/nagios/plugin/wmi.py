@@ -22,8 +22,6 @@
 """WMI module for plugins."""
 
 import logging
-import os
-import sys
 import csv
 from pprint import pformat
 
@@ -35,9 +33,8 @@ logger = logging.getLogger('monitoring.nagios.plugin.wmi')
 
 class NagiosPluginWMI(NagiosPlugin):
     """Base for a standard WMI Nagios plugin"""
-    def __init__(self, name=os.path.basename(sys.argv[0]), version='',
-                 description=''):
-        super(NagiosPluginWMI, self).__init__(name, version, description)
+    def __init__(self, *args, **kwargs):
+        super(NagiosPluginWMI, self).__init__(*args, **kwargs)
 
         # Init a new probe of type WMI
         self.probe = ProbeWMI(

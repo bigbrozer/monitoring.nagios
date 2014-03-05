@@ -25,9 +25,11 @@ from datetime import datetime
 import logging as log
 import string
 
-from monitoring.nagios.probes import Probe
-from monitoring.nagios.plugin.exceptions import NagiosUnknown
 import ssh
+
+from monitoring.nagios.probes import Probe
+from monitoring.nagios.exceptions import NagiosUnknown
+
 
 logger = log.getLogger('monitoring.nagios.probes')
 
@@ -72,7 +74,7 @@ class ProbeSSH(Probe):
     :param port: The remote port the remote host listen on.
     :type port: int
     :param username: Login user name. Default is to use the current
-    authenticated user.
+                     authenticated user.
     :type username: str
     :param password: Login user password. Default is to use the public key.
     :type password: str
@@ -160,12 +162,12 @@ Message: %s''' % (self.hostaddress, self.port, e))
         filter files.
 
         :param directory: Directory to look in. Default is the current working
-        directory.
+                          directory.
         :type directory: str
         :param glob: Pattern to filter files. Default to '*' all.
         :type glob: str
         :param depth: Recursive level for scanning files. Default to disable
-        recursive scanning.
+                      recursive scanning.
         :type depth: int
         :return: list(str)
         """
@@ -182,7 +184,7 @@ Message: %s''' % (self.hostaddress, self.port, e))
 
         :param filename: path to the file that should be checked.
         :param stime: location of the stime binary. Default to
-        ``/usr/local/nagios/bin/stime``.
+                      ``/usr/local/nagios/bin/stime``.
         :return: Unix timestamp.
         :rtype: int
         """

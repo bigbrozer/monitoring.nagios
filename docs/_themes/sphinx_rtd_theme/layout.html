@@ -1,5 +1,6 @@
 {# TEMPLATE VAR SETTINGS #}
 {%- set url_root = pathto('', 1) %}
+{%- set css_files = css_files + ['_static/css/custom.css']  %}
 {%- if url_root == '#' %}{% set url_root = '' %}{% endif %}
 {%- if not embedded and docstitle %}
   {%- set titlesuffix = " &mdash; "|safe + docstitle|e %}
@@ -110,7 +111,7 @@
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        {% set toctree = toctree(maxdepth=2, collapse=False, includehidden=True) %}
+        {% set toctree = toctree(maxdepth=3, collapse=False, includehidden=True) %}
         {% if toctree %}
             {{ toctree }}
         {% else %}

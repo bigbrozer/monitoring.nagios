@@ -32,7 +32,7 @@ from pprint import pformat
 import logging as log
 
 import monitoring.nagios
-from monitoring.nagios.plugin.exceptions import (
+from monitoring.nagios.exceptions import (
     NagiosUnknown,
     NagiosCritical,
     NagiosWarning,
@@ -51,16 +51,16 @@ class NagiosPlugin(object):
     :func:`initialize` to do this.
 
     :param name: the name of the plugin. This is set to the name of the file by
-    default.
+                 default.
     :param version: the version of the plugin. Set it to anything you want.
     :type version: str, unicode
     :param description: a description of what is doing the plugin.
     :type description: str, unicode
     """
-    def __init__(self, name=os.path.basename(sys.argv[0]), version='',
+    def __init__(self, name=None, version='',
                  description=''):
         # Plugin infos
-        self.name = name
+        self.name = os.path.basename(sys.argv[0]) if not name else name
         self.version = version
         self.description = description
 
@@ -243,10 +243,11 @@ If you see this message that would mean that the retention file located in
         Includes short output, long output and perf data (if any).
 
         :param substitute: dict wih key/value pair that should be replaced in
-        string (see :py:func:`str.format`).
+                           string (see :py:func:`str.format`).
         :type substitute: dict
         :param long_output_limit: limit the number of lines of long output,
-        default to ``20``. Set it to ``None`` for no limit.
+                                  default to ``20``. Set it to ``None`` for no
+                                  limit.
         :type long_output_limit: int, None
 
         :return: str, unicode

@@ -2,5 +2,5 @@
 Utilities
 =========
 
-.. automodule:: monitoring.nagios.plugin.utilities
+.. automodule:: monitoring.nagios.utilities
     :members: 

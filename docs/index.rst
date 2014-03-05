@@ -16,6 +16,7 @@ Contents:
     new_plugin
     snmp
     wmi
+    http
     api
 
 

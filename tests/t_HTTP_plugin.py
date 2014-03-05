@@ -1,4 +1,3 @@
-#!/usr/bin/env python2.7
 # -*- coding: utf-8 -*-
 # Copyright (C) Vincent BESANCON <besancon.vincent@gmail.com>
 #
@@ -20,34 +19,24 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
 # OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""Setuptools configuration for this project."""
+"""Test module for HTTP based plugins."""
 
-from setuptools import setup, find_packages
+import unittest
+import sys
 
-# Package dependencies
-dependencies = [
-    'pysnmp==4.2.4',
-    'ssh==1.8.0',
-    'pymssql==2.0.1',
-    'requests==2.2.1',
-    'beautifulsoup4==4.3.2',
-]
+from bs4 import BeautifulSoup
 
-# Way to obtain the project version if project is already installed somewhere
-# in the Python path.
-project_namespace = {}
-with open("monitoring/nagios/__init__.py") as version_file:
-    exec(version_file.read(), project_namespace)
+sys.path.insert(0, "..")
+from monitoring.nagios.plugin import NagiosPluginHTTP
 
-# Init distribution
-setup(
-    name='monitoring.nagios',
-    version=project_namespace["__version__"],
-    description='Nagios plugin creation framework',
-    author='Vincent BESANCON',
-    author_email='besancon.vincent@gmail.com',
-    license='MIT',
-    namespace_packages=['monitoring'],
-    packages=find_packages(),
-    install_requires=dependencies
-)
+
+class TestHTTPPlugin(unittest.TestCase):
+    """
+    Test HTTP plugin class.
+    """
+
+    def setUp(self):
+        sys.argv = sys.argv[:1]
+        args = ['-H', 'wweasapp0611.eas.ww.corp',]
+        sys.argv.extend(args)
+        self.plugin = NagiosPluginHTTP()

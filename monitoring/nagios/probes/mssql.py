@@ -22,10 +22,10 @@
 """MSSQL probe module."""
 
 import logging as log
+import pymssql
 
 from monitoring.nagios.probes import Probe
-from monitoring.nagios.plugin.exceptions import PluginError
-import pymssql
+from monitoring.nagios.exceptions import PluginError
 
 logger = log.getLogger('monitoring.nagios.probes.mssql')
 
@@ -41,12 +41,12 @@ class ProbeMSSQL(Probe):
     :param password: Login user password.
     :type password: str
     :param database: Database to connect to, by default selects the database
-    which is set as default for specific user.
+                     which is set as default for specific user.
     :type database: str
     :param query_timeout: Query timeout in seconds, default is 30 secs.
     :type query_timeout: int
     :param login_timeout: Timeout for connection and login in seconds, default
-    is 15 secs.
+                          is 15 secs.
     :type login_timeout: int
     """
     def __init__(self, hostaddress, username, password, database=None,

@@ -25,7 +25,7 @@ from __future__ import division
 from datetime import timedelta
 import logging as log
 
-logger = log.getLogger('monitoring.nagios.plugin.utilities')
+logger = log.getLogger('monitoring.nagios.utilities')
 
 __all__ = [
     'ip_rm_leading_zero',
@@ -114,9 +114,9 @@ def humanize_duration(time_delta, show=None, sep=" "):
 
     :param time_delta: the timedelta object to humanize.
     :param sep: specify a separator for days, hours, minutes and seconds in the
-    final string.
+                final string.
     :return: a dict with keys: ``days``, ``hours``, ``minutes``, ``minutes``
-    and ``seconds``.
+             and ``seconds``.
     :rtype: dict
 
     **Example**::
