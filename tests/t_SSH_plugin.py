@@ -124,3 +124,9 @@ class TestProbeSSH(unittest.TestCase):
         """Test failure when host cannot be reached."""
         with self.assertRaises(SystemExit):
             self.ssh = ProbeSSH('10.56.89.45')
+
+    def test_ssh_command_timeout(self):
+        """Test SSH remote command timeout trigger."""
+        self.ssh = ProbeSSH('monadm.edc.eu.corp', timeout=1)
+        with self.assertRaises(self.ssh.SSHCommandTimeout):
+            self.ssh.execute('sleep 5 && echo success')

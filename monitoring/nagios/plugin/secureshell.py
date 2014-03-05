@@ -40,6 +40,7 @@ class NagiosPluginSSH(NagiosPlugin):
             port=self.options.port,
             username=self.options.username,
             password=self.options.password,
+            timeout=self.options.timeout
         )
 
         if 'NagiosPluginSSH' == self.__class__.__name__:

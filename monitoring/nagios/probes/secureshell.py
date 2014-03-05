@@ -21,9 +21,10 @@
 
 """SSH probe module."""
 
-from datetime import datetime
 import logging as log
 import string
+import socket
+from datetime import datetime
 
 import ssh
 
@@ -47,15 +48,15 @@ class CommandResult(object):
 
     .. attribute:: CommandResult.output
 
-        This is stdout or output of the command.
+        This is a list of lines on stdout or output of the command.
 
     .. attribute:: CommandResult.errors
 
-        This is stderr or all errors for the command.
+        This is a list of lines on stderr or all errors for the command.
 
     .. attribute:: CommandResult.status
 
-        The command exit code.
+        An integer for the command exit code.
     """
     def __init__(self, channel):
         self.input = channel.makefile('wb', -1)
@@ -83,7 +84,11 @@ class ProbeSSH(Probe):
     """
     class SSHError(Exception):
         """Base class for all SSH related errors."""
-        pass
+        def __init__(self, message):
+            self.message = message
+
+        def __str__(self):
+            return self.message
 
     class SSHCommandFailed(SSHError):
         """Exception triggered when a SSH command has failed."""
@@ -91,6 +96,10 @@ class ProbeSSH(Probe):
 
     class SSHCommandNotFound(SSHError):
         """Exception triggered when a SSH command is not found."""
+        pass
+
+    class SSHCommandTimeout(SSHError):
+        """Exception triggered when a SSH command timed out."""
         pass
 
     def __init__(self, hostaddress='', port=22, username=None, password=None,
@@ -134,6 +143,8 @@ Message: %s''' % (self.hostaddress, self.port, e))
         :param timeout: Command execution timeout. Default to 10 secs.
         :type timeout: float
         :return: An instance of :class:`CommandResult`.
+
+        :raises ProbeSSH.SSHCommandTimeout: if executed command timed out.
         """
         logger.debug('Execute SSH command: {}'.format(command))
 
@@ -142,10 +153,16 @@ Message: %s''' % (self.hostaddress, self.port, e))
             timeout = self.timeout
         logger.debug('Timeout is set to %f.', timeout)
 
-        chan = self._ssh_client.get_transport().open_session()
-        chan.settimeout(timeout)
-        chan.exec_command(command)
-        cmd_results = CommandResult(chan)
+        try:
+            chan = self._ssh_client.get_transport().open_session()
+            chan.settimeout(timeout)
+            chan.exec_command(command)
+            cmd_results = CommandResult(chan)
+        except socket.timeout:
+            raise self.SSHCommandTimeout("The command execution has timed out !"
+                                         "\nCommand: {}"
+                                         "\nTimeout: {}s".format(command,
+                                                                timeout))
 
         return cmd_results
 
