@@ -26,7 +26,7 @@ Instanciate a new HTTP plugin with::
  >>> logger = logging.getLogger('plugin')
 
  >>> plugin = NagiosPluginHTTP(version="1.0",
-                               description="Get a file from HTTP.")
+ >>>                           description="Get a file from HTTP.")
 
 Default plugin arguments
 ========================
