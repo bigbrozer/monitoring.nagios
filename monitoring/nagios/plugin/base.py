@@ -96,20 +96,33 @@ class NagiosPlugin(object):
         logger.debug('Processed command line arguments:')
         logger.debug(pformat(vars(self.options), indent=4))
 
-        # Pickle file name path and default pattern
-        self._picklefile_path = '/var/tmp'
+        # Pickle file and location
+        if os.environ.get("NAGIOSENV"):
+            self._picklefile_path = '/var/tmp/plugin/{NAGIOSENV}'.format(
+                **os.environ)
+        else:
+            self._picklefile_path = '/var/tmp/plugin'
+
+        try:
+            if not os.path.isdir(self._picklefile_path):
+                os.makedirs(self._picklefile_path)
+        except OSError:
+            self.unknown("Unable to create the retention folder "
+                         "{0._picklefile_path}".format(self))
+
         self._picklefile_name = '{plugin.name}_{opt.hostname}'.format(
             plugin=self, opt=self.options)
         self.picklefile_pattern = 'p'
 
-        # Plugin initialization
-        self.initialize()
-
-        # Set the full pickle file name and path (can be modified in second
-        # level of init)
         self.picklefile = '{0}/{1}_{2}.pkl'.format(self._picklefile_path,
                                                    self._picklefile_name,
                                                    self.picklefile_pattern)
+
+        logger.debug("Pickled data will be saved "
+                     "in {0.picklefile}.".format(self))
+
+        # Second level plugin initialization
+        self.initialize()
 
         # Sanity checks for plugin arguments
         self.verify_plugin_arguments()
@@ -192,7 +205,9 @@ class NagiosPlugin(object):
                 message = """Unable to read retention file !
 If you see this message that would mean that the retention file located in
 \'%s\' does not exists or it is not readable. Check permissions or try to
-delete it to generate a new one. It may be possible that this version of this
+delete it to generate a new one. The directory may be not present too.
+
+It may be possible that this version of this
 plugin has changed and the retention file is outdated, so delete it if this is
 the case.
 
@@ -231,7 +246,7 @@ the case.
         except IOError:
             message = """Unable to save retention file !
 If you see this message that would mean that the retention file located in
-\'%s\' is not writable. Check permissions.
+\'%s\' is not writable or directory is missing.
 
 %s
 """ % (self.picklefile, traceback.format_exc(limit=1))
