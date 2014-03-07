@@ -1,3 +1,5 @@
+default:
+
 clean: py-bytecode backup-files
 
 doc: clean-doc
@@ -21,4 +23,4 @@ backup-files:
 	@find . -name '*~' -exec rm -f {} +
 	@find . -name '#*#' -exec rm -f {} +
 
-
+.PHONY: default clean doc clean-doc py-bytecode backup-files

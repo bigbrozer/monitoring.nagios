@@ -1,28 +1,31 @@
 # -*- coding: UTF-8 -*-
-#===============================================================================
-# Filename      : utilities
-# Author        : Vincent BESANCON <besancon.vincent@gmail.com>
-# Description   : Various utility functions.
-#-------------------------------------------------------------------------------
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# Copyright (C) Vincent BESANCON <besancon.vincent@gmail.com>
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# Permission is hereby granted, free of charge, to any person obtaining
+# a copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
 #
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#===============================================================================
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+# OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+"""Various utilities functions."""
 
 from __future__ import division
 from datetime import timedelta
 import logging as log
 
-logger = log.getLogger('monitoring.nagios.plugin.utilities')
+logger = log.getLogger('monitoring.nagios.utilities')
 
 __all__ = [
     'ip_rm_leading_zero',
@@ -32,9 +35,12 @@ __all__ = [
     'humanize_duration',
 ]
 
+
 def ip_rm_leading_zero(ip):
     """
-    Remove leading zeros in IP address string like '010.025.036.002'. Return '10.25.36.2'.
+    Remove leading zeros in IP address.
+
+    String like '010.025.036.002' will return '10.25.36.2'.
 
     .. note::
        TODO: Write a nice example ;-)
@@ -45,18 +51,18 @@ def ip_rm_leading_zero(ip):
     """
     return '.'.join([str(int(ip_elem)) for ip_elem in ip.split('.')])
 
-def humanize_bytes(bytes, precision=2):
+
+def humanize_bytes(byte, precision=2):
     """
     Return a humanized string representation of a number of bytes.
 
     **Example**::
 
-      print humanize_bytes(1024)
+     >>> print humanize_bytes(1024)
+     '1 kB'
 
-      --> It will return: "1 kB"
-
-    :param bytes: Byte number.
-    :type bytes: Integer.
+    :param byte: Byte number.
+    :type byte: Integer.
     :param precision: Specify float precision after conversion (default 2).
     :type precision: Integer.
     :return: Humanized string representation of a number of bytes.
@@ -68,12 +74,13 @@ def humanize_bytes(bytes, precision=2):
         (1 << 20L, 'MB'),
         (1 << 10L, 'kB'),
         (1, 'byte(s)')
-        )
+    )
 
     for factor, suffix in units:
-        if bytes >= factor:
+        if byte >= factor:
             break
-    return '%.*f %s' % (precision, bytes / factor, suffix)
+    return '%.*f %s' % (precision, byte / factor, suffix)
+
 
 def percent_used(used, total, decimal=2):
     """
@@ -86,8 +93,9 @@ def percent_used(used, total, decimal=2):
     :return: Float for percent used.
     :rtype: Float
     """
-    percent_used = round((100. / total) * used, decimal)
-    return percent_used
+    pused = round((100. / total) * used, decimal)
+    return pused
+
 
 def find_key_from_value(dic, val):
     """
@@ -99,13 +107,16 @@ def find_key_from_value(dic, val):
     """
     return [k for k, v in dic.iteritems() if v in val][0]
 
+
 def humanize_duration(time_delta, show=None, sep=" "):
     """
     Humanize a timedelta object.
 
     :param time_delta: the timedelta object to humanize.
-    :param sep: specify a separator for days, hours, minutes and seconds in the final string.
-    :return: a dict with keys: ``days``, ``hours``, ``minutes``, ``minutes`` and ``seconds``.
+    :param sep: specify a separator for days, hours, minutes and seconds in the
+                final string.
+    :return: a dict with keys: ``days``, ``hours``, ``minutes``, ``minutes``
+             and ``seconds``.
     :rtype: dict
 
     **Example**::
@@ -117,14 +128,18 @@ def humanize_duration(time_delta, show=None, sep=" "):
      >>> age_filter['as_string']
      '1 days, 2 hours'
     """
-    if not show: show = ['days', 'hours', 'minutes', 'seconds']
+    if not show:
+        show = ['days', 'hours', 'minutes', 'seconds']
     duration = {}
     as_string = []
 
     # Get data about duration
     duration['timedelta'] = time_delta
-    duration['days'], remains = divmod(int(duration['timedelta'].total_seconds()), int(timedelta(days=1).total_seconds()))
-    duration['hours'], remains = divmod(remains, int(timedelta(hours=1).total_seconds()))
+    duration['days'], remains = divmod(
+        int(duration['timedelta'].total_seconds()),
+        int(timedelta(days=1).total_seconds()))
+    duration['hours'], remains = divmod(
+        remains, int(timedelta(hours=1).total_seconds()))
     duration['minutes'], remains = divmod(remains, 60)
     duration['seconds'] = int(remains)
 

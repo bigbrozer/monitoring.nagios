@@ -15,7 +15,9 @@ Contents:
 
     new_plugin
     snmp
+    ssh
     wmi
+    http
     api
 
 

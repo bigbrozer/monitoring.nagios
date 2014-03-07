@@ -1,25 +1,27 @@
 # -*- coding: utf-8 -*-
-#===============================================================================
-# Author        : Vincent BESANCON <besancon.vincent@gmail.com>
-# Description   : Class to define a standard Nagios WMI plugin.
-#-------------------------------------------------------------------------------
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# Copyright (C) Vincent BESANCON <besancon.vincent@gmail.com>
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# Permission is hereby granted, free of charge, to any person obtaining
+# a copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
 #
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#===============================================================================
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+# OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+"""WMI module for plugins."""
 
 import logging
-import os
-import sys
 import csv
 from pprint import pformat
 
@@ -31,24 +33,23 @@ logger = logging.getLogger('monitoring.nagios.plugin.wmi')
 
 class NagiosPluginWMI(NagiosPlugin):
     """Base for a standard WMI Nagios plugin"""
-
-    def __init__(self, name=os.path.basename(sys.argv[0]), version='', description=''):
-        super(NagiosPluginWMI, self).__init__(name, version, description)
+    def __init__(self, *args, **kwargs):
+        super(NagiosPluginWMI, self).__init__(*args, **kwargs)
 
         # Init a new probe of type WMI
         self.probe = ProbeWMI(
-            host=self.options.hostname,
+            hostaddress=self.options.hostname,
             login=self.options.login,
             password=self.options.password,
             domain=self.options.domain,
             namespace=self.options.namespace
         )
 
-        if 'NagiosPluginWMI' == self.__class__.__name__: logger.debug('=== END PLUGIN INIT ===')
+        if 'NagiosPluginWMI' == self.__class__.__name__:
+            logger.debug('=== END PLUGIN INIT ===')
 
     def define_plugin_arguments(self):
         """Define arguments for the plugin"""
-        # Define common arguments
         super(NagiosPluginWMI, self).define_plugin_arguments()
 
         # Add extra arguments
@@ -58,12 +59,14 @@ class NagiosPluginWMI(NagiosPlugin):
                                  required=True)
         self.parser.add_argument('-p', '--password',
                                  dest='password',
-                                 help='Login password for the WMI remote call.',
+                                 help='Login password for the WMI remote '
+                                      'call.',
                                  required=True)
-        
+
         self.parser.add_argument('-d', '--domain',
                                  dest='domain',
-                                 help='Login AD domain for the WMI remote call.',
+                                 help='Login AD domain for the WMI remote '
+                                      'call.',
                                  required=True)
 
         self.parser.add_argument('-n', '--namespace',
@@ -73,7 +76,6 @@ class NagiosPluginWMI(NagiosPlugin):
 
     def verify_plugin_arguments(self):
         """Check syntax of all arguments"""
-        # Check common arguments syntax
         super(NagiosPluginWMI, self).verify_plugin_arguments()
 
     def execute(self, query):
@@ -91,7 +93,8 @@ class NagiosPluginWMI(NagiosPlugin):
         except OSError:
             self.unknown('Unable to find \'wmic\' binary !')
         except Exception as e:
-            self.unknown('Error during the WMI query !\nCommand: {0.cmd}\nOutput: {0.output}'.format(e))
+            self.unknown('Error during the WMI query !\n'
+                         'Command: {0.cmd}\nOutput: {0.output}'.format(e))
 
         # Split lines in list, remove headers
         wmic_output = wmic_output.splitlines()[1:]

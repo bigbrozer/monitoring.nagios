@@ -1,21 +1,23 @@
 # -*- coding: utf-8 -*-
-#===============================================================================
-# Author        : Vincent BESANCON <besancon.vincent@gmail.com>
-# Description   : This is a list of pre-defined argument types.
-#-------------------------------------------------------------------------------
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# Copyright (C) Vincent BESANCON <besancon.vincent@gmail.com>
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# Permission is hereby granted, free of charge, to any person obtaining
+# a copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
 #
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#===============================================================================
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+# OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 """
 .. module:: monitoring.nagios.plugin.arguments
@@ -24,6 +26,23 @@ This module contains a set of functions to convert or specify argument types.
 """
 
 from datetime import timedelta
+
+
+def http_basic_auth(auth_string):
+    """
+    Convert a HTTP Basic Authentication string to a tuple.
+
+    :param auth_string: the basic auth string of the form ``login:passwd``.
+    :type auth_string: str, unicode
+    :returns: Basic auth as a tuple ``(login, passwd)``.
+    :rtype: tuple
+
+    **Example**::
+
+     >>> http_basic_auth("besancon:8jj_767hhgy")
+     ('besancon', '8jj_767hhgy')
+    """
+    return tuple(auth_string.split(":"))
 
 
 def days(integer):
@@ -42,9 +61,12 @@ def days(integer):
     """
     return timedelta(days=int(integer))
 
+
 def hours(integer):
     """
-    Convert ``integer`` to a timedelta object. ``integer`` is a number of hours.
+    Convert ``integer`` to a timedelta object.
+
+    Argument ``integer`` is a number of hours.
 
     :param integer: the number of hours.
     :type integer: str, unicode
@@ -57,6 +79,7 @@ def hours(integer):
      datetime.timedelta(0, 14400)
     """
     return timedelta(hours=int(integer))
+
 
 def minutes(integer):
     """
@@ -74,6 +97,7 @@ def minutes(integer):
      datetime.timedelta(0, 1920)
     """
     return timedelta(minutes=int(integer))
+
 
 def seconds(integer):
     """

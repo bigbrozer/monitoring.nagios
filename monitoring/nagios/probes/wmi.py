@@ -1,21 +1,25 @@
 # -*- coding: utf-8 -*-
-#===============================================================================
-# Author        : Vincent BESANCON <besancon.vincent@gmail.com>
-# Description   : Module that define a WMI probe (make use of wmic).
-#-------------------------------------------------------------------------------
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# Copyright (C) Vincent BESANCON <besancon.vincent@gmail.com>
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# Permission is hereby granted, free of charge, to any person obtaining
+# a copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
 #
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#===============================================================================
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+# OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+"""WMI probe module."""
 
 import logging
 import subprocess as sp
@@ -29,8 +33,8 @@ class ProbeWMI(Probe):
     """
     A WMI probe.
 
-    :param host: The IP address of host to connect to.
-    :type host: str
+    :param hostaddress: The IP address of host to connect to.
+    :type hostaddress: str
     :param login: Login name.
     :type login: str
     :param password: Login password.
@@ -40,13 +44,22 @@ class ProbeWMI(Probe):
     :param namespace: WMI namespace (default is ``root/cimv2``).
     :type namespace: str
     """
-    
-    def __init__(self, host, login, password, domain, namespace='root/cimv2'):
-        super(ProbeWMI, self).__init__(host)
+    def __init__(self,
+                 hostaddress,
+                 login,
+                 password,
+                 domain,
+                 namespace='root/cimv2'):
+        super(ProbeWMI, self).__init__()
 
-        self.credentials = '{0}\{1}%{2}'.format(domain, login, password)
-        self.hosturl = '//{0}'.format(host)
+        self.hostaddress = hostaddress
+        self.login = login
+        self._password = password
+        self.domain = domain
+        self.credentials = "{0.domain}\\{0.login}%{0._password}".format(self)
+        self.hosturl = "//{0.hostaddress}".format(self)
         self.namespace = namespace
+        self.command = []
 
     def execute(self, query):
         """

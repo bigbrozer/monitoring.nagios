@@ -1,49 +1,53 @@
 #!/usr/bin/env python2.7
 # -*- coding: utf-8 -*-
-#==============================================================================
-# Module        : setup
-# Author        : Vincent BESANCON <besancon.vincent@gmail.com>
-# Description   : Setuptools install script.
-#------------------------------------------------------------------------------
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# Copyright (C) Vincent BESANCON <besancon.vincent@gmail.com>
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# Permission is hereby granted, free of charge, to any person obtaining
+# a copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
 #
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#==============================================================================
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+# OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import os
+"""Setuptools configuration for this project."""
+
 from setuptools import setup, find_packages
 
 # Package dependencies
 dependencies = [
     'pysnmp==4.2.4',
     'ssh==1.8.0',
+    'pymssql==2.0.1',
+    'requests==2.2.1',
+    'beautifulsoup4==4.3.2',
 ]
 
-# OS dependent
-if 'x86_64' in os.uname()[-1]:
-    # We are in 64 bits
-    dependencies.append('pymssql==2.0.1')
-else:
-    # We are in 32 bits
-    dependencies.append('pymssql==1.0.2')
+# Way to obtain the project version if project is already installed somewhere
+# in the Python path.
+project_namespace = {}
+with open("monitoring/nagios/__init__.py") as version_file:
+    exec(version_file.read(), project_namespace)
 
-# Init distribute
-setup(name='monitoring.nagios',
-      version="1.2.5",
-      description='Monitoring Python Package',
-      author='Vincent BESANCON',
-      author_email='besancon.vincent@gmail.com',
-      license='GPL',
-      namespace_packages=['monitoring'],
-      packages=find_packages(),
-      install_requires=dependencies,
-      extras_require={'graph': ['pygraphviz>=1.0,<=1.1']})
+# Init distribution
+setup(
+    name='monitoring.nagios',
+    version=project_namespace["__version__"],
+    description='Nagios plugin creation framework',
+    author='Vincent BESANCON',
+    author_email='besancon.vincent@gmail.com',
+    license='MIT',
+    namespace_packages=['monitoring'],
+    packages=find_packages(),
+    install_requires=dependencies
+)

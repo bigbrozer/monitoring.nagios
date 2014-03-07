@@ -44,23 +44,3 @@ query_getnext = plugin.snmp.getnext({
     'alias': '1.3.6.1.4.1.1588.2.1.1.1.6.2.1.37',
 })
 print query_getnext
-
-print '=' * 80
-
-cisco_probe = ProbeSNMP('10.20.129.1', community='DmbmfubZ', snmpv2=True)
-query_table = cisco_probe.table({
-    'indexes': '1.3.6.1.4.1.9.9.109.1.1.1.1.2',
-    'entity_name': '1.3.6.1.2.1.47.1.1.1.1.7',
-    'cpu_usages': '1.3.6.1.4.1.9.9.109.1.1.1.1.8',
-})
-print query_table
-
-print '=' * 80
-
-query_san_table = plugin.snmp.table({
-    'indexes': '1.3.6.1.4.1.1588.2.1.1.1.6.2.1.1',
-    'name': '1.3.6.1.4.1.1588.2.1.1.1.6.2.1.36.65',
-    'alias': '1.3.6.1.4.1.1588.2.1.1.1.6.2.1.37',
-    'crc': '1.3.6.1.4.1.1588.2.1.1.1.6.2.1.22.65',
-})
-print query_san_table

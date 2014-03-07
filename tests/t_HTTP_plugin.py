@@ -1,4 +1,4 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 # Copyright (C) Vincent BESANCON <besancon.vincent@gmail.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining
@@ -19,30 +19,24 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
 # OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""
-Fabric tasks for project monitoring.nagios.
-"""
+"""Test module for HTTP based plugins."""
 
-import os
+import unittest
+import sys
 
-from fabric.api import (
-    env,
-    task,
-    hosts,
-    local,
-)
-from fabric.contrib.project import rsync_project
-from monitoring.fabric import servers
+from bs4 import BeautifulSoup
+
+sys.path.insert(0, "..")
+from monitoring.nagios.plugin import NagiosPluginHTTP
 
 
-@task
-@hosts('monitoring-dc.app.corp')
-def doc():
-    """Upload doc to central server"""
-    env.user = "webcontent"
+class TestHTTPPlugin(unittest.TestCase):
+    """
+    Test HTTP plugin class.
+    """
 
-    DOCROOT = '/var/www/project'
-    DOCDIR = os.path.join(DOCROOT, 'monitoring.nagios')
-
-    local('make doc')
-    rsync_project(DOCDIR, 'docs/_build/html/', delete=True)
+    def setUp(self):
+        sys.argv = sys.argv[:1]
+        args = ['-H', 'wweasapp0611.eas.ww.corp',]
+        sys.argv.extend(args)
+        self.plugin = NagiosPluginHTTP()
