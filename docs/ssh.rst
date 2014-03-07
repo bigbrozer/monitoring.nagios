@@ -135,5 +135,5 @@ Example::
 
  >>> plugin.ssh.get_file_lastmodified_minutes("/etc/motd")
  16
- >>> plugin.get_file_lastmodified_timestamp("/etc/motd")
+ >>> plugin.ssh.get_file_lastmodified_timestamp("/etc/motd")
  1294765528
