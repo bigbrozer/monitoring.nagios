@@ -25,6 +25,7 @@
 This module contains a set of functions to convert or specify argument types.
 """
 
+import argparse
 from datetime import timedelta
 
 
@@ -115,3 +116,31 @@ def seconds(integer):
      datetime.timedelta(0, 54)
     """
     return timedelta(seconds=int(integer))
+
+
+def percent(integer):
+    """
+    Check that ``integer`` is in range [0, 100] and returns the integer value.
+
+    :param integer: an integer for percent value.
+    :type integer: int
+    :return: ``integer`` if in range [0, 100].
+    :rtype: int
+
+    :raises: argparse.ArgumentTypeError
+
+    **Example**::
+
+     >>> percent(54)
+     54
+     >>> try:
+     ...    percent(234)
+     ... except argparse.ArgumentTypeError as e:
+     ...    e.message
+     'Must be a percent value between [0, 100] !'
+    """
+    if integer in xrange(0, 100):
+        return integer
+    else:
+        raise argparse.ArgumentTypeError("Must be a percent value between "
+                                         "[0, 100] !")
