@@ -26,6 +26,7 @@ This module contains a set of functions to convert or specify argument types.
 """
 
 import argparse
+import re
 from datetime import timedelta
 
 
@@ -144,3 +145,56 @@ def percent(integer):
     else:
         raise argparse.ArgumentTypeError("Must be a percent value between "
                                          "[0, 100] !")
+
+
+class NagiosThreshold(object):
+    """
+    This class represents a Nagios threshold as defined in the
+    `Guidelines for Developers <https://nagios-plugins.org/doc/guidelines.html#THRESHOLDFORMAT>`_.
+
+    :param threshold: the Nagios threshold (ex. 5:20, @5:20, ...)
+    :type threshold: str, unicode
+
+    >>> t = NagiosThreshold("@25:40")
+    >>> t.start
+    25
+    >>> t.end
+    40
+    >>> t.inclusive
+    True
+    """
+    pattern = r'(^(?P<inclusive>@)?(?P<start>[0-9]+)|' \
+              r'(?P<is_strict_positive>^~)):?(?P<end>[0-9]*)$'
+
+    def __init__(self, threshold):
+        self.threshold = threshold
+        self.__match = re.match(self.pattern, self.threshold)
+        self.inclusive = False
+        self.start = 0
+        self.end = 0
+        self.is_strict_positive = False
+
+        if self.__match:
+            # Set attributes
+            attributes = self.__match.groupdict()
+
+            if attributes["inclusive"]:
+                self.inclusive = True
+
+            if attributes["start"]:
+                self.start = int(attributes["start"])
+
+            if attributes["end"]:
+                self.end = int(attributes["end"])
+
+            if attributes["is_strict_positive"]:
+                self.is_strict_positive = True
+
+            # Sanity checks
+            if not self.start <= self.end:
+                raise argparse.ArgumentTypeError("Error: "
+                                                 "start must be <= end !")
+        else:
+            raise argparse.ArgumentTypeError(
+                "Threshold \"{0.threshold}\" does not "
+                "match \"{0.pattern}\" !".format(self))
