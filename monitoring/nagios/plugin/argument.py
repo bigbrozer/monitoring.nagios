@@ -20,9 +20,10 @@
 # OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 """
-.. module:: monitoring.nagios.plugin.arguments
-
 This module contains a set of functions to convert or specify argument types.
+
+See ``type`` argument of `argparse's add_argument()
+<http://docs.python.org/2/library/argparse.html#type>`_ module.
 """
 
 import argparse
@@ -150,18 +151,41 @@ def percent(integer):
 class NagiosThreshold(object):
     """
     This class represents a Nagios threshold as defined in the
-    `Guidelines for Developers <https://nagios-plugins.org/doc/guidelines.html#THRESHOLDFORMAT>`_.
+    `Guidelines for Developers
+    <https://nagios-plugins.org/doc/guidelines.html#THRESHOLDFORMAT>`_.
 
-    :param threshold: the Nagios threshold (ex. 5:20, @5:20, ...)
+    The ``threshold`` format is the following to make it simple:
+    ``[@]start[:end]``. If ``start`` is ``~``, it means negative infinity.
+
+    :param threshold: the Nagios threshold (ex. start:end, @start:end,
+                      ...). With ``start`` and ``end`` as integer.
     :type threshold: str, unicode
 
     >>> t = NagiosThreshold("@25:40")
-    >>> t.start
-    25
-    >>> t.end
-    40
-    >>> t.inclusive
+    >>> t.test(10) # OK: outside the range of {25 .. 40}
+    False
+    >>> t.test(30) # KO: inside the range of {25 .. 40}
     True
+
+    >>> t = NagiosThreshold("30")
+    >>> t.test(40) # KO: outside the range of {0 .. 30}
+    True
+    >>> t.test(10) # OK: inside the range of {0 .. 30}
+    False
+    >>> t.test(-10) # KO: outside the range of {0 .. 30}
+    True
+
+    >>> t = NagiosThreshold("~:20")
+    >>> t.test(30) # KO: outside the range of {-∞ .. 20}
+    True
+    >>> t.test(15) # OK: inside the range of {-∞ .. 20}
+    False
+
+    >>> t = NagiosThreshold("10:20")
+    >>> t.test(30) # KO: outside the range of {10 .. 20}
+    True
+    >>> t.test(13) # OK: inside the range of {10 .. 20}
+    False
     """
     pattern = r'(^(?P<inclusive>@)?(?P<start>[0-9]+)|' \
               r'(?P<is_strict_positive>^~)):?(?P<end>[0-9]*)$'
@@ -191,10 +215,50 @@ class NagiosThreshold(object):
                 self.is_strict_positive = True
 
             # Sanity checks
-            if not self.start <= self.end:
-                raise argparse.ArgumentTypeError("Error: "
-                                                 "start must be <= end !")
+            if self.start and self.end:
+                if not self.start <= self.end:
+                    raise argparse.ArgumentTypeError("Error: "
+                                                     "start must be <= end !")
         else:
             raise argparse.ArgumentTypeError(
                 "Threshold \"{0.threshold}\" does not "
                 "match \"{0.pattern}\" !".format(self))
+
+    def test(self, value):
+        """
+        Test ``value`` against threshold to know if an alert must be
+        generated. If the test pass, it returns True to tell an alert is
+        needed.
+
+        It makes it easy from plugin arguments to test a value now::
+
+         value = 54
+         if plugin.options.warning.test(value):
+            # Create an alert
+            plugin.warning("A warning here !")
+         elif plugin.options.critical.test(value):
+            # Create an alert
+            plugin.critical("Critical alert !!")
+         else:
+            plugin.ok("Nothing is going wrong here.")
+
+        :param value: the value that must be tested on the threshold.
+        :type value: int
+        :returns: returns True if alert must be generated else False.
+        """
+        if self.is_strict_positive:
+            if value > self.end:
+                return True
+        else:
+            if self.inclusive:
+                if self.start <= value <= self.end:
+                    return True
+            else:
+                if self.start and not self.end:
+                    if value > self.start or value < 0:
+                        return True
+                else:
+                    if value < self.start or value > self.end:
+                        return True
+
+        return False
