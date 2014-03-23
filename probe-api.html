@@ -1,0 +1,627 @@
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Probes API reference &mdash; monitoring.nagios 1.3.0 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:'',
+        VERSION:'1.3.0',
+        COLLAPSE_INDEX:false,
+        FILE_SUFFIX:'.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+    <script type="text/javascript">
+        jQuery(function () {
+            SphinxRtdTheme.StickyNav.enable();
+        });
+    </script>
+  
+
+  
+    <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+  
+    <link rel="top" title="monitoring.nagios 1.3.0 documentation" href="index.html"/>
+        <link rel="up" title="API Reference" href="api.html"/>
+        <link rel="next" title="Arguments types" href="arguments.html"/>
+        <link rel="prev" title="Plugin API reference" href="plugin-api.html"/> 
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="index.html" class="icon icon-home"> monitoring.nagios</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="new_plugin.html">Creating a new plugin, the basics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="new_plugin.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="new_plugin.html#basic-intialization">Basic intialization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="new_plugin.html#logging">Logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="new_plugin.html#defining-new-arguments">Defining new arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="new_plugin.html#sanity-checks-on-arguments">Sanity checks on arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="new_plugin.html#output-to-nagios">Output to Nagios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="new_plugin.html#preparation">Preparation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="new_plugin.html#plugin-template">Plugin template</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="snmp.html">SNMP based plugin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="snmp.html#getting-started">Getting started</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ssh.html">SSH based plugin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ssh.html#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ssh.html#default-plugin-arguments">Default plugin arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ssh.html#remote-actions">Remote actions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ssh.html#get-a-command-output">Get a command output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ssh.html#get-a-list-of-files-in-a-directory">Get a list of files in a directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ssh.html#get-file-or-directory-last-modified-time">Get file or directory last modified time</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="wmi.html">WMI based plugin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="wmi.html#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wmi.html#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="http.html">HTTP based plugin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="http.html#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="http.html#default-plugin-arguments">Default plugin arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="http.html#making-requests">Making requests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="http.html#playing-with-response">Playing with response</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="http.html#response-content">Response content</a></li>
+<li class="toctree-l3"><a class="reference internal" href="http.html#json-output">JSON output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="http.html#xml-output">XML output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="plugin-api.html">Plugin API reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="plugin-api.html#base-class">Base class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plugin-api.html#network-protocols">Network protocols</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plugin-api.html#databases">Databases</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Probes API reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#base-class">Base class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#network-protocols">Network protocols</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#databases">Databases</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="arguments.html">Arguments types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
+</ul>
+</li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="icon icon-reorder"></i>
+        <a href="index.html">monitoring.nagios</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="api.html">API Reference</a> &raquo;</li>
+      
+    <li>Probes API reference</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="_sources/probe-api.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            
+  <div class="section" id="probes-api-reference">
+<h1>Probes API reference<a class="headerlink" href="#probes-api-reference" title="Permalink to this headline">¶</a></h1>
+<p>#.. module:: monitoring.nagios.probes</p>
+<p>API Reference for all probes.</p>
+<div class="section" id="base-class">
+<h2>Base class<a class="headerlink" href="#base-class" title="Permalink to this headline">¶</a></h2>
+<p>This is the base class for all plugin classes.</p>
+<span class="target" id="module-monitoring.nagios.probes.base"></span><p>Base module for all probes.</p>
+<dl class="class">
+<dt id="monitoring.nagios.probes.base.Probe">
+<em class="property">class </em><tt class="descclassname">monitoring.nagios.probes.base.</tt><tt class="descname">Probe</tt><a class="headerlink" href="#monitoring.nagios.probes.base.Probe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for defining a new Probe.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="network-protocols">
+<h2>Network protocols<a class="headerlink" href="#network-protocols" title="Permalink to this headline">¶</a></h2>
+<p>Plugins that interact with SNMP or SSH protocols.</p>
+<div class="section" id="module-monitoring.nagios.probes.snmp">
+<span id="snmp"></span><h3>SNMP<a class="headerlink" href="#module-monitoring.nagios.probes.snmp" title="Permalink to this headline">¶</a></h3>
+<p>SNMP probe module.</p>
+<dl class="class">
+<dt id="monitoring.nagios.probes.snmp.ProbeSNMP">
+<em class="property">class </em><tt class="descclassname">monitoring.nagios.probes.snmp.</tt><tt class="descname">ProbeSNMP</tt><big>(</big><em>hostaddress=''</em>, <em>port=161</em>, <em>community='public'</em>, <em>snmpv2=False</em><big>)</big><a class="headerlink" href="#monitoring.nagios.probes.snmp.ProbeSNMP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class ProbeSNMP.</p>
+<dl class="method">
+<dt id="monitoring.nagios.probes.snmp.ProbeSNMP.get">
+<tt class="descname">get</tt><big>(</big><em>oidstable</em><big>)</big><a class="headerlink" href="#monitoring.nagios.probes.snmp.ProbeSNMP.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Query a SNMP OID using Get command.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="monitoring.nagios.probes.snmp.ProbeSNMP.getnext">
+<tt class="descname">getnext</tt><big>(</big><em>oidstable</em><big>)</big><a class="headerlink" href="#monitoring.nagios.probes.snmp.ProbeSNMP.getnext" title="Permalink to this definition">¶</a></dt>
+<dd><p>Query a SNMP OID using Getnext command.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="monitoring.nagios.probes.snmp.ProbeSNMP.table">
+<tt class="descname">table</tt><big>(</big><em>columns</em><big>)</big><a class="headerlink" href="#monitoring.nagios.probes.snmp.ProbeSNMP.table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Query SNMP OIDs and format results like a table.</p>
+<p>NOT YET IMPLEMENTED.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-monitoring.nagios.probes.secureshell">
+<span id="ssh"></span><h3>SSH<a class="headerlink" href="#module-monitoring.nagios.probes.secureshell" title="Permalink to this headline">¶</a></h3>
+<p>SSH probe module.</p>
+<dl class="class">
+<dt id="monitoring.nagios.probes.secureshell.CommandResult">
+<em class="property">class </em><tt class="descclassname">monitoring.nagios.probes.secureshell.</tt><tt class="descname">CommandResult</tt><big>(</big><em>channel</em><big>)</big><a class="headerlink" href="#monitoring.nagios.probes.secureshell.CommandResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class is for manipulating a remote command execution result.</p>
+<p>It takes a <tt class="xref py py-class docutils literal"><span class="pre">ssh.Channel</span></tt> object as his first parameter. Then
+provides the following attributes:</p>
+<dl class="attribute">
+<dt id="monitoring.nagios.probes.secureshell.CommandResult.input">
+<tt class="descname">input</tt><a class="headerlink" href="#monitoring.nagios.probes.secureshell.CommandResult.input" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is stdin for the command.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="monitoring.nagios.probes.secureshell.CommandResult.output">
+<tt class="descname">output</tt><a class="headerlink" href="#monitoring.nagios.probes.secureshell.CommandResult.output" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a list of lines on stdout or output of the command.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="monitoring.nagios.probes.secureshell.CommandResult.errors">
+<tt class="descname">errors</tt><a class="headerlink" href="#monitoring.nagios.probes.secureshell.CommandResult.errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a list of lines on stderr or all errors for the command.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="monitoring.nagios.probes.secureshell.CommandResult.status">
+<tt class="descname">status</tt><a class="headerlink" href="#monitoring.nagios.probes.secureshell.CommandResult.status" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer for the command exit code.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="monitoring.nagios.probes.secureshell.ProbeSSH">
+<em class="property">class </em><tt class="descclassname">monitoring.nagios.probes.secureshell.</tt><tt class="descname">ProbeSSH</tt><big>(</big><em>hostaddress=''</em>, <em>port=22</em>, <em>username=None</em>, <em>password=None</em>, <em>timeout=10.0</em><big>)</big><a class="headerlink" href="#monitoring.nagios.probes.secureshell.ProbeSSH" title="Permalink to this definition">¶</a></dt>
+<dd><p>A SSH probe.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>hostaddress</strong> (<em>str</em>) &#8211; The host to connect to.</li>
+<li><strong>port</strong> (<em>int</em>) &#8211; The remote port the remote host listen on.</li>
+<li><strong>username</strong> (<em>str</em>) &#8211; Login user name. Default is to use the current
+authenticated user.</li>
+<li><strong>password</strong> (<em>str</em>) &#8211; Login user password. Default is to use the public key.</li>
+<li><strong>timeout</strong> (<em>float</em>) &#8211; Connection timeout in seconds (default to 10 secs).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="exception">
+<dt id="monitoring.nagios.probes.secureshell.ProbeSSH.SSHCommandFailed">
+<em class="property">exception </em><tt class="descname">SSHCommandFailed</tt><big>(</big><em>message</em><big>)</big><a class="headerlink" href="#monitoring.nagios.probes.secureshell.ProbeSSH.SSHCommandFailed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception triggered when a SSH command has failed.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="monitoring.nagios.probes.secureshell.ProbeSSH.SSHCommandNotFound">
+<em class="property">exception </em><tt class="descclassname">ProbeSSH.</tt><tt class="descname">SSHCommandNotFound</tt><big>(</big><em>message</em><big>)</big><a class="headerlink" href="#monitoring.nagios.probes.secureshell.ProbeSSH.SSHCommandNotFound" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception triggered when a SSH command is not found.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="monitoring.nagios.probes.secureshell.ProbeSSH.SSHCommandTimeout">
+<em class="property">exception </em><tt class="descclassname">ProbeSSH.</tt><tt class="descname">SSHCommandTimeout</tt><big>(</big><em>message</em><big>)</big><a class="headerlink" href="#monitoring.nagios.probes.secureshell.ProbeSSH.SSHCommandTimeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception triggered when a SSH command timed out.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="monitoring.nagios.probes.secureshell.ProbeSSH.SSHError">
+<em class="property">exception </em><tt class="descclassname">ProbeSSH.</tt><tt class="descname">SSHError</tt><big>(</big><em>message</em><big>)</big><a class="headerlink" href="#monitoring.nagios.probes.secureshell.ProbeSSH.SSHError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for all SSH related errors.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="monitoring.nagios.probes.secureshell.ProbeSSH.close">
+<tt class="descclassname">ProbeSSH.</tt><tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#monitoring.nagios.probes.secureshell.ProbeSSH.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the SSH connection.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="monitoring.nagios.probes.secureshell.ProbeSSH.execute">
+<tt class="descclassname">ProbeSSH.</tt><tt class="descname">execute</tt><big>(</big><em>command</em>, <em>timeout=None</em><big>)</big><a class="headerlink" href="#monitoring.nagios.probes.secureshell.ProbeSSH.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute a command on the remote server and return results.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>command</strong> (<em>str, unicode</em>) &#8211; Command line to execute on the remote server.</li>
+<li><strong>timeout</strong> (<em>float</em>) &#8211; Command execution timeout. Default to 10 secs.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">An instance of <a class="reference internal" href="#monitoring.nagios.probes.secureshell.CommandResult" title="monitoring.nagios.probes.secureshell.CommandResult"><tt class="xref py py-class docutils literal"><span class="pre">CommandResult</span></tt></a>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">Raises ProbeSSH.SSHCommandTimeout:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><p class="first last">if executed command timed out.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="monitoring.nagios.probes.secureshell.ProbeSSH.get_file_lastmodified_minutes">
+<tt class="descclassname">ProbeSSH.</tt><tt class="descname">get_file_lastmodified_minutes</tt><big>(</big><em>filename</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#monitoring.nagios.probes.secureshell.ProbeSSH.get_file_lastmodified_minutes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return minutes since file was last modified.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> &#8211; path to the file that should be checked.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Minutes.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="monitoring.nagios.probes.secureshell.ProbeSSH.get_file_lastmodified_timestamp">
+<tt class="descclassname">ProbeSSH.</tt><tt class="descname">get_file_lastmodified_timestamp</tt><big>(</big><em>filename</em>, <em>stime='/usr/local/nagios/bin/stime'</em><big>)</big><a class="headerlink" href="#monitoring.nagios.probes.secureshell.ProbeSSH.get_file_lastmodified_timestamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the last modified Unix Epoch timestamp of a file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>filename</strong> &#8211; path to the file that should be checked.</li>
+<li><strong>stime</strong> &#8211; location of the stime binary. Default to
+<tt class="docutils literal"><span class="pre">/usr/local/nagios/bin/stime</span></tt>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Unix timestamp.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">int</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="monitoring.nagios.probes.secureshell.ProbeSSH.list_files">
+<tt class="descclassname">ProbeSSH.</tt><tt class="descname">list_files</tt><big>(</big><em>directory='.'</em>, <em>glob='*'</em>, <em>depth=1</em><big>)</big><a class="headerlink" href="#monitoring.nagios.probes.secureshell.ProbeSSH.list_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>List all files in a directory. Optionnaly, you can specify a regexp to
+filter files.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>directory</strong> (<em>str</em>) &#8211; Directory to look in. Default is the current working
+directory.</li>
+<li><strong>glob</strong> (<em>str</em>) &#8211; Pattern to filter files. Default to &#8216;*&#8217; all.</li>
+<li><strong>depth</strong> (<em>int</em>) &#8211; Recursive level for scanning files. Default to disable
+recursive scanning.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">list(str)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-monitoring.nagios.probes.wmi">
+<span id="wmi"></span><h3>WMI<a class="headerlink" href="#module-monitoring.nagios.probes.wmi" title="Permalink to this headline">¶</a></h3>
+<p>WMI probe module.</p>
+<dl class="class">
+<dt id="monitoring.nagios.probes.wmi.ProbeWMI">
+<em class="property">class </em><tt class="descclassname">monitoring.nagios.probes.wmi.</tt><tt class="descname">ProbeWMI</tt><big>(</big><em>hostaddress</em>, <em>login</em>, <em>password</em>, <em>domain</em>, <em>namespace='root/cimv2'</em><big>)</big><a class="headerlink" href="#monitoring.nagios.probes.wmi.ProbeWMI" title="Permalink to this definition">¶</a></dt>
+<dd><p>A WMI probe.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>hostaddress</strong> (<em>str</em>) &#8211; The IP address of host to connect to.</li>
+<li><strong>login</strong> (<em>str</em>) &#8211; Login name.</li>
+<li><strong>password</strong> (<em>str</em>) &#8211; Login password.</li>
+<li><strong>domain</strong> (<em>str</em>) &#8211; Login AD domain.</li>
+<li><strong>namespace</strong> (<em>str</em>) &#8211; WMI namespace (default is <tt class="docutils literal"><span class="pre">root/cimv2</span></tt>).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="monitoring.nagios.probes.wmi.ProbeWMI.execute">
+<tt class="descname">execute</tt><big>(</big><em>query</em><big>)</big><a class="headerlink" href="#monitoring.nagios.probes.wmi.ProbeWMI.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute a WMI query on the remote server and return results.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>query</strong> (<em>str, unicode</em>) &#8211; The WMI query.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">CSV with delimiter <tt class="docutils literal"><span class="pre">|</span></tt>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-monitoring.nagios.probes.http">
+<span id="http"></span><h3>HTTP<a class="headerlink" href="#module-monitoring.nagios.probes.http" title="Permalink to this headline">¶</a></h3>
+<p>HTTP probe module.</p>
+<dl class="class">
+<dt id="monitoring.nagios.probes.http.HTTPResponse">
+<em class="property">class </em><tt class="descclassname">monitoring.nagios.probes.http.</tt><tt class="descname">HTTPResponse</tt><big>(</big><em>response</em><big>)</big><a class="headerlink" href="#monitoring.nagios.probes.http.HTTPResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class represents the HTTP response from the server.</p>
+<p>This is a wrapper arround <tt class="docutils literal"><span class="pre">requests.Response</span></tt> object with extensions like
+parsing response to others formats.</p>
+<p>Check out <a class="reference external" href="http://www.python-requests.org/en/latest/api/#requests.Response">requests.Response API reference</a> for more details.</p>
+<dl class="method">
+<dt id="monitoring.nagios.probes.http.HTTPResponse.xml">
+<tt class="descname">xml</tt><big>(</big><big>)</big><a class="headerlink" href="#monitoring.nagios.probes.http.HTTPResponse.xml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse response as XML and make a BeautifulSoup out of it.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">an instance of <tt class="docutils literal"><span class="pre">BeautifulSoup</span></tt> class.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="monitoring.nagios.probes.http.ProbeHTTP">
+<em class="property">class </em><tt class="descclassname">monitoring.nagios.probes.http.</tt><tt class="descname">ProbeHTTP</tt><big>(</big><em>hostaddress</em>, <em>port=80</em>, <em>ssl=False</em>, <em>auth=None</em><big>)</big><a class="headerlink" href="#monitoring.nagios.probes.http.ProbeHTTP" title="Permalink to this definition">¶</a></dt>
+<dd><p>An HTTP probe doing HTTP GET/POST request from your plugins.</p>
+<p>This is basically just a wrapper arround <a class="reference external" href="http://www.python-requests.org/en/latest/">requests</a> library.</p>
+<dl class="method">
+<dt id="monitoring.nagios.probes.http.ProbeHTTP.get">
+<tt class="descname">get</tt><big>(</big><em>path</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#monitoring.nagios.probes.http.ProbeHTTP.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a HTTP GET request. See requests.get() api reference.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>path</strong> (<em>str, unicode</em>) &#8211; the URL location. This is the part after the
+<tt class="docutils literal"><span class="pre">hostaddress</span></tt>.</li>
+<li><strong>kwargs</strong> &#8211; optional arguments that requests takes.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">return of <tt class="xref py py-func docutils literal"><span class="pre">requests.get()</span></tt>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="monitoring.nagios.probes.http.ProbeHTTP.post">
+<tt class="descname">post</tt><big>(</big><em>path</em>, <em>data</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#monitoring.nagios.probes.http.ProbeHTTP.post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a HTTP POST request. See requests.post() api reference.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>path</strong> (<em>str, unicode</em>) &#8211; the URL location. This is the part after the
+<tt class="docutils literal"><span class="pre">hostaddress</span></tt>.</li>
+<li><strong>data</strong> &#8211; Dictionary, bytes, or file-like object to send in the body
+of the Request.</li>
+<li><strong>kwargs</strong> &#8211; optional arguments that requests takes.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">return of <tt class="xref py py-func docutils literal"><span class="pre">requests.get()</span></tt>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="databases">
+<h2>Databases<a class="headerlink" href="#databases" title="Permalink to this headline">¶</a></h2>
+<p>Plugins that interact with a database.</p>
+<div class="section" id="module-monitoring.nagios.probes.mssql">
+<span id="microsoft-sql-server"></span><h3>Microsoft SQL Server<a class="headerlink" href="#module-monitoring.nagios.probes.mssql" title="Permalink to this headline">¶</a></h3>
+<p>MSSQL probe module.</p>
+<dl class="class">
+<dt id="monitoring.nagios.probes.mssql.ProbeMSSQL">
+<em class="property">class </em><tt class="descclassname">monitoring.nagios.probes.mssql.</tt><tt class="descname">ProbeMSSQL</tt><big>(</big><em>hostaddress</em>, <em>username</em>, <em>password</em>, <em>database=None</em>, <em>query_timeout=30</em>, <em>login_timeout=15</em><big>)</big><a class="headerlink" href="#monitoring.nagios.probes.mssql.ProbeMSSQL" title="Permalink to this definition">¶</a></dt>
+<dd><p>A MS SQL Server probe.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>hostaddress</strong> (<em>str</em>) &#8211; The host to connect to.</li>
+<li><strong>username</strong> (<em>str</em>) &#8211; Login user name.</li>
+<li><strong>password</strong> (<em>str</em>) &#8211; Login user password.</li>
+<li><strong>database</strong> (<em>str</em>) &#8211; Database to connect to, by default selects the database
+which is set as default for specific user.</li>
+<li><strong>query_timeout</strong> (<em>int</em>) &#8211; Query timeout in seconds, default is 30 secs.</li>
+<li><strong>login_timeout</strong> (<em>int</em>) &#8211; Timeout for connection and login in seconds, default
+is 15 secs.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="monitoring.nagios.probes.mssql.ProbeMSSQL.close">
+<tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#monitoring.nagios.probes.mssql.ProbeMSSQL.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the connection.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="monitoring.nagios.probes.mssql.ProbeMSSQL.execute">
+<tt class="descname">execute</tt><big>(</big><em>query</em><big>)</big><a class="headerlink" href="#monitoring.nagios.probes.mssql.ProbeMSSQL.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute a SQL query.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>query</strong> (<em>str</em>) &#8211; SQL query.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">pymssql.Cursor</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="arguments.html" class="btn btn-neutral float-right" title="Arguments types"/>Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="plugin-api.html" class="btn btn-neutral" title="Plugin API reference"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Vincent BESANCON.
+    </p>
+  </div>
+
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+</body>
+</html>

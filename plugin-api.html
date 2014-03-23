@@ -1,0 +1,565 @@
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Plugin API reference &mdash; monitoring.nagios 1.3.0 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:'',
+        VERSION:'1.3.0',
+        COLLAPSE_INDEX:false,
+        FILE_SUFFIX:'.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+    <script type="text/javascript">
+        jQuery(function () {
+            SphinxRtdTheme.StickyNav.enable();
+        });
+    </script>
+  
+
+  
+    <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+  
+    <link rel="top" title="monitoring.nagios 1.3.0 documentation" href="index.html"/>
+        <link rel="up" title="API Reference" href="api.html"/>
+        <link rel="next" title="Probes API reference" href="probe-api.html"/>
+        <link rel="prev" title="API Reference" href="api.html"/> 
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="index.html" class="icon icon-home"> monitoring.nagios</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="new_plugin.html">Creating a new plugin, the basics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="new_plugin.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="new_plugin.html#basic-intialization">Basic intialization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="new_plugin.html#logging">Logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="new_plugin.html#defining-new-arguments">Defining new arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="new_plugin.html#sanity-checks-on-arguments">Sanity checks on arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="new_plugin.html#output-to-nagios">Output to Nagios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="new_plugin.html#preparation">Preparation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="new_plugin.html#plugin-template">Plugin template</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="snmp.html">SNMP based plugin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="snmp.html#getting-started">Getting started</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ssh.html">SSH based plugin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ssh.html#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ssh.html#default-plugin-arguments">Default plugin arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ssh.html#remote-actions">Remote actions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ssh.html#get-a-command-output">Get a command output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ssh.html#get-a-list-of-files-in-a-directory">Get a list of files in a directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ssh.html#get-file-or-directory-last-modified-time">Get file or directory last modified time</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="wmi.html">WMI based plugin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="wmi.html#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wmi.html#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="http.html">HTTP based plugin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="http.html#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="http.html#default-plugin-arguments">Default plugin arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="http.html#making-requests">Making requests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="http.html#playing-with-response">Playing with response</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="http.html#response-content">Response content</a></li>
+<li class="toctree-l3"><a class="reference internal" href="http.html#json-output">JSON output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="http.html#xml-output">XML output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="">Plugin API reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#base-class">Base class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#network-protocols">Network protocols</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#databases">Databases</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="probe-api.html">Probes API reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="probe-api.html#base-class">Base class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="probe-api.html#network-protocols">Network protocols</a></li>
+<li class="toctree-l3"><a class="reference internal" href="probe-api.html#databases">Databases</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="arguments.html">Arguments types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
+</ul>
+</li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="icon icon-reorder"></i>
+        <a href="index.html">monitoring.nagios</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="api.html">API Reference</a> &raquo;</li>
+      
+    <li>Plugin API reference</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="_sources/plugin-api.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            
+  <div class="section" id="module-monitoring.nagios.plugin">
+<span id="plugin-api-reference"></span><h1>Plugin API reference<a class="headerlink" href="#module-monitoring.nagios.plugin" title="Permalink to this headline">¶</a></h1>
+<p>Reference for all classes.</p>
+<hr class="docutils" />
+<div class="section" id="base-class">
+<h2>Base class<a class="headerlink" href="#base-class" title="Permalink to this headline">¶</a></h2>
+<p>This is the base class for all plugin classes.</p>
+<div class="section" id="nagiosplugin-base-class-for-all-class-plugin">
+<h3><a class="reference internal" href="#monitoring.nagios.plugin.NagiosPlugin" title="monitoring.nagios.plugin.NagiosPlugin"><tt class="xref py py-class docutils literal"><span class="pre">NagiosPlugin</span></tt></a> &#8212; Base class for all class plugin<a class="headerlink" href="#nagiosplugin-base-class-for-all-class-plugin" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="monitoring.nagios.plugin.NagiosPlugin">
+<em class="property">class </em><tt class="descclassname">monitoring.nagios.plugin.</tt><tt class="descname">NagiosPlugin</tt><big>(</big><em>name=None</em>, <em>version=''</em>, <em>description=''</em><big>)</big><a class="headerlink" href="#monitoring.nagios.plugin.NagiosPlugin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize a new Nagios Plugin.</p>
+<p>Please avoid to override __init__ in derived classes. See
+<a class="reference internal" href="#monitoring.nagios.plugin.NagiosPlugin.initialize" title="monitoring.nagios.plugin.NagiosPlugin.initialize"><tt class="xref py py-func docutils literal"><span class="pre">initialize()</span></tt></a> to do this.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> &#8211; the name of the plugin. This is set to the name of the file by
+default.</li>
+<li><strong>version</strong> (<em>str, unicode</em>) &#8211; the version of the plugin. Set it to anything you want.</li>
+<li><strong>description</strong> (<em>str, unicode</em>) &#8211; a description of what is doing the plugin.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="monitoring.nagios.plugin.NagiosPlugin.critical">
+<tt class="descname">critical</tt><big>(</big><em>msg</em><big>)</big><a class="headerlink" href="#monitoring.nagios.plugin.NagiosPlugin.critical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raise a <tt class="xref py py-exc docutils literal"><span class="pre">NagiosCritical</span></tt> exception.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="monitoring.nagios.plugin.NagiosPlugin.define_plugin_arguments">
+<tt class="descname">define_plugin_arguments</tt><big>(</big><big>)</big><a class="headerlink" href="#monitoring.nagios.plugin.NagiosPlugin.define_plugin_arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define arguments for the plugin.</p>
+<p>Override this method to include yours.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="monitoring.nagios.plugin.NagiosPlugin.initialize">
+<tt class="descname">initialize</tt><big>(</big><big>)</big><a class="headerlink" href="#monitoring.nagios.plugin.NagiosPlugin.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plugin level initialization.</p>
+<p>Overrides this method if you need to init some attributes after
+__init__. This avoid to ovverrides __init__ in base class and also
+provide a way to init things before arguments sanity checks are run by
+<a class="reference internal" href="#monitoring.nagios.plugin.NagiosPlugin.verify_plugin_arguments" title="monitoring.nagios.plugin.NagiosPlugin.verify_plugin_arguments"><tt class="xref py py-func docutils literal"><span class="pre">verify_plugin_arguments()</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="monitoring.nagios.plugin.NagiosPlugin.load_data">
+<tt class="descname">load_data</tt><big>(</big><big>)</big><a class="headerlink" href="#monitoring.nagios.plugin.NagiosPlugin.load_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load pickled data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises IOError:</th><td class="field-body">raise IOError if pickle file is not found / readable.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="monitoring.nagios.plugin.NagiosPlugin.ok">
+<tt class="descname">ok</tt><big>(</big><em>msg</em><big>)</big><a class="headerlink" href="#monitoring.nagios.plugin.NagiosPlugin.ok" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raise a <tt class="xref py py-exc docutils literal"><span class="pre">NagiosOk</span></tt> exception.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="monitoring.nagios.plugin.NagiosPlugin.output">
+<tt class="descname">output</tt><big>(</big><em>substitute=None</em>, <em>long_output_limit=20</em><big>)</big><a class="headerlink" href="#monitoring.nagios.plugin.NagiosPlugin.output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct and format the full string that should be returned to Nagios.
+Includes short output, long output and perf data (if any).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>substitute</strong> (<em>dict</em>) &#8211; dict wih key/value pair that should be replaced in
+string (see <tt class="xref py py-func docutils literal"><span class="pre">str.format()</span></tt>).</li>
+<li><strong>long_output_limit</strong> (<em>int, None</em>) &#8211; limit the number of lines of long output,
+default to <tt class="docutils literal"><span class="pre">20</span></tt>. Set it to <tt class="docutils literal"><span class="pre">None</span></tt> for no
+limit.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">str, unicode</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="monitoring.nagios.plugin.NagiosPlugin.save_data">
+<tt class="descname">save_data</tt><big>(</big><em>data</em>, <em>limit=0</em><big>)</big><a class="headerlink" href="#monitoring.nagios.plugin.NagiosPlugin.save_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save data into a pickle file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>list</em>) &#8211; A list of objects to save in the pickle file.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="monitoring.nagios.plugin.NagiosPlugin.unknown">
+<tt class="descname">unknown</tt><big>(</big><em>msg</em><big>)</big><a class="headerlink" href="#monitoring.nagios.plugin.NagiosPlugin.unknown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raise a <tt class="xref py py-exc docutils literal"><span class="pre">NagiosUnknown</span></tt> exception.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="monitoring.nagios.plugin.NagiosPlugin.verify_plugin_arguments">
+<tt class="descname">verify_plugin_arguments</tt><big>(</big><big>)</big><a class="headerlink" href="#monitoring.nagios.plugin.NagiosPlugin.verify_plugin_arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check syntax of all arguments.</p>
+<p>Override this method to include yours.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="monitoring.nagios.plugin.NagiosPlugin.warning">
+<tt class="descname">warning</tt><big>(</big><em>msg</em><big>)</big><a class="headerlink" href="#monitoring.nagios.plugin.NagiosPlugin.warning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raise a <tt class="xref py py-exc docutils literal"><span class="pre">NagiosWarning</span></tt> exception.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="network-protocols">
+<h2>Network protocols<a class="headerlink" href="#network-protocols" title="Permalink to this headline">¶</a></h2>
+<p>Plugins that interact with SNMP or SSH protocols.</p>
+<div class="section" id="nagiospluginsnmp-plugin-snmp-based">
+<h3><a class="reference internal" href="#monitoring.nagios.plugin.NagiosPluginSNMP" title="monitoring.nagios.plugin.NagiosPluginSNMP"><tt class="xref py py-class docutils literal"><span class="pre">NagiosPluginSNMP</span></tt></a> &#8212; Plugin SNMP based<a class="headerlink" href="#nagiospluginsnmp-plugin-snmp-based" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="monitoring.nagios.plugin.NagiosPluginSNMP">
+<em class="property">class </em><tt class="descclassname">monitoring.nagios.plugin.</tt><tt class="descname">NagiosPluginSNMP</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#monitoring.nagios.plugin.NagiosPluginSNMP" title="Permalink to this definition">¶</a></dt>
+<dd><p>A standard SNMP Nagios plugin.</p>
+<dl class="method">
+<dt id="monitoring.nagios.plugin.NagiosPluginSNMP.define_plugin_arguments">
+<tt class="descname">define_plugin_arguments</tt><big>(</big><big>)</big><a class="headerlink" href="#monitoring.nagios.plugin.NagiosPluginSNMP.define_plugin_arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define arguments for the plugin</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="monitoring.nagios.plugin.NagiosPluginSNMP.verify_plugin_arguments">
+<tt class="descname">verify_plugin_arguments</tt><big>(</big><big>)</big><a class="headerlink" href="#monitoring.nagios.plugin.NagiosPluginSNMP.verify_plugin_arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check syntax of all arguments</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="nagiospluginssh-plugin-ssh-based">
+<h3><a class="reference internal" href="#monitoring.nagios.plugin.NagiosPluginSSH" title="monitoring.nagios.plugin.NagiosPluginSSH"><tt class="xref py py-class docutils literal"><span class="pre">NagiosPluginSSH</span></tt></a> &#8212; Plugin SSH based<a class="headerlink" href="#nagiospluginssh-plugin-ssh-based" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="monitoring.nagios.plugin.NagiosPluginSSH">
+<em class="property">class </em><tt class="descclassname">monitoring.nagios.plugin.</tt><tt class="descname">NagiosPluginSSH</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#monitoring.nagios.plugin.NagiosPluginSSH" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base for a standard SSH Nagios plugin</p>
+<dl class="method">
+<dt id="monitoring.nagios.plugin.NagiosPluginSSH.define_plugin_arguments">
+<tt class="descname">define_plugin_arguments</tt><big>(</big><big>)</big><a class="headerlink" href="#monitoring.nagios.plugin.NagiosPluginSSH.define_plugin_arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define arguments for the plugin</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="monitoring.nagios.plugin.NagiosPluginSSH.verify_plugin_arguments">
+<tt class="descname">verify_plugin_arguments</tt><big>(</big><big>)</big><a class="headerlink" href="#monitoring.nagios.plugin.NagiosPluginSSH.verify_plugin_arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check syntax of all arguments</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="nagiospluginwmi-plugin-wmi-based">
+<h3><a class="reference internal" href="#monitoring.nagios.plugin.NagiosPluginWMI" title="monitoring.nagios.plugin.NagiosPluginWMI"><tt class="xref py py-class docutils literal"><span class="pre">NagiosPluginWMI</span></tt></a> &#8212; Plugin WMI based<a class="headerlink" href="#nagiospluginwmi-plugin-wmi-based" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="monitoring.nagios.plugin.NagiosPluginWMI">
+<em class="property">class </em><tt class="descclassname">monitoring.nagios.plugin.</tt><tt class="descname">NagiosPluginWMI</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#monitoring.nagios.plugin.NagiosPluginWMI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base for a standard WMI Nagios plugin</p>
+<dl class="method">
+<dt id="monitoring.nagios.plugin.NagiosPluginWMI.define_plugin_arguments">
+<tt class="descname">define_plugin_arguments</tt><big>(</big><big>)</big><a class="headerlink" href="#monitoring.nagios.plugin.NagiosPluginWMI.define_plugin_arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define arguments for the plugin</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="monitoring.nagios.plugin.NagiosPluginWMI.execute">
+<tt class="descname">execute</tt><big>(</big><em>query</em><big>)</big><a class="headerlink" href="#monitoring.nagios.plugin.NagiosPluginWMI.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper arround <tt class="xref py py-meth docutils literal"><span class="pre">monitoring.nagios.probes.ProbeWMI.execute()</span></tt>
+method. Handles exceptions and parse CSV results.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A dict with keys as WMI columns and their values.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="monitoring.nagios.plugin.NagiosPluginWMI.verify_plugin_arguments">
+<tt class="descname">verify_plugin_arguments</tt><big>(</big><big>)</big><a class="headerlink" href="#monitoring.nagios.plugin.NagiosPluginWMI.verify_plugin_arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check syntax of all arguments</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="nagiospluginhttp-plugin-http-based">
+<h3><a class="reference internal" href="#monitoring.nagios.plugin.NagiosPluginHTTP" title="monitoring.nagios.plugin.NagiosPluginHTTP"><tt class="xref py py-class docutils literal"><span class="pre">NagiosPluginHTTP</span></tt></a> &#8212; Plugin HTTP based<a class="headerlink" href="#nagiospluginhttp-plugin-http-based" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="monitoring.nagios.plugin.NagiosPluginHTTP">
+<em class="property">class </em><tt class="descclassname">monitoring.nagios.plugin.</tt><tt class="descname">NagiosPluginHTTP</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#monitoring.nagios.plugin.NagiosPluginHTTP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base plugin that makes HTTP requests.</p>
+<p>Make HTTP requests using attribute <tt class="xref py py-attr docutils literal"><span class="pre">http</span></tt> which is an instance of
+<a class="reference internal" href="probe-api.html#monitoring.nagios.probes.http.ProbeHTTP" title="monitoring.nagios.probes.http.ProbeHTTP"><tt class="xref py py-class docutils literal"><span class="pre">monitoring.nagios.probes.http.ProbeHTTP</span></tt></a>.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">plugin</span> <span class="o">=</span> <span class="n">NagiosPluginHTTP</span><span class="p">()</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">plugin</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;/test.html&quot;</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span>
+</pre></div>
+</div>
+<p>The following arguments are pre-defined and accessible with attribute
+<tt class="xref py py-attr docutils literal"><span class="pre">options</span></tt>:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">-H</span></tt>: <tt class="xref py py-attr docutils literal"><span class="pre">options.hostname</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">-p,</span> <span class="pre">--port</span></tt>: <tt class="xref py py-attr docutils literal"><span class="pre">options.port</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">-S,</span> <span class="pre">--ssl</span></tt>: <tt class="xref py py-attr docutils literal"><span class="pre">options.ssl</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">-a,</span> <span class="pre">--auth</span></tt>: <tt class="xref py py-attr docutils literal"><span class="pre">options.auth</span></tt></li>
+</ul>
+<dl class="method">
+<dt id="monitoring.nagios.plugin.NagiosPluginHTTP.define_plugin_arguments">
+<tt class="descname">define_plugin_arguments</tt><big>(</big><big>)</big><a class="headerlink" href="#monitoring.nagios.plugin.NagiosPluginHTTP.define_plugin_arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define arguments for the plugin</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="databases">
+<h2>Databases<a class="headerlink" href="#databases" title="Permalink to this headline">¶</a></h2>
+<p>Plugins that interact with a database.</p>
+<div class="section" id="nagiospluginmssql-plugin-microsoft-sql-server">
+<h3><a class="reference internal" href="#monitoring.nagios.plugin.NagiosPluginMSSQL" title="monitoring.nagios.plugin.NagiosPluginMSSQL"><tt class="xref py py-class docutils literal"><span class="pre">NagiosPluginMSSQL</span></tt></a> &#8212; Plugin Microsoft SQL Server<a class="headerlink" href="#nagiospluginmssql-plugin-microsoft-sql-server" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="monitoring.nagios.plugin.NagiosPluginMSSQL">
+<em class="property">class </em><tt class="descclassname">monitoring.nagios.plugin.</tt><tt class="descname">NagiosPluginMSSQL</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#monitoring.nagios.plugin.NagiosPluginMSSQL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base for a standard SSH Nagios plugin</p>
+<dl class="method">
+<dt id="monitoring.nagios.plugin.NagiosPluginMSSQL.close">
+<tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#monitoring.nagios.plugin.NagiosPluginMSSQL.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the database connection.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="monitoring.nagios.plugin.NagiosPluginMSSQL.define_plugin_arguments">
+<tt class="descname">define_plugin_arguments</tt><big>(</big><big>)</big><a class="headerlink" href="#monitoring.nagios.plugin.NagiosPluginMSSQL.define_plugin_arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define arguments for the plugin</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="monitoring.nagios.plugin.NagiosPluginMSSQL.get_all_db_status">
+<tt class="descname">get_all_db_status</tt><big>(</big><big>)</big><a class="headerlink" href="#monitoring.nagios.plugin.NagiosPluginMSSQL.get_all_db_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Query the status of all databases on the connected SQL Server.</p>
+<p>Return a list of tuples [(db_name, db_state), ...].</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list(tuple)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="monitoring.nagios.plugin.NagiosPluginMSSQL.get_db_size">
+<tt class="descname">get_db_size</tt><big>(</big><big>)</big><a class="headerlink" href="#monitoring.nagios.plugin.NagiosPluginMSSQL.get_db_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the size of the database connected on. Also return the used
+percent. This returns a dict with a key per filename (eg. db.Data /
+db.Log) that is also a dict with keys &#8216;size&#8217;, &#8216;maxsize&#8217; and &#8216;used&#8217;
+(sizes are in bytes and used in percent).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="monitoring.nagios.plugin.NagiosPluginMSSQL.get_server_time">
+<tt class="descname">get_server_time</tt><big>(</big><big>)</big><a class="headerlink" href="#monitoring.nagios.plugin.NagiosPluginMSSQL.get_server_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the local time of the SQL server.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">local time of SQL server</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">datetime</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="monitoring.nagios.plugin.NagiosPluginMSSQL.query">
+<tt class="descname">query</tt><big>(</big><em>sql_query</em><big>)</big><a class="headerlink" href="#monitoring.nagios.plugin.NagiosPluginMSSQL.query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute a SQL query and fetch all data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sql_query</strong> (<em>str, unicode</em>) &#8211; SQL query.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Results of the SQL query</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="probe-api.html" class="btn btn-neutral float-right" title="Probes API reference"/>Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="api.html" class="btn btn-neutral" title="API Reference"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Vincent BESANCON.
+    </p>
+  </div>
+
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+</body>
+</html>

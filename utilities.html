@@ -1,0 +1,347 @@
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Utilities &mdash; monitoring.nagios 1.3.0 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:'',
+        VERSION:'1.3.0',
+        COLLAPSE_INDEX:false,
+        FILE_SUFFIX:'.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+    <script type="text/javascript">
+        jQuery(function () {
+            SphinxRtdTheme.StickyNav.enable();
+        });
+    </script>
+  
+
+  
+    <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+  
+    <link rel="top" title="monitoring.nagios 1.3.0 documentation" href="index.html"/>
+        <link rel="up" title="API Reference" href="api.html"/>
+        <link rel="prev" title="Arguments types" href="arguments.html"/> 
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="index.html" class="icon icon-home"> monitoring.nagios</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="new_plugin.html">Creating a new plugin, the basics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="new_plugin.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="new_plugin.html#basic-intialization">Basic intialization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="new_plugin.html#logging">Logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="new_plugin.html#defining-new-arguments">Defining new arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="new_plugin.html#sanity-checks-on-arguments">Sanity checks on arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="new_plugin.html#output-to-nagios">Output to Nagios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="new_plugin.html#preparation">Preparation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="new_plugin.html#plugin-template">Plugin template</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="snmp.html">SNMP based plugin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="snmp.html#getting-started">Getting started</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ssh.html">SSH based plugin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ssh.html#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ssh.html#default-plugin-arguments">Default plugin arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ssh.html#remote-actions">Remote actions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ssh.html#get-a-command-output">Get a command output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ssh.html#get-a-list-of-files-in-a-directory">Get a list of files in a directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ssh.html#get-file-or-directory-last-modified-time">Get file or directory last modified time</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="wmi.html">WMI based plugin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="wmi.html#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wmi.html#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="http.html">HTTP based plugin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="http.html#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="http.html#default-plugin-arguments">Default plugin arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="http.html#making-requests">Making requests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="http.html#playing-with-response">Playing with response</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="http.html#response-content">Response content</a></li>
+<li class="toctree-l3"><a class="reference internal" href="http.html#json-output">JSON output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="http.html#xml-output">XML output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="plugin-api.html">Plugin API reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="plugin-api.html#base-class">Base class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plugin-api.html#network-protocols">Network protocols</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plugin-api.html#databases">Databases</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="probe-api.html">Probes API reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="probe-api.html#base-class">Base class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="probe-api.html#network-protocols">Network protocols</a></li>
+<li class="toctree-l3"><a class="reference internal" href="probe-api.html#databases">Databases</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="arguments.html">Arguments types</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Utilities</a></li>
+</ul>
+</li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="icon icon-reorder"></i>
+        <a href="index.html">monitoring.nagios</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="api.html">API Reference</a> &raquo;</li>
+      
+    <li>Utilities</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="_sources/utilities.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            
+  <div class="section" id="module-monitoring.nagios.utilities">
+<span id="utilities"></span><h1>Utilities<a class="headerlink" href="#module-monitoring.nagios.utilities" title="Permalink to this headline">¶</a></h1>
+<p>Various utilities functions.</p>
+<dl class="function">
+<dt id="monitoring.nagios.utilities.ip_rm_leading_zero">
+<tt class="descclassname">monitoring.nagios.utilities.</tt><tt class="descname">ip_rm_leading_zero</tt><big>(</big><em>ip</em><big>)</big><a class="headerlink" href="#monitoring.nagios.utilities.ip_rm_leading_zero" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove leading zeros in IP address.</p>
+<p>String like &#8216;010.025.036.002&#8217; will return &#8216;10.25.36.2&#8217;.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">TODO: Write a nice example ;-)</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ip</strong> (<em>string</em>) &#8211; IP address.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">IP address with leading zeros removed as string.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="monitoring.nagios.utilities.humanize_bytes">
+<tt class="descclassname">monitoring.nagios.utilities.</tt><tt class="descname">humanize_bytes</tt><big>(</big><em>byte</em>, <em>precision=2</em><big>)</big><a class="headerlink" href="#monitoring.nagios.utilities.humanize_bytes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a humanized string representation of a number of bytes.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">humanize_bytes</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+<span class="go">&#39;1 kB&#39;</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>byte</strong> (<em>Integer.</em>) &#8211; Byte number.</li>
+<li><strong>precision</strong> (<em>Integer.</em>) &#8211; Specify float precision after conversion (default 2).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Humanized string representation of a number of bytes.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="monitoring.nagios.utilities.percent_used">
+<tt class="descclassname">monitoring.nagios.utilities.</tt><tt class="descname">percent_used</tt><big>(</big><em>used</em>, <em>total</em>, <em>decimal=2</em><big>)</big><a class="headerlink" href="#monitoring.nagios.utilities.percent_used" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return percent used by giving total and used value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>used</strong> (<em>Integer</em>) &#8211; Used value.</li>
+<li><strong>total</strong> (<em>Integer</em>) &#8211; Total value.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Float for percent used.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Float</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="monitoring.nagios.utilities.find_key_from_value">
+<tt class="descclassname">monitoring.nagios.utilities.</tt><tt class="descname">find_key_from_value</tt><big>(</big><em>dic</em>, <em>val</em><big>)</big><a class="headerlink" href="#monitoring.nagios.utilities.find_key_from_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the key of dictionary dic given the value</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>dic</strong> (<em>dict</em>) &#8211; dict to search in.</li>
+<li><strong>val</strong> &#8211; the value you need the key.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="monitoring.nagios.utilities.humanize_duration">
+<tt class="descclassname">monitoring.nagios.utilities.</tt><tt class="descname">humanize_duration</tt><big>(</big><em>time_delta</em>, <em>show=None</em>, <em>sep=' '</em><big>)</big><a class="headerlink" href="#monitoring.nagios.utilities.humanize_duration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Humanize a timedelta object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>time_delta</strong> &#8211; the timedelta object to humanize.</li>
+<li><strong>sep</strong> &#8211; specify a separator for days, hours, minutes and seconds in the
+final string.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a dict with keys: <tt class="docutils literal"><span class="pre">days</span></tt>, <tt class="docutils literal"><span class="pre">hours</span></tt>, <tt class="docutils literal"><span class="pre">minutes</span></tt>, <tt class="docutils literal"><span class="pre">minutes</span></tt>
+and <tt class="docutils literal"><span class="pre">seconds</span></tt>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">age</span> <span class="o">=</span> <span class="n">humanize_duration</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">hours</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">minutes</span><span class="o">=</span><span class="mi">34</span><span class="p">,</span> <span class="n">seconds</span><span class="o">=</span><span class="mi">22</span><span class="p">),</span> <span class="n">sep</span><span class="o">=</span><span class="s">&quot;, &quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">age</span>
+<span class="go">{&#39;timedelta&#39;: datetime.timedelta(1, 9262), &#39;seconds&#39;: 22, &#39;as_string&#39;: &#39;1 days, 2 hours, 34 minutes, 22 seconds&#39;, &#39;days&#39;: 1, &#39;hours&#39;: 2, &#39;minutes&#39;: 34}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">age_filter</span> <span class="o">=</span> <span class="n">humanize_duration</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">hours</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">minutes</span><span class="o">=</span><span class="mi">34</span><span class="p">,</span> <span class="n">seconds</span><span class="o">=</span><span class="mi">22</span><span class="p">),</span> <span class="n">sep</span><span class="o">=</span><span class="s">&quot;, &quot;</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;days&#39;</span><span class="p">,</span> <span class="s">&#39;hours&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">age_filter</span><span class="p">[</span><span class="s">&#39;as_string&#39;</span><span class="p">]</span>
+<span class="go">&#39;1 days, 2 hours&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="arguments.html" class="btn btn-neutral" title="Arguments types"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Vincent BESANCON.
+    </p>
+  </div>
+
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+</body>
+</html>

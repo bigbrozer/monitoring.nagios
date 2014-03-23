@@ -1,0 +1,661 @@
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Creating a new plugin, the basics &mdash; monitoring.nagios 1.3.0 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:'',
+        VERSION:'1.3.0',
+        COLLAPSE_INDEX:false,
+        FILE_SUFFIX:'.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+    <script type="text/javascript">
+        jQuery(function () {
+            SphinxRtdTheme.StickyNav.enable();
+        });
+    </script>
+  
+
+  
+    <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+  
+    <link rel="top" title="monitoring.nagios 1.3.0 documentation" href="index.html"/>
+        <link rel="next" title="SNMP based plugin" href="snmp.html"/>
+        <link rel="prev" title="monitoring.nagios — Python package that ease Nagios plugin creation" href="index.html"/> 
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="index.html" class="icon icon-home"> monitoring.nagios</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="">Creating a new plugin, the basics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#basic-intialization">Basic intialization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#logging">Logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#defining-new-arguments">Defining new arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sanity-checks-on-arguments">Sanity checks on arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#output-to-nagios">Output to Nagios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#preparation">Preparation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#plugin-template">Plugin template</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="snmp.html">SNMP based plugin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="snmp.html#getting-started">Getting started</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ssh.html">SSH based plugin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ssh.html#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ssh.html#default-plugin-arguments">Default plugin arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ssh.html#remote-actions">Remote actions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ssh.html#get-a-command-output">Get a command output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ssh.html#get-a-list-of-files-in-a-directory">Get a list of files in a directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ssh.html#get-file-or-directory-last-modified-time">Get file or directory last modified time</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="wmi.html">WMI based plugin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="wmi.html#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wmi.html#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="http.html">HTTP based plugin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="http.html#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="http.html#default-plugin-arguments">Default plugin arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="http.html#making-requests">Making requests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="http.html#playing-with-response">Playing with response</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="http.html#response-content">Response content</a></li>
+<li class="toctree-l3"><a class="reference internal" href="http.html#json-output">JSON output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="http.html#xml-output">XML output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="plugin-api.html">Plugin API reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="plugin-api.html#base-class">Base class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plugin-api.html#network-protocols">Network protocols</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plugin-api.html#databases">Databases</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="probe-api.html">Probes API reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="probe-api.html#base-class">Base class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="probe-api.html#network-protocols">Network protocols</a></li>
+<li class="toctree-l3"><a class="reference internal" href="probe-api.html#databases">Databases</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="arguments.html">Arguments types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
+</ul>
+</li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="icon icon-reorder"></i>
+        <a href="index.html">monitoring.nagios</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Creating a new plugin, the basics</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="_sources/new_plugin.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            
+  <div class="section" id="creating-a-new-plugin-the-basics">
+<h1>Creating a new plugin, the basics<a class="headerlink" href="#creating-a-new-plugin-the-basics" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>The module <a class="reference internal" href="plugin-api.html#module-monitoring.nagios.plugin" title="monitoring.nagios.plugin"><tt class="xref py py-mod docutils literal"><span class="pre">monitoring.nagios.plugin</span></tt></a> allows you to create a new plugin
+that depends on the type of check it will execute.</p>
+<p>This can be a plugin that make use of SNMP, or SSH, or it needs to access a
+database and do some query...</p>
+<p>There&#8217;re a class per protocols. I will describe them here.</p>
+</div>
+<div class="section" id="basic-intialization">
+<h2>Basic intialization<a class="headerlink" href="#basic-intialization" title="Permalink to this headline">¶</a></h2>
+<p>The class <tt class="xref py py-class docutils literal"><span class="pre">NagiosPlugin</span></tt> is the base class from which all others plugin
+classes will inherit. She is reponsible for the plugin initialization and
+provides attributes and methods in order to manage plugin output (including
+performance data), data rentention saving / loading and plugin arguments.</p>
+<p>Initialize a basic plugin, create a file <tt class="docutils literal"><span class="pre">my_super_plugin.py</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">monitoring.nagios.plugin</span> <span class="kn">import</span> <span class="n">NagiosPlugin</span>
+
+<span class="n">plugin</span> <span class="o">=</span> <span class="n">NagiosPlugin</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="s">&#39;1.0&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s">&#39;Just a test...&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Try to see the help passing the <tt class="docutils literal"><span class="pre">--help</span></tt> argument to your plugin:</p>
+<div class="highlight-python"><pre>usage: my_super_plugin.py [-h] [--debug] [--version] -H HOSTNAME
+
+Just a test...
+
+optional arguments:
+  -h, --help   show this help message and exit
+  --debug      Show debug information, Nagios may truncate output
+  --version    show program's version number and exit
+
+Plugin arguments:
+  This arguments are required by the plugin.
+
+  -H HOSTNAME  Target hostname (FQDN or IP address)</pre>
+</div>
+<p>Already a bunch of work is done for you ;-)</p>
+<p>As you can see, the <tt class="docutils literal"><span class="pre">-H</span></tt> argument is mandatory.</p>
+<div class="section" id="logging">
+<h3>Logging<a class="headerlink" href="#logging" title="Permalink to this headline">¶</a></h3>
+<p>Logging is important and you should not neglect it. On first import of
+<tt class="xref py py-mod docutils literal"><span class="pre">monitoring.nagios</span></tt>, the logging system will be initialized for you. It is
+configured to be shown if argument <tt class="docutils literal"><span class="pre">--debug</span></tt> is passed to your script
+(plugin). For the moment it shows only <strong>debug</strong> logging level.</p>
+<p>Here is how to use it (based on previous example):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">monitoring.nagios.plugin</span> <span class="kn">import</span> <span class="n">NagiosPlugin</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&#39;plugin&#39;</span><span class="p">)</span>
+
+<span class="n">myvar</span> <span class="o">=</span> <span class="s">&quot;Hey !&quot;</span>
+
+<span class="n">plugin</span> <span class="o">=</span> <span class="n">NagiosPlugin</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="s">&#39;1.0&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s">&#39;Just a test with logging...&#39;</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;Show this message in debug mode only...&#39;</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;Content of variable </span><span class="se">\&quot;</span><span class="s">myvar</span><span class="se">\&quot;</span><span class="s">: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">myvar</span><span class="p">))</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;This is the end !&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>It is mandatory to get the logger named <em>plugin</em> with <tt class="xref py py-meth docutils literal"><span class="pre">logging.getLogger()</span></tt>,
+this logger will be used to print debug information related to your plugin.</p>
+<p>Now try to start this script with arguments <tt class="docutils literal"><span class="pre">-H</span> <span class="pre">fake_host</span> <span class="pre">--debug</span></tt> (<tt class="docutils literal"><span class="pre">-H</span></tt> is
+mandatory but will not be verified here), you should notice that the package and
+its modules will show a lot of information:</p>
+<div class="highlight-python"><pre>[DEBUG] (base) === BEGIN PLUGIN INIT ===
+[DEBUG] (base) Debug mode is ON.
+[DEBUG] (base) Plugin class: NagiosPlugin.
+[DEBUG] (base)         Name: my_super_plugin.py, v1.0
+[DEBUG] (base)         Desc: Just a test with logging...
+[DEBUG] (base) Processed command line arguments:
+[DEBUG] (base) {   'debug': True, 'hostname': 'fake_host'}
+[DEBUG] (base) Calling second level of initialization.
+[DEBUG] (base) === END PLUGIN INIT ===
+[DEBUG] (my_super_plugin) Show this message in debug mode only...
+[DEBUG] (my_super_plugin) Content of variable "myvar": Hey !
+[DEBUG] (my_super_plugin) This is the end !</pre>
+</div>
+<p>The format is <tt class="docutils literal"><span class="pre">[LEVEL]</span> <span class="pre">(source)</span> <span class="pre">message</span></tt>.</p>
+</div>
+<div class="section" id="defining-new-arguments">
+<h3>Defining new arguments<a class="headerlink" href="#defining-new-arguments" title="Permalink to this headline">¶</a></h3>
+<p>You need to create a class that inherit from <tt class="xref py py-class docutils literal"><span class="pre">NagiosPlugin</span></tt> in order to
+add extra arguments to your plugin:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">monitoring.nagios.plugin</span> <span class="kn">import</span> <span class="n">NagiosPlugin</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&#39;plugin&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">MySuperPlugin</span><span class="p">(</span><span class="n">NagiosPlugin</span><span class="p">):</span>
+   <span class="k">pass</span>
+
+<span class="n">myvar</span> <span class="o">=</span> <span class="s">&quot;Hey !&quot;</span>
+
+<span class="n">plugin</span> <span class="o">=</span> <span class="n">MySuperPlugin</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="s">&#39;1.0&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s">&#39;Just a test with logging...&#39;</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;Show this message in debug mode only...&#39;</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;Content of variable </span><span class="se">\&quot;</span><span class="s">myvar</span><span class="se">\&quot;</span><span class="s">: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">myvar</span><span class="p">))</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;This is the end !&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>By doing this, you inherit from the base class and by doing this you will be
+able to customize as you want some parts of your plugin.</p>
+<p>First thing you will want to do is to add new arguments such as thresholds or
+whatever. You can add arguments by overriding <tt class="xref py py-meth docutils literal"><span class="pre">define_plugin_arguments()</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">monitoring.nagios.plugin</span> <span class="kn">import</span> <span class="n">NagiosPlugin</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&#39;plugin&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">MySuperPlugin</span><span class="p">(</span><span class="n">NagiosPlugin</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">define_plugin_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+       <span class="nb">super</span><span class="p">(</span><span class="n">MySuperPlugin</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">define_plugin_arguments</span><span class="p">()</span>
+
+<span class="n">myvar</span> <span class="o">=</span> <span class="s">&quot;Hey !&quot;</span>
+
+<span class="n">plugin</span> <span class="o">=</span> <span class="n">MySuperPlugin</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="s">&#39;1.0&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s">&#39;Just a test with logging...&#39;</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;Show this message in debug mode only...&#39;</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;Content of variable </span><span class="se">\&quot;</span><span class="s">myvar</span><span class="se">\&quot;</span><span class="s">: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">myvar</span><span class="p">))</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;This is the end !&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This is called <em>overriding</em> because you will change the behavior of the method
+<tt class="xref py py-meth docutils literal"><span class="pre">define_plugin_arguments()</span></tt> but you first call the one in the super class
+(the one we inherit from) called <tt class="xref py py-class docutils literal"><span class="pre">NagiosPlugin</span></tt> with the help of
+<tt class="xref py py-func docutils literal"><span class="pre">super()</span></tt>. If you forget to call <tt class="xref py py-func docutils literal"><span class="pre">super()</span></tt>, you will loose arguments
+defined in the base class <tt class="xref py py-class docutils literal"><span class="pre">NagiosPlugin</span></tt> such as <tt class="docutils literal"><span class="pre">-H</span></tt>, <tt class="docutils literal"><span class="pre">--debug</span></tt>, ...</p>
+<p>Let&#8217;s add a new argument now:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">monitoring.nagios.plugin</span> <span class="kn">import</span> <span class="n">NagiosPlugin</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&#39;plugin&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">MySuperPlugin</span><span class="p">(</span><span class="n">NagiosPlugin</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">define_plugin_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+       <span class="nb">super</span><span class="p">(</span><span class="n">MySuperPlugin</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">define_plugin_arguments</span><span class="p">()</span>
+
+       <span class="bp">self</span><span class="o">.</span><span class="n">required_args</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">&#39;-a&#39;</span><span class="p">,</span> <span class="s">&#39;--argument&#39;</span><span class="p">,</span>
+                                       <span class="n">dest</span><span class="o">=</span><span class="s">&quot;argument&quot;</span><span class="p">,</span>
+                                       <span class="n">help</span><span class="o">=</span><span class="s">&quot;This is our new argument.&quot;</span><span class="p">,</span>
+                                       <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="n">myvar</span> <span class="o">=</span> <span class="s">&quot;Hey !&quot;</span>
+
+<span class="n">plugin</span> <span class="o">=</span> <span class="n">MySuperPlugin</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="s">&#39;1.0&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s">&#39;Just a test with logging...&#39;</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;Show this message in debug mode only...&#39;</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;Content of variable </span><span class="se">\&quot;</span><span class="s">myvar</span><span class="se">\&quot;</span><span class="s">: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">myvar</span><span class="p">))</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;This is the end !&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><tt class="xref py py-attr docutils literal"><span class="pre">required_args</span></tt> is an attribute inherited from <tt class="xref py py-class docutils literal"><span class="pre">NagiosPlugin</span></tt>. It
+is the default <em>namespace</em> or <em>argument group</em> for the plugin. You should add
+argument to this group only if they are required. Adding argument is done with
+<a class="reference internal" href="#add_argument" title="add_argument"><tt class="xref py py-meth docutils literal"><span class="pre">add_argument()</span></tt></a> method of <tt class="xref py py-attr docutils literal"><span class="pre">required_args</span></tt>, please I strongly advice
+you to check out the <tt class="xref py py-mod docutils literal"><span class="pre">argparse</span></tt> module documentation which is part of
+Python Standard Library.</p>
+<p><a class="reference internal" href="#add_argument" title="add_argument"><tt class="xref py py-meth docutils literal"><span class="pre">add_argument()</span></tt></a> has a <strong>required</strong> keyword argument that specify if a error
+should be returned if it is required or not (True / False).</p>
+<p>Here is the <a class="reference internal" href="#add_argument" title="add_argument"><tt class="xref py py-meth docutils literal"><span class="pre">add_argument()</span></tt></a> method in details:</p>
+<dl class="function">
+<dt id="add_argument">
+<tt class="descname">add_argument</tt><big>(</big><em>short_name</em><span class="optional">[</span>, <em>long_name</em><span class="optional">]</span>, <em>dest</em>, <em>type</em>, <em>help</em>, <em>required</em><big>)</big><a class="headerlink" href="#add_argument" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a new argument to the plugin.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>short_name</strong> (<em>str</em>) &#8211; the short name of the argument, eg. <tt class="docutils literal"><span class="pre">-a</span></tt>.</li>
+<li><strong>long_name</strong> (<em>str</em>) &#8211; (<em>optional</em>) the long name of the argument, eg. <tt class="docutils literal"><span class="pre">--argument</span></tt>.</li>
+<li><strong>dest</strong> (<em>str</em>) &#8211; the name of the variable that will store the argument value.</li>
+<li><strong>type</strong> (<em>built-in type</em>) &#8211; (<em>optional</em>) specify the type of the argument value. Default to <tt class="xref py py-class docutils literal"><span class="pre">str</span></tt>.</li>
+<li><strong>help</strong> (<em>str</em>) &#8211; the help message that describe this argument. Used by <tt class="docutils literal"><span class="pre">--help</span></tt>.</li>
+<li><strong>required</strong> (<em>bool</em>) &#8211; should this argument be required or not.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Looking to the help again with <tt class="docutils literal"><span class="pre">--help</span></tt>:</p>
+<div class="highlight-python"><pre>usage: my_super_plugin.py [-h] [--debug] [--version] -H HOSTNAME -a ARGUMENT
+
+Just a test with logging...
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --debug               Show debug information, Nagios may truncate output
+  --version             show program's version number and exit
+
+Plugin arguments:
+  This arguments are required by the plugin.
+
+  -H HOSTNAME           Target hostname (FQDN or IP address)
+  -a ARGUMENT, --argument ARGUMENT
+                       This is our new argument.</pre>
+</div>
+<p>You can see <tt class="docutils literal"><span class="pre">-a</span> <span class="pre">or</span> <span class="pre">--argument</span></tt> in the default namespace named <em>Plugin
+arguments</em>.</p>
+<p>Getting the argument value in your plugin is done with the <tt class="xref py py-attr docutils literal"><span class="pre">options</span></tt>
+attribute of your plugin instance, which is here <tt class="xref py py-data docutils literal"><span class="pre">plugin</span></tt>: <tt class="docutils literal"><span class="pre">plugin.options.&lt;destvar&gt;</span></tt>.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">monitoring.nagios.plugin</span> <span class="kn">import</span> <span class="n">NagiosPlugin</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&#39;plugin&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">MySuperPlugin</span><span class="p">(</span><span class="n">NagiosPlugin</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">define_plugin_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+       <span class="nb">super</span><span class="p">(</span><span class="n">MySuperPlugin</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">define_plugin_arguments</span><span class="p">()</span>
+
+       <span class="bp">self</span><span class="o">.</span><span class="n">required_args</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">&#39;-a&#39;</span><span class="p">,</span> <span class="s">&#39;--argument&#39;</span><span class="p">,</span>
+                                       <span class="n">dest</span><span class="o">=</span><span class="s">&quot;argument&quot;</span><span class="p">,</span>
+                                       <span class="n">help</span><span class="o">=</span><span class="s">&quot;This is our new argument.&quot;</span><span class="p">,</span>
+                                       <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="n">plugin</span> <span class="o">=</span> <span class="n">MySuperPlugin</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="s">&#39;1.0&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s">&#39;Just a test with logging...&#39;</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;Show this message in debug mode only...&#39;</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;Value of argument: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">plugin</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">argument</span><span class="p">))</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;This is the end !&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="grouping-arguments">
+<h4>Grouping arguments<a class="headerlink" href="#grouping-arguments" title="Permalink to this headline">¶</a></h4>
+<p>You can create others namespaces if needed. For example, one for thresholds,
+modify the <tt class="xref py py-meth docutils literal"><span class="pre">define_plugin_arguments()</span></tt> to:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">define_plugin_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="nb">super</span><span class="p">(</span><span class="n">MySuperPlugin</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">define_plugin_arguments</span><span class="p">()</span>
+
+    <span class="n">args_thresholds_group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s">&quot;Thresholds&quot;</span><span class="p">,</span> <span class="s">&quot;Arguments for thresholds&quot;</span><span class="p">)</span>
+    <span class="n">args_thresholds_group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">&#39;-w&#39;</span><span class="p">,</span>
+                                       <span class="n">dest</span><span class="o">=</span><span class="s">&quot;warning&quot;</span><span class="p">,</span>
+                                       <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+                                       <span class="n">help</span><span class="o">=</span><span class="s">&quot;This is our warning threshold, an integer.&quot;</span><span class="p">,</span>
+                                       <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">args_thresholds_group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">&#39;-c&#39;</span><span class="p">,</span>
+                                       <span class="n">dest</span><span class="o">=</span><span class="s">&quot;critical&quot;</span><span class="p">,</span>
+                                       <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+                                       <span class="n">help</span><span class="o">=</span><span class="s">&quot;This is our critical threshold, an integer.&quot;</span><span class="p">,</span>
+                                       <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will show in the help with <tt class="docutils literal"><span class="pre">--help</span></tt>:</p>
+<div class="highlight-python"><pre>Thresholds:
+  Arguments for thresholds
+
+  -w WARNING   This is our warning threshold, an integer.
+  -c CRITICAL  This is our critical threshold, an integer.</pre>
+</div>
+<p>Cool ?</p>
+</div>
+</div>
+<div class="section" id="sanity-checks-on-arguments">
+<h3>Sanity checks on arguments<a class="headerlink" href="#sanity-checks-on-arguments" title="Permalink to this headline">¶</a></h3>
+<p>This is the same way as adding new arguments. You overrides
+<tt class="xref py py-meth docutils literal"><span class="pre">verify_plugin_arguments()</span></tt> in your MySuperPlugin class. In
+this method you will focus only on arguments verifications, one that is
+typical:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">verify_plugin_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="nb">super</span><span class="p">(</span><span class="n">MySuperPlugin</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">verify_plugin_arguments</span><span class="p">()</span>
+
+    <span class="c"># Checking if warning thresholds is not &gt; critical</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">warning</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">critical</span><span class="p">:</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">unknown</span><span class="p">(</span><span class="s">&#39;Warning cannot be greater than critical !&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In this example, the plugin will exit with code 3 (UNKNOWN status) if the <tt class="docutils literal"><span class="pre">-w</span></tt>
+argument value (warning) is greater than <tt class="docutils literal"><span class="pre">-c</span></tt> argument value (critical):</p>
+<div class="highlight-python"><pre>$ python my_super_plugin.py -H fake_host -w 100 -c 50
+UNKNOWN - Warning cannot be greater than critical !</pre>
+</div>
+<p>That&#8217;s also cool, no ? ;-)</p>
+</div>
+</div>
+<div class="section" id="output-to-nagios">
+<h2>Output to Nagios<a class="headerlink" href="#output-to-nagios" title="Permalink to this headline">¶</a></h2>
+<p><tt class="xref py py-class docutils literal"><span class="pre">NagiosPlugin</span></tt> class and inheritors have a list of attributes in order to
+send output to Nagios and a status code:</p>
+<div class="section" id="preparation">
+<h3>Preparation<a class="headerlink" href="#preparation" title="Permalink to this headline">¶</a></h3>
+<p>During plugin execution, you must prepare the following (do not use one if not
+needed, for example the long output...). Assuming <tt class="xref py py-data docutils literal"><span class="pre">plugin</span></tt> is your
+instance if <tt class="xref py py-class docutils literal"><span class="pre">NagiosPlugin</span></tt> or any other that inherits from it like the
+examples above.</p>
+<p><tt class="xref py py-attr docutils literal"><span class="pre">shortoutput</span></tt></p>
+<blockquote>
+<div><p>This is a string containing the first line that Nagios will show in status
+information table or in alerts. You can use variable substitution here:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">plugin</span><span class="o">.</span><span class="n">shortoutput</span> <span class="o">=</span> <span class="s">&quot;My name is {fullname}&quot;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><tt class="xref py py-attr docutils literal"><span class="pre">longoutput</span></tt></p>
+<blockquote>
+<div><p>This is the extra lines that should be shown as long output in the Thruk
+popup. This is a list, append lines with:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">plugin</span><span class="o">.</span><span class="n">longoutput</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;A new line of long output&quot;</span><span class="p">)</span>
+<span class="n">plugin</span><span class="o">.</span><span class="n">longoutput</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;Another one...&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><tt class="xref py py-attr docutils literal"><span class="pre">perfdata</span></tt></p>
+<blockquote>
+<div><p>A list of the datasources that are used in graphs. This is a list, append
+with:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">plugin</span><span class="o">.</span><span class="n">perfdata</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;data1=valueU;MIN;MAX;WARN;CRIT;&quot;</span><span class="p">)</span>
+<span class="n">plugin</span><span class="o">.</span><span class="n">perfdata</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;data2=valueU;MIN;MAX;WARN;CRIT;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Please note that variable substitution is working here for each attributes. For
+example, with perfdata:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">plugin</span><span class="o">.</span><span class="n">perfdata</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;{table}={value}r;{warn};;0;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">warn</span><span class="o">=</span><span class="n">plugin</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">warning</span><span class="p">,</span>
+                                                           <span class="n">table</span><span class="o">=</span><span class="n">table_name</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+                                                           <span class="n">value</span><span class="o">=</span><span class="n">num_rows</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Send the final output string to Nagios with <a class="reference internal" href="#output" title="output"><tt class="xref py py-meth docutils literal"><span class="pre">output()</span></tt></a> method.</p>
+<dl class="method">
+<dt id="output">
+<tt class="descname">output</tt><big>(</big><span class="optional">[</span><em>subs</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format the final string of text that will be send to Nagios. Includes short
+output, long output and performance data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>subs</strong> (<em>dict</em>) &#8211; (<em>optional</em>) a keyword dict that will be used to replace <em>keys</em> by <em>values</em> in the final string.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the final string with variables substitued if any provided by subs.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">monitoring.nagios.plugin</span> <span class="kn">import</span> <span class="n">NagiosPlugin</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&#39;plugin&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">MySuperPlugin</span><span class="p">(</span><span class="n">NagiosPlugin</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="n">plugin</span> <span class="o">=</span> <span class="n">MySuperPlugin</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="s">&#39;1.0&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s">&#39;Just a test with logging...&#39;</span><span class="p">)</span>
+<span class="n">plugin</span><span class="o">.</span><span class="n">shortoutput</span> <span class="o">=</span> <span class="s">&quot;My name is {fullname}&quot;</span>
+
+<span class="n">subs</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;fullname&#39;</span><span class="p">:</span> <span class="s">&#39;Vincent Besancon&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+    <span class="n">plugin</span><span class="o">.</span><span class="n">longoutput</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;Long output line n{0}.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+    <span class="n">plugin</span><span class="o">.</span><span class="n">perfdata</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;data{0}={0};&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+
+<span class="n">plugin</span><span class="o">.</span><span class="n">longoutput</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;Global substitution ! Hello Mr. {fullname} ;-)&quot;</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="n">plugin</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">subs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will output:</p>
+<div class="highlight-python"><pre>My name is Vincent Besancon
+Long output line n1.
+Long output line n2.
+Long output line n3.
+Long output line n4.
+Long output line n5.
+Long output line n6.
+Long output line n7.
+Long output line n8.
+Long output line n9.
+Global substitution ! Hello Mr. Vincent Besancon ;-) | data1=1; data2=2; data3=3; data4=4; data5=5; data6=6; data7=7; data8=8; data9=9;</pre>
+</div>
+<p>To send a status to Nagios, 4 methods are availables: <tt class="xref py py-meth docutils literal"><span class="pre">ok()</span></tt>,
+<tt class="xref py py-meth docutils literal"><span class="pre">warning()</span></tt>, <tt class="xref py py-meth docutils literal"><span class="pre">critical()</span></tt> and <tt class="xref py py-meth docutils literal"><span class="pre">unknown()</span></tt>. Just change the last line
+to:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">plugin</span><span class="o">.</span><span class="n">ok</span><span class="p">(</span><span class="n">plugins</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">subs</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>This will exit with code 0 for OK. We also prepend to
+<tt class="xref py py-attr docutils literal"><span class="pre">shortoutput</span></tt> the current status.</p>
+</div>
+</div>
+<div class="section" id="plugin-template">
+<h2>Plugin template<a class="headerlink" href="#plugin-template" title="Permalink to this headline">¶</a></h2>
+<p>Here is a template that you can use to create new plugin:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env python2.7</span>
+<span class="c"># -*- coding: utf-8 -*-</span>
+<span class="c"># Copyright (C) AUTHOR &lt;ADDRESS&gt;</span>
+<span class="c">#</span>
+<span class="c"># Permission is hereby granted, free of charge, to any person obtaining</span>
+<span class="c"># a copy of this software and associated documentation files (the &quot;Software&quot;),</span>
+<span class="c"># to deal in the Software without restriction, including without limitation</span>
+<span class="c"># the rights to use, copy, modify, merge, publish, distribute, sublicense,</span>
+<span class="c"># and/or sell copies of the Software, and to permit persons to whom the</span>
+<span class="c"># Software is furnished to do so, subject to the following conditions:</span>
+<span class="c">#</span>
+<span class="c"># The above copyright notice and this permission notice shall be included</span>
+<span class="c"># in all copies or substantial portions of the Software.</span>
+<span class="c">#</span>
+<span class="c"># THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND,</span>
+<span class="c"># EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES</span>
+<span class="c"># OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</span>
+<span class="c"># IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,</span>
+<span class="c"># DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,</span>
+<span class="c"># TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE</span>
+<span class="c"># OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+
+<span class="kn">from</span> <span class="nn">monitoring.nagios.plugin</span> <span class="kn">import</span> <span class="n">NagiosPlugin</span>
+
+
+<span class="c"># Initialize default logger</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&quot;plugin.default&quot;</span><span class="p">)</span>
+
+
+<span class="c"># Customize plugin here</span>
+<span class="k">class</span> <span class="nc">CustomPlugin</span><span class="p">(</span><span class="n">NagiosPlugin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Customize Plugin definition.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+
+
+<span class="c"># Initialize the plugin</span>
+<span class="n">plugin</span> <span class="o">=</span> <span class="n">CustomPlugin</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="s">&quot;1.0.0&quot;</span><span class="p">,</span>
+                      <span class="n">description</span><span class="o">=</span><span class="s">&quot;Parse JSON data via HTTP.&quot;</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="c"># Plugin execution code goes here.</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Plugin execution started...&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+    <span class="n">plugin</span><span class="o">.</span><span class="n">shortoutput</span> <span class="o">=</span> <span class="s">&quot;Unexpected plugin behavior ! Traceback attached.&quot;</span>
+    <span class="n">plugin</span><span class="o">.</span><span class="n">longoutput</span> <span class="o">=</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+    <span class="n">plugin</span><span class="o">.</span><span class="n">unknown</span><span class="p">(</span><span class="n">plugin</span><span class="o">.</span><span class="n">output</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="snmp.html" class="btn btn-neutral float-right" title="SNMP based plugin"/>Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="monitoring.nagios — Python package that ease Nagios plugin creation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Vincent BESANCON.
+    </p>
+  </div>
+
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+</body>
+</html>

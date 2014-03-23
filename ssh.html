@@ -1,0 +1,345 @@
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>SSH based plugin &mdash; monitoring.nagios 1.3.0 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:'',
+        VERSION:'1.3.0',
+        COLLAPSE_INDEX:false,
+        FILE_SUFFIX:'.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+    <script type="text/javascript">
+        jQuery(function () {
+            SphinxRtdTheme.StickyNav.enable();
+        });
+    </script>
+  
+
+  
+    <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+  
+    <link rel="top" title="monitoring.nagios 1.3.0 documentation" href="index.html"/>
+        <link rel="next" title="WMI based plugin" href="wmi.html"/>
+        <link rel="prev" title="SNMP based plugin" href="snmp.html"/> 
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="index.html" class="icon icon-home"> monitoring.nagios</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="new_plugin.html">Creating a new plugin, the basics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="new_plugin.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="new_plugin.html#basic-intialization">Basic intialization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="new_plugin.html#logging">Logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="new_plugin.html#defining-new-arguments">Defining new arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="new_plugin.html#sanity-checks-on-arguments">Sanity checks on arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="new_plugin.html#output-to-nagios">Output to Nagios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="new_plugin.html#preparation">Preparation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="new_plugin.html#plugin-template">Plugin template</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="snmp.html">SNMP based plugin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="snmp.html#getting-started">Getting started</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">SSH based plugin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#default-plugin-arguments">Default plugin arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#remote-actions">Remote actions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#get-a-command-output">Get a command output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-a-list-of-files-in-a-directory">Get a list of files in a directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-file-or-directory-last-modified-time">Get file or directory last modified time</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="wmi.html">WMI based plugin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="wmi.html#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wmi.html#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="http.html">HTTP based plugin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="http.html#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="http.html#default-plugin-arguments">Default plugin arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="http.html#making-requests">Making requests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="http.html#playing-with-response">Playing with response</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="http.html#response-content">Response content</a></li>
+<li class="toctree-l3"><a class="reference internal" href="http.html#json-output">JSON output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="http.html#xml-output">XML output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="plugin-api.html">Plugin API reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="plugin-api.html#base-class">Base class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plugin-api.html#network-protocols">Network protocols</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plugin-api.html#databases">Databases</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="probe-api.html">Probes API reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="probe-api.html#base-class">Base class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="probe-api.html#network-protocols">Network protocols</a></li>
+<li class="toctree-l3"><a class="reference internal" href="probe-api.html#databases">Databases</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="arguments.html">Arguments types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
+</ul>
+</li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="icon icon-reorder"></i>
+        <a href="index.html">monitoring.nagios</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>SSH based plugin</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="_sources/ssh.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            
+  <div class="section" id="ssh-based-plugin">
+<h1>SSH based plugin<a class="headerlink" href="#ssh-based-plugin" title="Permalink to this headline">¶</a></h1>
+<p>The class <a class="reference internal" href="plugin-api.html#monitoring.nagios.plugin.NagiosPluginSSH" title="monitoring.nagios.plugin.NagiosPluginSSH"><tt class="xref py py-class docutils literal"><span class="pre">NagiosPluginSSH</span></tt></a> that inherits from <a class="reference internal" href="plugin-api.html#monitoring.nagios.plugin.NagiosPlugin" title="monitoring.nagios.plugin.NagiosPlugin"><tt class="xref py py-class docutils literal"><span class="pre">NagiosPlugin</span></tt></a> is
+responsible to init a plugin that makes use of SSH to check something.</p>
+<p>If you show the help with <tt class="docutils literal"><span class="pre">--help</span></tt>, you will see extra arguments provided by
+the class. It uses the same mechanics as we saw in <a class="reference internal" href="new_plugin.html"><em>Creating a new plugin, the basics</em></a> section. It
+overrides <a class="reference internal" href="plugin-api.html#monitoring.nagios.plugin.NagiosPlugin.define_plugin_arguments" title="monitoring.nagios.plugin.NagiosPlugin.define_plugin_arguments"><tt class="xref py py-meth docutils literal"><span class="pre">NagiosPlugin.define_plugin_arguments()</span></tt></a> to define new arguments
+and <a class="reference internal" href="plugin-api.html#monitoring.nagios.plugin.NagiosPlugin.verify_plugin_arguments" title="monitoring.nagios.plugin.NagiosPlugin.verify_plugin_arguments"><tt class="xref py py-meth docutils literal"><span class="pre">NagiosPlugin.verify_plugin_arguments()</span></tt></a> to do arguments checking.</p>
+<div class="section" id="getting-started">
+<h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<p>Instanciate a new SSH plugin with:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">monitoring.nagios.plugin</span> <span class="kn">import</span> <span class="n">NagiosPluginSSH</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&#39;plugin&#39;</span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plugin</span> <span class="o">=</span> <span class="n">NagiosPluginSSH</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="s">&quot;1.0&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>                         <span class="n">description</span><span class="o">=</span><span class="s">&quot;Do something using SSH.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="default-plugin-arguments">
+<h2>Default plugin arguments<a class="headerlink" href="#default-plugin-arguments" title="Permalink to this headline">¶</a></h2>
+<p>The class defines the following default set of arguments.</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">-H</span></tt>: The hostaddress of the server to connect on.</li>
+<li><tt class="docutils literal"><span class="pre">-P</span></tt>: Port to connect to (default to 22).</li>
+<li><tt class="docutils literal"><span class="pre">-u,</span> <span class="pre">--username</span></tt>: Login user. Default to current logged in user.</li>
+<li><tt class="docutils literal"><span class="pre">-p,</span> <span class="pre">--password</span></tt>: Login user password. Default is to use pub key of the
+current user.</li>
+<li><tt class="docutils literal"><span class="pre">-t,</span> <span class="pre">--timeout</span></tt>: Connection timeout in seconds (default to 10 secs).</li>
+</ul>
+</div>
+<div class="section" id="remote-actions">
+<h2>Remote actions<a class="headerlink" href="#remote-actions" title="Permalink to this headline">¶</a></h2>
+<p>Use attribute <tt class="docutils literal"><span class="pre">ssh</span></tt> to make use of the SSH probe. Look at deeper details
+within the API reference for <a class="reference internal" href="probe-api.html#monitoring.nagios.probes.secureshell.ProbeSSH" title="monitoring.nagios.probes.secureshell.ProbeSSH"><tt class="xref py py-class docutils literal"><span class="pre">ProbeSSH</span></tt></a> class.</p>
+<div class="section" id="get-a-command-output">
+<h3>Get a command output<a class="headerlink" href="#get-a-command-output" title="Permalink to this headline">¶</a></h3>
+<p>Here is how you can execute a command:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cmd</span> <span class="o">=</span> <span class="n">plugin</span><span class="o">.</span><span class="n">ssh</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;ls -l /&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will return a <a class="reference internal" href="probe-api.html#monitoring.nagios.probes.secureshell.CommandResult" title="monitoring.nagios.probes.secureshell.CommandResult"><tt class="xref py py-class docutils literal"><span class="pre">CommandResult</span></tt></a> instance with useful attributes like
+<a class="reference internal" href="probe-api.html#monitoring.nagios.probes.secureshell.CommandResult.output" title="monitoring.nagios.probes.secureshell.CommandResult.output"><tt class="xref py py-attr docutils literal"><span class="pre">CommandResult.output</span></tt></a> for lines on stdout, <a class="reference internal" href="probe-api.html#monitoring.nagios.probes.secureshell.CommandResult.errors" title="monitoring.nagios.probes.secureshell.CommandResult.errors"><tt class="xref py py-attr docutils literal"><span class="pre">CommandResult.errors</span></tt></a>
+for lines on stderr and <a class="reference internal" href="probe-api.html#monitoring.nagios.probes.secureshell.CommandResult.status" title="monitoring.nagios.probes.secureshell.CommandResult.status"><tt class="xref py py-attr docutils literal"><span class="pre">CommandResult.status</span></tt></a> for status code of the
+command.</p>
+<p>Read output of the command and get a list with:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cmd</span><span class="o">.</span><span class="n">output</span>
+<span class="go">[&#39;total 160&#39;,</span>
+<span class="go">&#39;drwxr-xr-x   2 root root  4096 janv. 15 08:53 bin&#39;,</span>
+<span class="go">&#39;drwxr-xr-x   4 root root 12288 f\xc3\xa9vr. 25 17:41 boot&#39;,</span>
+<span class="go">&#39;drwxr-xr-x   2 root root  4096 d\xc3\xa9c.   4  2012 cdrom&#39;,</span>
+<span class="go">&#39;drwxr-xr-x  16 root root  4280 mars   5 08:38 dev&#39;,</span>
+<span class="go">&#39;drwxr-xr-x 170 root root 12288 mars   5 08:38 etc&#39;,</span>
+<span class="go">&#39;drwxr-xr-x   3 root root  4096 d\xc3\xa9c.   4  2012 home&#39;,</span>
+<span class="go">&#39;...&#39;]</span>
+</pre></div>
+</div>
+<p>As this is a list, you can easily iterate over each lines:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">cmd</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="c"># Do something with line...</span>
+</pre></div>
+</div>
+<p>The method <a class="reference internal" href="probe-api.html#monitoring.nagios.probes.secureshell.ProbeSSH.execute" title="monitoring.nagios.probes.secureshell.ProbeSSH.execute"><tt class="xref py py-meth docutils literal"><span class="pre">ProbeSSH.execute()</span></tt></a> will raise
+<a class="reference internal" href="probe-api.html#monitoring.nagios.probes.secureshell.ProbeSSH.SSHCommandTimeout" title="monitoring.nagios.probes.secureshell.ProbeSSH.SSHCommandTimeout"><tt class="xref py py-class docutils literal"><span class="pre">ProbeSSH.SSHCommandTimeout</span></tt></a> exception if timeout is reached (as
+defined by the <tt class="docutils literal"><span class="pre">-t</span></tt> plugin argument).</p>
+<p>You can also get the command status code instead:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">cmd</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="k">print</span> <span class="s">&quot;Command executed successfully ;-)&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="get-a-list-of-files-in-a-directory">
+<h3>Get a list of files in a directory<a class="headerlink" href="#get-a-list-of-files-in-a-directory" title="Permalink to this headline">¶</a></h3>
+<p>The SSH probe has suppport to easily find files within a directory that match a
+pattern. It has support for recursion but disabled by default.</p>
+<p>Search for <tt class="docutils literal"><span class="pre">*.txt</span></tt> files in <tt class="docutils literal"><span class="pre">/tmp</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">text_files</span> <span class="o">=</span> <span class="n">plugin</span><span class="o">.</span><span class="n">ssh</span><span class="o">.</span><span class="n">list_files</span><span class="p">(</span><span class="n">directory</span><span class="o">=</span><span class="s">&quot;/tmp&quot;</span><span class="p">,</span> <span class="n">glob</span><span class="o">=</span><span class="s">&quot;*.txt&quot;</span><span class="p">)</span>
+<span class="go">[&#39;/tmp/c.txt&#39;,</span>
+<span class="go">&#39;/tmp/e.txt&#39;,</span>
+<span class="go">&#39;/tmp/d.txt&#39;,</span>
+<span class="go">&#39;/tmp/o.txt&#39;,</span>
+<span class="go">&#39;/tmp/t.txt&#39;,</span>
+<span class="go">&#39;/tmp/y.txt&#39;,</span>
+<span class="go">&#39;/tmp/b.txt&#39;,</span>
+<span class="go">&#39;/tmp/r.txt&#39;,</span>
+<span class="go">&#39;/tmp/a.txt&#39;]</span>
+</pre></div>
+</div>
+<p>Now with recursion up to 5 sub-directories:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">text_files</span> <span class="o">=</span> <span class="n">plugin</span><span class="o">.</span><span class="n">ssh</span><span class="o">.</span><span class="n">list_files</span><span class="p">(</span><span class="n">directory</span><span class="o">=</span><span class="s">&quot;/tmp&quot;</span><span class="p">,</span> <span class="n">glob</span><span class="o">=</span><span class="s">&quot;*.txt&quot;</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="go">[&#39;/tmp/c.txt&#39;,</span>
+<span class="go">&#39;/tmp/e.txt&#39;,</span>
+<span class="go">&#39;/tmp/d.txt&#39;,</span>
+<span class="go">&#39;/tmp/o.txt&#39;,</span>
+<span class="go">&#39;/tmp/tata/a.txt&#39;,</span>
+<span class="go">&#39;/tmp/t.txt&#39;,</span>
+<span class="go">&#39;/tmp/y.txt&#39;,</span>
+<span class="go">&#39;/tmp/toto/b/b.txt&#39;,</span>
+<span class="go">&#39;/tmp/toto/c/b.txt&#39;,</span>
+<span class="go">&#39;/tmp/toto/a/b.txt&#39;,</span>
+<span class="go">&#39;/tmp/b.txt&#39;,</span>
+<span class="go">&#39;/tmp/r.txt&#39;,</span>
+<span class="go">&#39;/tmp/a.txt&#39;]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="get-file-or-directory-last-modified-time">
+<h3>Get file or directory last modified time<a class="headerlink" href="#get-file-or-directory-last-modified-time" title="Permalink to this headline">¶</a></h3>
+<p>The SSH probe defines methods to obtain the last modified time of a file or
+directory.</p>
+<p><a class="reference internal" href="probe-api.html#monitoring.nagios.probes.secureshell.ProbeSSH.get_file_lastmodified_minutes" title="monitoring.nagios.probes.secureshell.ProbeSSH.get_file_lastmodified_minutes"><tt class="xref py py-meth docutils literal"><span class="pre">ProbeSSH.get_file_lastmodified_minutes()</span></tt></a> will give you for how much
+minutes the file was last modified.</p>
+<p><a class="reference internal" href="probe-api.html#monitoring.nagios.probes.secureshell.ProbeSSH.get_file_lastmodified_timestamp" title="monitoring.nagios.probes.secureshell.ProbeSSH.get_file_lastmodified_timestamp"><tt class="xref py py-meth docutils literal"><span class="pre">ProbeSSH.get_file_lastmodified_timestamp()</span></tt></a> will give you the last modified
+time as a Unix Timestamp (UTC).</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">plugin</span><span class="o">.</span><span class="n">ssh</span><span class="o">.</span><span class="n">get_file_lastmodified_minutes</span><span class="p">(</span><span class="s">&quot;/etc/motd&quot;</span><span class="p">)</span>
+<span class="go">16</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plugin</span><span class="o">.</span><span class="n">get_file_lastmodified_timestamp</span><span class="p">(</span><span class="s">&quot;/etc/motd&quot;</span><span class="p">)</span>
+<span class="go">1294765528</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="wmi.html" class="btn btn-neutral float-right" title="WMI based plugin"/>Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="snmp.html" class="btn btn-neutral" title="SNMP based plugin"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Vincent BESANCON.
+    </p>
+  </div>
+
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+</body>
+</html>

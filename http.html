@@ -1,0 +1,318 @@
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>HTTP based plugin &mdash; monitoring.nagios 1.3.0 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:'',
+        VERSION:'1.3.0',
+        COLLAPSE_INDEX:false,
+        FILE_SUFFIX:'.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+    <script type="text/javascript">
+        jQuery(function () {
+            SphinxRtdTheme.StickyNav.enable();
+        });
+    </script>
+  
+
+  
+    <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+  
+    <link rel="top" title="monitoring.nagios 1.3.0 documentation" href="index.html"/>
+        <link rel="next" title="API Reference" href="api.html"/>
+        <link rel="prev" title="WMI based plugin" href="wmi.html"/> 
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="index.html" class="icon icon-home"> monitoring.nagios</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="new_plugin.html">Creating a new plugin, the basics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="new_plugin.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="new_plugin.html#basic-intialization">Basic intialization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="new_plugin.html#logging">Logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="new_plugin.html#defining-new-arguments">Defining new arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="new_plugin.html#sanity-checks-on-arguments">Sanity checks on arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="new_plugin.html#output-to-nagios">Output to Nagios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="new_plugin.html#preparation">Preparation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="new_plugin.html#plugin-template">Plugin template</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="snmp.html">SNMP based plugin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="snmp.html#getting-started">Getting started</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ssh.html">SSH based plugin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ssh.html#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ssh.html#default-plugin-arguments">Default plugin arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ssh.html#remote-actions">Remote actions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ssh.html#get-a-command-output">Get a command output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ssh.html#get-a-list-of-files-in-a-directory">Get a list of files in a directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ssh.html#get-file-or-directory-last-modified-time">Get file or directory last modified time</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="wmi.html">WMI based plugin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="wmi.html#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wmi.html#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">HTTP based plugin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#default-plugin-arguments">Default plugin arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#making-requests">Making requests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#playing-with-response">Playing with response</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#response-content">Response content</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#json-output">JSON output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#xml-output">XML output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="plugin-api.html">Plugin API reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="plugin-api.html#base-class">Base class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plugin-api.html#network-protocols">Network protocols</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plugin-api.html#databases">Databases</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="probe-api.html">Probes API reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="probe-api.html#base-class">Base class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="probe-api.html#network-protocols">Network protocols</a></li>
+<li class="toctree-l3"><a class="reference internal" href="probe-api.html#databases">Databases</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="arguments.html">Arguments types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
+</ul>
+</li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="icon icon-reorder"></i>
+        <a href="index.html">monitoring.nagios</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>HTTP based plugin</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="_sources/http.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            
+  <div class="section" id="http-based-plugin">
+<h1>HTTP based plugin<a class="headerlink" href="#http-based-plugin" title="Permalink to this headline">¶</a></h1>
+<p>The class <a class="reference internal" href="plugin-api.html#monitoring.nagios.plugin.NagiosPluginHTTP" title="monitoring.nagios.plugin.NagiosPluginHTTP"><tt class="xref py py-class docutils literal"><span class="pre">NagiosPluginHTTP</span></tt></a> that inherits from <a class="reference internal" href="plugin-api.html#monitoring.nagios.plugin.NagiosPlugin" title="monitoring.nagios.plugin.NagiosPlugin"><tt class="xref py py-class docutils literal"><span class="pre">NagiosPlugin</span></tt></a> is
+responsible to init a plugin based on HTTP requests.</p>
+<p>She will provides new attributes and methods in order to query a host using
+HTTP.</p>
+<p>If you show the help with <tt class="docutils literal"><span class="pre">--help</span></tt>, you will see extra arguments provided by
+the class. It uses the same mechanics as we saw in <a class="reference internal" href="new_plugin.html"><em>Creating a new plugin, the basics</em></a> section. It
+overrides <a class="reference internal" href="plugin-api.html#monitoring.nagios.plugin.NagiosPlugin.define_plugin_arguments" title="monitoring.nagios.plugin.NagiosPlugin.define_plugin_arguments"><tt class="xref py py-meth docutils literal"><span class="pre">NagiosPlugin.define_plugin_arguments()</span></tt></a> to define new arguments
+and <a class="reference internal" href="plugin-api.html#monitoring.nagios.plugin.NagiosPlugin.verify_plugin_arguments" title="monitoring.nagios.plugin.NagiosPlugin.verify_plugin_arguments"><tt class="xref py py-meth docutils literal"><span class="pre">NagiosPlugin.verify_plugin_arguments()</span></tt></a> to do arguments checking.</p>
+<div class="section" id="getting-started">
+<h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<p>Instanciate a new HTTP plugin with:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">monitoring.nagios.plugin</span> <span class="kn">import</span> <span class="n">NagiosPluginHTTP</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&#39;plugin&#39;</span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plugin</span> <span class="o">=</span> <span class="n">NagiosPluginHTTP</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="s">&quot;1.0&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>                          <span class="n">description</span><span class="o">=</span><span class="s">&quot;Get a file from HTTP.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="default-plugin-arguments">
+<h2>Default plugin arguments<a class="headerlink" href="#default-plugin-arguments" title="Permalink to this headline">¶</a></h2>
+<p>The class defines the following default set of arguments.</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">-H</span></tt>: The hostaddress of the server to connect on.</li>
+<li><tt class="docutils literal"><span class="pre">-p,</span> <span class="pre">--port</span></tt>: on which port HTTP session is established (default to 80).</li>
+<li><tt class="docutils literal"><span class="pre">-S,</span> <span class="pre">--ssl</span></tt>: if we should use SSL (default No).</li>
+<li><tt class="docutils literal"><span class="pre">-a,</span> <span class="pre">--auth</span></tt>: A string for doing basic HTTP auth like login:passwd.</li>
+</ul>
+</div>
+<div class="section" id="making-requests">
+<h2>Making requests<a class="headerlink" href="#making-requests" title="Permalink to this headline">¶</a></h2>
+<p>Make use of <tt class="docutils literal"><span class="pre">plugin.http</span></tt> attribute to make queries. This is an instance of
+<a class="reference internal" href="probe-api.html#monitoring.nagios.probes.http.ProbeHTTP" title="monitoring.nagios.probes.http.ProbeHTTP"><tt class="xref py py-class docutils literal"><span class="pre">monitoring.nagios.probes.http.ProbeHTTP</span></tt></a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">All URL paths are relative to the hostaddress given with argument <tt class="docutils literal"><span class="pre">-H</span></tt>.</p>
+</div>
+<p>Doing a HTTP GET query is simple as:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">response</span> <span class="o">=</span> <span class="n">plugin</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;/file.json&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Checkout more details in <a class="reference internal" href="probe-api.html#monitoring.nagios.probes.http.ProbeHTTP.get" title="monitoring.nagios.probes.http.ProbeHTTP.get"><tt class="xref py py-meth docutils literal"><span class="pre">monitoring.nagios.probes.http.ProbeHTTP.get()</span></tt></a>.</p>
+<p>Doing a HTTP POST query is simple as:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">response</span> <span class="o">=</span> <span class="n">plugin</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s">&quot;/post_path&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s">&quot;var1&quot;</span><span class="p">:</span> <span class="s">&quot;toto&quot;</span><span class="p">,</span> <span class="s">&quot;var2&quot;</span><span class="p">:</span> <span class="s">&quot;tata&quot;</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>This will post the <tt class="docutils literal"><span class="pre">data</span></tt> to the <tt class="docutils literal"><span class="pre">/post_path</span></tt> URL.</p>
+</div>
+<div class="section" id="playing-with-response">
+<h2>Playing with response<a class="headerlink" href="#playing-with-response" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">response</span></tt> object now contains the server answer that makes new
+attributes available to you in order to process server response. This is an
+instance of <a class="reference internal" href="probe-api.html#monitoring.nagios.probes.http.HTTPResponse" title="monitoring.nagios.probes.http.HTTPResponse"><tt class="xref py py-class docutils literal"><span class="pre">monitoring.nagios.probes.http.HTTPResponse</span></tt></a></p>
+<div class="section" id="response-content">
+<h3>Response content<a class="headerlink" href="#response-content" title="Permalink to this headline">¶</a></h3>
+<p>You can have the full server response (ex. HTML) using the <tt class="docutils literal"><span class="pre">content</span></tt>
+attribute:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span>
+<span class="go">&#39;&lt;HTML&gt;</span>
+<span class="go"> ...</span>
+<span class="go"> ...&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="json-output">
+<h3>JSON output<a class="headerlink" href="#json-output" title="Permalink to this headline">¶</a></h3>
+<p>If the response returned by the server is JSON data, you can parse it to Python
+objects like so:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">json_data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">json_data</span>
+<span class="go">[{u&#39;repository&#39;: {u&#39;open_issues&#39;: 0, u&#39;url&#39;: &#39;https://github.com/...</span>
+</pre></div>
+</div>
+<p>You will obtain formatted object usable for Python. <tt class="docutils literal"><span class="pre">response.json()</span></tt>
+will raise a <tt class="docutils literal"><span class="pre">ValueError</span></tt> exception if any error occurs.</p>
+</div>
+<div class="section" id="xml-output">
+<h3>XML output<a class="headerlink" href="#xml-output" title="Permalink to this headline">¶</a></h3>
+<p>If the response returned by the server is XML data, you can obtain a
+<tt class="docutils literal"><span class="pre">BeautifulSoup</span></tt> parser object and play with it like so:</p>
+<div class="highlight-python"><pre># Find all tags "&lt;alert&gt;&lt;/alert&gt;" in XML results
+&gt;&gt;&gt; xml_data = response.xml()
+&gt;&gt;&gt; xml_data.find_all("alert")
+
+# Get a last_update value using attributes like in XML
+# "&lt;alert&gt;&lt;last_update&gt;10:00&lt;/last_update&gt;&lt;/alert&gt;"
+&gt;&gt;&gt; xml_data.alert.last_update
+'10:00'</pre>
+</div>
+<p>Check out the documentation of
+<a class="reference external" href="http://www.crummy.com/software/BeautifulSoup/bs4/doc/">BeautifulSoup 4</a> for
+more information about the available methods and attributes.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="api.html" class="btn btn-neutral float-right" title="API Reference"/>Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="wmi.html" class="btn btn-neutral" title="WMI based plugin"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Vincent BESANCON.
+    </p>
+  </div>
+
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+</body>
+</html>
