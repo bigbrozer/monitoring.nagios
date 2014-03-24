@@ -58,8 +58,8 @@ def humanize_bytes(byte, precision=2):
 
     **Example**::
 
-     >>> print humanize_bytes(1024)
-     '1 kB'
+     >>> humanize_bytes(1024)
+     '1.00 kB'
 
     :param byte: Byte number.
     :type byte: Integer.
