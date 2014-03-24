@@ -37,6 +37,6 @@ class TestHTTPPlugin(unittest.TestCase):
 
     def setUp(self):
         sys.argv = sys.argv[:1]
-        args = ['-H', 'wweasapp0611.eas.ww.corp',]
+        args = ['-H', 'wweasapp0611.eas.ww.corp']
         sys.argv.extend(args)
         self.plugin = NagiosPluginHTTP()
