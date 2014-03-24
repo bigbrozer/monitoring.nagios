@@ -40,6 +40,13 @@ class TestHTTPProbe(unittest.TestCase):
         """Test instance initialization."""
         self.assertEqual(self.http.baseurl, "http://monitoring-dc.app.corp:80")
 
+    def test_probe_auth(self):
+        """Test HTTP probe auth."""
+        http = ProbeHTTP("wwgrpapp0061.ww.corp", auth=('9nagios',
+                                                       'PassNAD9@!@'))
+        http_get_response = http.get("/")
+        self.assertTrue(http_get_response.status_code == 200)
+
     def test_http_get(self):
         """Test HTTP GET request."""
         http_get_response = self.http.get("/")

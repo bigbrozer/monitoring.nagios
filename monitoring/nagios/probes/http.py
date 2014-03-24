@@ -107,6 +107,7 @@ class ProbeHTTP(Probe):
         """
         path = path.lstrip("/")
         response = requests.get("{0}/{1}".format(self.baseurl, path),
+                                auth=self.auth,
                                 **kwargs)
         return HTTPResponse(response)
 
@@ -125,5 +126,6 @@ class ProbeHTTP(Probe):
         path = path.lstrip("/")
         response = requests.post("{0}/{1}".format(self.baseurl, path),
                                  data,
+                                 auth=self.auth,
                                  **kwargs)
         return HTTPResponse(response)
