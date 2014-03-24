@@ -37,6 +37,11 @@ class TestHTTPPlugin(unittest.TestCase):
 
     def setUp(self):
         sys.argv = sys.argv[:1]
-        args = ['-H', 'wweasapp0611.eas.ww.corp']
+        args = ['-H', 'monitoring-dc.app.corp']
         sys.argv.extend(args)
         self.plugin = NagiosPluginHTTP()
+
+    def test_default_get(self):
+        """Test that NagiosPluginHTTP is working well by default."""
+        response = self.plugin.http.get(self.plugin.options.path)
+        self.assertEqual(response.status_code, 200)
