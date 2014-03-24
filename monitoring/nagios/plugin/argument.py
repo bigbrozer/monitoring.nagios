@@ -166,6 +166,8 @@ class NagiosThreshold(object):
     False
     >>> t.test(30) # KO: inside the range of {25 .. 40}
     True
+    >>> str(t)
+    '[25 .. 40]'
 
     >>> t = NagiosThreshold("30")
     >>> t.test(40) # KO: outside the range of {0 .. 30}
@@ -174,18 +176,24 @@ class NagiosThreshold(object):
     False
     >>> t.test(-10) # KO: outside the range of {0 .. 30}
     True
+    >>> str(t)
+    '< 0 or > 30'
 
     >>> t = NagiosThreshold("~:20")
     >>> t.test(30) # KO: outside the range of {-∞ .. 20}
     True
     >>> t.test(15) # OK: inside the range of {-∞ .. 20}
     False
+    >>> str(t)
+    '> 20'
 
     >>> t = NagiosThreshold("10:20")
     >>> t.test(30) # KO: outside the range of {10 .. 20}
     True
     >>> t.test(13) # OK: inside the range of {10 .. 20}
     False
+    >>> str(t)
+    '< 10 or > 20'
     """
     pattern = r'(^(?P<inclusive>@)?(?P<start>[0-9]+)|' \
               r'(?P<is_strict_positive>^~)):?(?P<end>[0-9]*)$'
@@ -262,3 +270,15 @@ class NagiosThreshold(object):
                         return True
 
         return False
+
+    def __str__(self):
+        if self.is_strict_positive:
+            return "> {0.end}".format(self)
+        else:
+            if self.inclusive:
+                return "[{0.start} .. {0.end}]".format(self)
+            else:
+                if self.start and not self.end:
+                    return "< 0 or > {0.start}".format(self)
+                else:
+                    return "< {0.start} or > {0.end}".format(self)
