@@ -2,6 +2,8 @@
 Creating a new plugin, the basics
 =================================
 
+.. module:: monitoring.nagios.plugin
+
 Introduction
 ============
 
@@ -135,9 +137,9 @@ whatever. You can add arguments by overriding :meth:`define_plugin_arguments`::
  logger.debug('This is the end !')
 
 This is called *overriding* because you will change the behavior of the method
-:meth:`define_plugin_arguments` but you first call the one in the super class
-(the one we inherit from) called :class:`NagiosPlugin` with the help of
-:func:`super`. If you forget to call :func:`super`, you will loose arguments
+:meth:`NagiosPlugin.define_plugin_arguments` but you first call the one in the
+super class (the one we inherit from) called :class:`NagiosPlugin` with the help
+of :func:`super`. If you forget to call :func:`super`, you will loose arguments
 defined in the base class :class:`NagiosPlugin` such as ``-H``, ``--debug``, ...
 
 Let's add a new argument now::
@@ -175,19 +177,22 @@ should be returned if it is required or not (True / False).
 
 Here is the :meth:`add_argument` method in details:
 
-.. py:function:: add_argument(short_name, [long_name,] dest, type, help, required)
+.. py:method:: NagiosPlugin.required_args.add_argument(short_name, [long_name,] dest, type, help, required)
 
     Add a new argument to the plugin.
 
     :param short_name: the short name of the argument, eg. ``-a``.
     :type short_name: str
-    :param long_name: (*optional*) the long name of the argument, eg. ``--argument``.
+    :param long_name: (*optional*) the long name of the argument,
+                      eg. ``--argument``.
     :type long_name: str
     :param dest: the name of the variable that will store the argument value.
     :type dest: str
-    :param type: (*optional*) specify the type of the argument value. Default to :class:`str`.
+    :param type: (*optional*) specify the type of the argument value.
+                 Default to :class:`str`.
     :type type: built-in type
-    :param help: the help message that describe this argument. Used by ``--help``.
+    :param help: the help message that describe this argument. Used by
+                 ``--help``.
     :type help: str
     :param required: should this argument be required or not.
     :type required: bool
@@ -214,7 +219,8 @@ You can see ``-a or --argument`` in the default namespace named *Plugin
 arguments*.
 
 Getting the argument value in your plugin is done with the :attr:`options`
-attribute of your plugin instance, which is here :data:`plugin`: ``plugin.options.<destvar>``.
+attribute of your plugin instance, which is here :data:`plugin`:
+``plugin.options.<destvar>``.
 
 Example::
 
@@ -236,6 +242,76 @@ Example::
  logger.debug('Show this message in debug mode only...')
  logger.debug('Value of argument: {0}'.format(plugin.options.argument))
  logger.debug('This is the end !')
+
+Pre-defined argument types
+..........................
+
+.. module:: monitoring.nagios.plugin.argument
+
+The library has support for arguments that are common in plugins such as
+percent values, `Nagios thresholds
+<https://nagios-plugins.org/doc/guidelines.html#THRESHOLDFORMAT>`_, time
+related args, etc...
+
+Everything is located within the module
+:mod:`monitoring.nagios.plugin.argument`.
+
+Reference them with the ``type`` keyword argument of :meth:`add_argument`.
+
+**Example for a percent value argument**::
+
+ ...
+
+ from monitoring.nagios.plugin import argument
+
+ ...
+
+ self.required_args.add_argument('-u', '--used-space',
+                                 dest="used_space",
+                                 type=argument.percent,
+                                 help="Used space threshold.",
+                                 required=True)
+
+Checkout all pre-defined argument types in :doc:`arguments`.
+
+Nagios thresholds
+.................
+
+.. versionadded:: 1.3.1
+        New argument type that add support for `Nagios Threshold
+        <https://nagios-plugins.org/doc/guidelines.html#THRESHOLDFORMAT>`_
+        format.
+
+There is also support of `Nagios threshold format
+<https://nagios-plugins.org/doc/guidelines.html#THRESHOLDFORMAT>`_ as described
+in the Developer Guidelines by using the argument type
+:class:`NagiosThreshold`.
+
+The following code will create a warning argument that accept this format::
+
+ ...
+
+ from monitoring.nagios.plugin import argument
+
+ ...
+
+ self.required_args.add_argument('-w', '--warning',
+                                 dest="used_space",
+                                 type=argument.NagiosThreshold,
+                                 help="Warning threshold.")
+
+You can now test if the plugin must generate an alert with the
+:meth:`NagiosThreshold.test` method::
+
+ ...
+
+ value = 54
+ if plugin.options.warning.test(value):
+    plugin.warning("A warning here !")
+ elif plugin.options.critical.test(value):
+    plugin.critical("Critical alert !!")
+ else:
+    plugin.ok("Nothing is going wrong here.")
 
 Grouping arguments
 ..................

@@ -70,6 +70,11 @@ class NagiosPluginHTTP(NagiosPlugin):
                                         help='HTTP port (default 80).',
                                         default=80)
 
+        self.required_args.add_argument('-P', '--path',
+                                        dest='path',
+                                        help='The URL path relative to host.',
+                                        default="/")
+
         self.required_args.add_argument('-S', '--ssl',
                                         dest='ssl',
                                         action="store_true",
