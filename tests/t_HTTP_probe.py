@@ -24,7 +24,6 @@
 import unittest
 import sys
 
-from requests.exceptions import HTTPError
 from bs4 import BeautifulSoup
 
 sys.path.insert(0, "..")
@@ -58,16 +57,10 @@ class TestHTTPProbe(unittest.TestCase):
         http_get_response = http.post("/post", data={"hello": "world"})
         self.assertTrue(http_get_response.status_code == 200)
 
-    def test_status_404(self):
-        """Test HTTP GET that returns 404 error code."""
-        http_get_response = self.http.get("/rueyuzeytzeytiuytuez")
-        self.assertTrue(http_get_response.status_code == 404)
-
     def test_bad_status_exception(self):
         """Test that HTTP request returns bad code."""
-        http_get_response = self.http.get("/rueyuzeytzeytiuytuez")
-        with self.assertRaises(HTTPError):
-            http_get_response.raise_for_status()
+        with self.assertRaises(SystemExit):
+            self.http.get("/rueyuzeytzeytiuytuez")
 
     def test_xml_parser_init(self):
         """Test fetching a XML file and parsing it."""
