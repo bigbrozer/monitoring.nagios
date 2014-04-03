@@ -24,6 +24,7 @@
 import logging
 
 import requests
+from requests.exceptions import RequestException
 from bs4 import BeautifulSoup
 
 from monitoring.nagios.probes import Probe
@@ -106,9 +107,15 @@ class ProbeHTTP(Probe):
         :returns: return of :func:`requests.get`.
         """
         path = path.lstrip("/")
-        response = requests.get("{0}/{1}".format(self.baseurl, path),
-                                auth=self.auth,
-                                **kwargs)
+        url = "{0}/{1}".format(self.baseurl, path)
+
+        try:
+            response = requests.get(url, auth=self.auth, **kwargs)
+            response.raise_for_status()
+        except RequestException as e:
+            raise NagiosUnknown("HTTP GET error on URL: {}\n"
+                                "{}".format(url, e))
+
         return HTTPResponse(response)
 
     def post(self, path, data, **kwargs):
@@ -124,8 +131,12 @@ class ProbeHTTP(Probe):
         :returns: return of :func:`requests.get`.
         """
         path = path.lstrip("/")
-        response = requests.post("{0}/{1}".format(self.baseurl, path),
-                                 data,
-                                 auth=self.auth,
-                                 **kwargs)
+        url = "{0}/{1}".format(self.baseurl, path)
+
+        try:
+            response = requests.post(url, data, auth=self.auth, **kwargs)
+        except RequestException as e:
+            raise NagiosUnknown("HTTP POST error on URL: {}\n"
+                                "{}".format(url, e))
+
         return HTTPResponse(response)
