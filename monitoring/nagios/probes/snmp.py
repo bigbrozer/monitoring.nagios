@@ -97,20 +97,27 @@ class _SNMPQuery(object):
             oid = _SNMPQuery.convert_oid_to_tuple(oid)
 
         try:
+            if self.__probe.snmp_version < 2:
+                auth_method = cmdgen.CommunityData('nagios-plugin',
+                                                   self.__probe.community,
+                                                   self.__probe.snmp_version)
+            else:
+                auth_method = cmdgen.UsmUserData(
+                    self.__probe.login,
+                    self.__probe.password,
+                    authProtocol=self.__probe.auth_protocol,
+                    privProtocol=self.__probe.priv_protocol,)
+
             error_indication, _, _, varbinds = snmpcmd(
-                cmdgen.CommunityData('nagios-plugin', self.__probe.community,
-                                     self.__probe.snmpv2),
+                auth_method,
                 self.__probe.udp_transport, oid)
             if error_indication is not None:
                 raise NagiosUnknown('SNMP query error: %s' % error_indication)
         except Exception as e:
             raise NagiosUnknown('Unexpected error during SNMP %s query !\n'
-                                'Host: %s\n'
-                                'Community: %s\n'
                                 'OID: %s\n'
                                 'Message: %s' % (self.__snmpcmd.upper(),
-                                                 self.__probe.hostaddress,
-                                                 self.__probe.community, oid,
+                                                 oid,
                                                  e))
 
         logger.debug('Returned varBinds:')
@@ -197,28 +204,42 @@ class _SNMPTable(IterableUserDict):
 
 class ProbeSNMP(Probe):
     """Class ProbeSNMP."""
-    def __init__(self, hostaddress='', port=161, community='public',
-                 snmpv2=False):
+    def __init__(self,
+                 hostaddress='',
+                 port=161,
+                 community=None,
+                 snmp_version=0,
+                 login=None,
+                 password=None,
+                 auth_protocol=cmdgen.usmHMACMD5AuthProtocol,
+                 priv_protocol=cmdgen.usmDESPrivProtocol):
         super(ProbeSNMP, self).__init__()
 
         self.hostaddress = hostaddress
         self.port = port
         self.community = community
-        self.snmpv2 = snmpv2
+        self.snmp_version = snmp_version
+        self.login = login
+        self.password = password
+        self.auth_protocol = auth_protocol
+        self.priv_protocol = priv_protocol
 
         try:
-            logger.debug('Establishing SNMP connection to \'%s:%d\' with '
-                         'community \'%s\' using SNMPv2 (%s)...',
-                         self.hostaddress, self.port, self.community,
-                         self.snmpv2)
+            logger.debug('Establishing SNMP connection to \'%s:%d\'...',
+                         self.hostaddress, self.port)
             self.udp_transport = cmdgen.UdpTransportTarget(
                 (self.hostaddress, self.port))
         except Exception as e:
             raise NagiosUnknown('Cannot establish a SNMP connection !\n'
                                 'Host: %s\n'
-                                'Community: %s\n'
+                                'Port: %d\n'
+                                'Login: %s\n'
+                                'Password: %s\n'
                                 'Message: %s' % (self.hostaddress,
-                                                 self.community, e))
+                                                 self.port,
+                                                 self.login,
+                                                 self.password,
+                                                 e))
 
         if 'ProbeSNMP' == self.__class__.__name__:
             logger.debug('=== END PROBE INIT ===')

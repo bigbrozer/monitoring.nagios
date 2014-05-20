@@ -23,6 +23,7 @@
 
 import logging as log
 
+from monitoring.nagios.plugin import argument
 from monitoring.nagios.probes import ProbeSNMP
 from monitoring.nagios.plugin import NagiosPlugin
 
@@ -34,13 +35,22 @@ class NagiosPluginSNMP(NagiosPlugin):
     def __init__(self, *args, **kwargs):
         super(NagiosPluginSNMP, self).__init__(*args, **kwargs)
 
-        self.__use_snmp_v2 = 0
+        self.snmp_version = 0
+
+        if self.options.snmpv2:
+            self.snmp_version = 1
+        elif self.options.snmpv3:
+            self.snmp_version = 2
 
         # Init a new probe of type SNMP
         self.snmp = ProbeSNMP(
             hostaddress=self.options.hostname,
             community=self.options.snmpcommunity,
-            snmpv2=self.options.snmpv2
+            snmp_version=self.snmp_version,
+            login=self.options.snmpv3_login,
+            password=self.options.snmpv3_password,
+            auth_protocol=self.options.auth_protocol,
+            priv_protocol=self.options.priv_protocol,
         )
 
         if 'NagiosPluginSNMP' == self.__class__.__name__:
@@ -50,26 +60,54 @@ class NagiosPluginSNMP(NagiosPlugin):
         """Define arguments for the plugin"""
         super(NagiosPluginSNMP, self).define_plugin_arguments()
 
-        # Add extra arguments
+        # Add common arguments
         self.required_args.add_argument('-C',
                                         dest='snmpcommunity',
-                                        help='SNMP Community to use',
-                                        required=True)
+                                        help='SNMP Community to use')
         self.parser.add_argument('-2',
                                  action='store_true',
                                  dest='snmpv2',
                                  default=False,
                                  help='Use SNMP v2c (default use version 1)')
+
         self.parser.add_argument('-p',
                                  type=int,
                                  dest='port',
                                  default=161,
                                  help='Port to connect to (default to 161).')
 
+        # Specific to SNMPv3
+        self.parser.add_argument('-3',
+                                 action='store_true',
+                                 dest='snmpv3',
+                                 default=False,
+                                 help='Use SNMP v3 (default use version 1)')
+
+        self.parser.add_argument('--login',
+                                 dest='snmpv3_login',
+                                 help='SNMPv3 login')
+
+        self.parser.add_argument('--password',
+                                 dest='snmpv3_password',
+                                 help='SNMPv3 password')
+
+        self.parser.add_argument('--auth-protocol',
+                                 type=argument.snmpv3_auth_protocol,
+                                 help='SNMPv3 authentication protocol')
+
+        self.parser.add_argument('--priv-protocol',
+                                 type=argument.snmpv3_priv_protocol,
+                                 help='SNMPv3 priv protocol (encryption)')
+
     def verify_plugin_arguments(self):
-        """Check syntax of all arguments"""
         super(NagiosPluginSNMP, self).verify_plugin_arguments()
 
-        if self.options.snmpv2:
-            logger.debug('Using SNMP v2.')
-            self.__use_snmp_v2 = 1
+        if not self.options.snmpv3:
+            if not self.options.snmpcommunity:
+                self.unknown("Missing community string with -C argument !")
+
+        if self.options.snmpv3:
+            if not self.options.snmpv3_login \
+               or not self.options.snmpv3_password:
+                self.unknown("Login / Password required for SNMPv3 !")
+
