@@ -1,23 +1,24 @@
 #!/usr/bin/env python2.7
 # -*- coding: utf-8 -*-
-#===============================================================================
-# Filename      : snmp_query.py
-# Author        : Vincent BESANCON <besancon.vincent@gmail.com>
-# Description   : Test SNMPQuery class.
-#-------------------------------------------------------------------------------
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# Copyright (C) Vincent BESANCON <besancon.vincent@gmail.com>
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# Permission is hereby granted, free of charge, to any person obtaining
+# a copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
 #
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#===============================================================================
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+# OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # TODO: Convert to unittest.
 
@@ -26,21 +27,10 @@ import sys
 sys.path.insert(0, '..')
 
 from monitoring.nagios.plugin import NagiosPluginSNMP
-from monitoring.nagios.probes import ProbeSNMP
 
 plugin = NagiosPluginSNMP(version='1.0', description='Test SNMPQuery class')
 
-query_get = plugin.snmp.get({
-    'name': '1.3.6.1.4.1.1588.2.1.1.1.6.2.1.36.65',
-    'alias': '1.3.6.1.4.1.1588.2.1.1.1.6.2.1.37.65',
-    'crc': '1.3.6.1.4.1.1588.2.1.1.1.6.2.1.22.65',
+results = plugin.snmp.get({
+    'name': '1.3.6.1.2.1.1.5.0',
 })
-print query_get
-
-print '=' * 80
-
-query_getnext = plugin.snmp.getnext({
-    'indexes': '1.3.6.1.4.1.1588.2.1.1.1.6.2.1.1',
-    'alias': '1.3.6.1.4.1.1588.2.1.1.1.6.2.1.37',
-})
-print query_getnext
+print results
