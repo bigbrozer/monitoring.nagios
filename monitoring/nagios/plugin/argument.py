@@ -30,6 +30,96 @@ import argparse
 import re
 from datetime import timedelta
 
+from pysnmp.entity.rfc3413.oneliner import cmdgen
+
+
+def snmpv3_auth_protocol(protocol):
+    """
+    Specify a SNMPv3 auth protocol to use for the connection.
+
+    :param protocol: the name of the protocol for authentication.
+                     Checkout `PySNMP Security Reference
+                     <http://pysnmp.sourceforge.net/docs/current/security-configuration.html>`_
+    :type protocol: str, unicode
+    :returns: the SNMPv3 USM class for the protocol.
+
+    **Example**::
+
+     >>> p = snmpv3_auth_protocol("md5")
+     >>> type(p)
+     <type 'tuple'>
+     >>> snmpv3_auth_protocol("md5ufdk")
+     Traceback (most recent call last):
+       ...
+     ArgumentTypeError: Unsupported auth protocol 'md5ufdk' ! Supported are md5, noauth, sha.
+    """
+
+    # Lookup table for SNMPv3 auth protocols
+    #
+    # usmHMACMD5AuthProtocol    -- MD5-based authentication protocol
+    # usmHMACSHAAuthProtocol    -- SHA-based authentication protocol
+    # usmNoAuthProtocol         -- no authentication to use
+    #
+    snmpv3_auth_protocols = {
+        "md5": cmdgen.usmHMACMD5AuthProtocol,
+        "sha": cmdgen.usmHMACSHAAuthProtocol,
+        "noauth": cmdgen.usmNoAuthProtocol,
+    }
+
+    try:
+        return snmpv3_auth_protocols[protocol]
+    except KeyError as e:
+        raise argparse.ArgumentTypeError(
+            "Unsupported auth protocol {} ! Supported are {}.".format(
+                e, ", ".join(sorted(snmpv3_auth_protocols.keys()))))
+
+
+def snmpv3_priv_protocol(protocol):
+    """
+    Specify a SNMPv3 priv protocol to use for the encryption.
+
+    :param protocol: the name of the privacy protocol for encryption.
+                     Checkout `PySNMP Security Reference
+                     <http://pysnmp.sourceforge.net/docs/current/security-configuration.html>`_
+    :type protocol: str, unicode
+    :returns: the SNMPv3 USM class for the protocol.
+
+    **Example**::
+
+     >>> p = snmpv3_priv_protocol("des")
+     >>> type(p)
+     <type 'tuple'>
+     >>> snmpv3_priv_protocol("desjfi")
+     Traceback (most recent call last):
+       ...
+     ArgumentTypeError: Unsupported priv protocol 'desjfi' ! Supported are 3des, aes128, aes192, aes256, des, nopriv.
+    """
+
+    # Lookup table for SNMPv3 priv protocols (encryption)
+    #
+    # usmDESPrivProtocol        -- DES-based encryption protocol
+    # usmAesCfb128Protocol      -- AES128-based encryption protocol (RFC3826)
+    # usm3DESEDEPrivProtocol    -- triple DES-based encryption protocol
+    # usmAesCfb192Protocol      -- AES192-based encryption protocol
+    # usmAesCfb256Protocol      -- AES256-based encryption protocol
+    # usmNoPrivProtocol         -- no encryption to use
+    #
+    snmpv3_priv_protocols = {
+        "des": cmdgen.usmDESPrivProtocol,
+        "aes128": cmdgen.usmAesCfb128Protocol,
+        "3des": cmdgen.usm3DESEDEPrivProtocol,
+        "aes192": cmdgen.usmAesCfb192Protocol,
+        "aes256": cmdgen.usmAesCfb256Protocol,
+        "nopriv": cmdgen.usmNoPrivProtocol,
+    }
+
+    try:
+        return snmpv3_priv_protocols[protocol]
+    except KeyError as e:
+        raise argparse.ArgumentTypeError(
+            "Unsupported priv protocol {} ! Supported are {}.".format(
+                e, ", ".join(sorted(snmpv3_priv_protocols.keys()))))
+
 
 def http_basic_auth(auth_string):
     """
